@@ -18,7 +18,7 @@ export type Recipe = {
 export const recipes: Recipe[] = [
   {
     slug: "obstacle-avoiding-robot", title: "Obstacle-Avoiding Robot", level: "Beginner", hours: 4,
-    product: "hc-sr04-ultrasonic-sensor", tone: "sky",
+    product: "hc-sr04-ultrasonic-sensor", tone: "aqua",
     outcome: "Read an ultrasonic sensor, drive two motors through an H-bridge and write simple decision logic.",
     parts: ["arduino-uno-r3", "hc-sr04-ultrasonic-sensor", "l298n-motor-driver", "sg90-micro-servo", "li-ion-18650-cell", "jumper-wire-set"],
     steps: [
@@ -31,7 +31,7 @@ export const recipes: Recipe[] = [
   },
   {
     slug: "iot-energy-sub-meter", title: "IoT Energy Sub-Meter", level: "Intermediate", hours: 6,
-    product: "acs712-current-sensor", tone: "red",
+    product: "acs712-current-sensor", tone: "ink",
     outcome: "Measure load current, compute energy over time and publish readings to a web dashboard over Wi-Fi.",
     parts: ["esp32-devkit-v1", "acs712-current-sensor", "lcd-16x2-i2c", "lm2596-buck-converter", "dc-power-adapter-12v"],
     steps: [
@@ -44,7 +44,7 @@ export const recipes: Recipe[] = [
   },
   {
     slug: "555-astable-blinker", title: "555 Astable LED Blinker", level: "Beginner", hours: 1,
-    product: "ne555-timer-ic", tone: "orange",
+    product: "ne555-timer-ic", tone: "amber",
     outcome: "Understand RC timing and duty cycle by building the classic astable multivibrator.",
     parts: ["ne555-timer-ic", "resistor-kit", "capacitor-kit-electrolytic", "led-5mm-assorted", "breadboard-830"],
     steps: [
@@ -56,7 +56,7 @@ export const recipes: Recipe[] = [
   },
   {
     slug: "4-bit-counter", title: "4-Bit Counter with 7-Segment Output", level: "Intermediate", hours: 3,
-    product: "seven-segment-display", tone: "violet",
+    product: "seven-segment-display", tone: "deep",
     outcome: "Build a synchronous counter from JK flip-flops and display its state — a core DLD sessional.",
     parts: ["ttl-74xx-ic-kit", "seven-segment-display", "breadboard-830", "jumper-wire-set", "led-5mm-assorted"],
     steps: [
@@ -78,7 +78,7 @@ export const recipes: Recipe[] = [
   },
   {
     slug: "regulated-dc-supply", title: "Regulated DC Power Supply", level: "Beginner", hours: 2,
-    product: "step-down-transformer", tone: "green",
+    product: "step-down-transformer", tone: "butter",
     outcome: "Step down, rectify, filter and measure ripple — the Electronics I power-supply experiment end to end.",
     parts: ["step-down-transformer", "diode-1n4007-pack", "capacitor-kit-electrolytic", "digital-multimeter", "digital-oscilloscope"],
     steps: [
@@ -90,7 +90,7 @@ export const recipes: Recipe[] = [
   },
   {
     slug: "wifi-security-camera", title: "Wi-Fi Security Camera", level: "Intermediate", hours: 3,
-    product: "esp32-cam", tone: "pink",
+    product: "esp32-cam", tone: "cloud",
     outcome: "Stream video over Wi-Fi and trigger snapshots from a motion sensor.",
     parts: ["esp32-cam", "pir-motion-sensor", "lm2596-buck-converter"],
     steps: [

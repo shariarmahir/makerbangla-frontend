@@ -1,10 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { startTransition, useActionState, useEffect, useState, useSyncExternalStore } from "react";
 import { Banknote, Check, Loader2, Lock, MapPin, ShoppingCart, Store, Truck } from "lucide-react";
+import { MagicButton, MagicLink } from "@/components/ui/magic-button";
 import { placeOrder } from "./actions";
 import type { PlaceOrderState } from "@/lib/order";
 import { saveOrder } from "@/lib/orders-store";
@@ -69,7 +69,7 @@ export function CheckoutForm() {
       <div className="mt-6 rounded-2xl border border-dashed border-line px-6 py-16 text-center">
         <ShoppingCart className="mx-auto size-10 text-subtle/50" strokeWidth={1.4} />
         <p className="mt-4 text-[14px] font-semibold">Your cart is empty.</p>
-        <Link href="/shop" className="btn-pill mt-5 h-11 bg-ink px-6 text-white hover:bg-brand-strong">Browse the shop</Link>
+        <div className="mt-6"><MagicLink href="/shop">Browse the shop</MagicLink></div>
       </div>
     );
   }
@@ -113,7 +113,7 @@ export function CheckoutForm() {
                   key={d.id}
                   className={cn(
                     "relative flex cursor-pointer flex-col gap-1.5 rounded-xl border-2 p-4 transition-colors",
-                    on ? "border-brand bg-brand/8" : "border-line hover:border-ink/30",
+                    on ? "border-brand bg-brand/10" : "border-line hover:border-ink/30",
                   )}
                 >
                   <input type="radio" name="delivery" value={d.id} checked={on} onChange={() => setDelivery(d.id)} className="sr-only" />
@@ -160,7 +160,7 @@ export function CheckoutForm() {
         )}
 
         <Step n={4} title="Payment">
-          <div className="flex items-center gap-3 rounded-xl border-2 border-brand bg-brand/8 p-4">
+          <div className="flex items-center gap-3 rounded-xl border-2 border-brand bg-brand/10 p-4">
             <Banknote className="size-5 text-brand-strong" />
             <div>
               <p className="text-[13.5px] font-extrabold">{delivery === "pickup" ? "Pay at pickup" : "Cash on delivery"}</p>
@@ -200,13 +200,9 @@ export function CheckoutForm() {
         {errors?.items && <p className="mt-3 text-[12px] font-semibold text-sale">{errors.items}</p>}
         {state && !state.ok && <p role="alert" className="mt-3 rounded-lg bg-sale/10 p-3 text-[12px] font-semibold text-sale">{state.message}</p>}
 
-        <button
-          type="submit"
-          disabled={pending || state?.ok}
-          className="btn-pill mt-5 h-12 w-full bg-linear-to-r from-sale to-tile-orange text-[14px] text-white shadow-[0_10px_24px_-10px_var(--color-sale)] disabled:opacity-60"
-        >
+        <MagicButton type="submit" disabled={pending || state?.ok} variant="accent" size="lg" rainbow className="mt-6 w-full">
           {pending ? <Loader2 className="size-4 animate-spin" /> : <Lock className="size-4" />} Place Order
-        </button>
+        </MagicButton>
         <p className="mt-3 text-center text-[11px] text-subtle">
           Prices are checked again when you place the order. Need help? <a href={`tel:${site.phoneIntl}`} className="font-bold text-ink hover:underline">{site.phone}</a>
         </p>

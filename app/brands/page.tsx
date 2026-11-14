@@ -27,7 +27,7 @@ export default function BrandsPage() {
           return (
             <li key={b.slug} className="group flex flex-col rounded-2xl border border-line bg-white p-6 transition-shadow hover:shadow-[0_18px_40px_-24px_rgb(0_0_0/0.4)]">
               <Link href={`/shop?brand=${b.slug}`} className="flex h-12 items-center text-ink">
-                <BrandLogo slug={b.slug} name={b.name} />
+                <BrandLogo slug={b.slug} name={b.name} index={brands.indexOf(b)} />
               </Link>
               <ul className="mt-4 space-y-1 text-[12.5px] text-ink-2">
                 {items.slice(0, 3).map((p) => (

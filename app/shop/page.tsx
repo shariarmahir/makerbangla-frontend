@@ -3,7 +3,8 @@ import Form from "next/form";
 import Link from "next/link";
 import { Suspense } from "react";
 import { SlidersHorizontal, X } from "lucide-react";
-import { ProductCard } from "@/components/product/product-card";
+import { ProductCard, productGrid } from "@/components/product/product-card";
+import { MagicButton, MagicLink } from "@/components/ui/magic-button";
 import { applications, categories, departmentNames, departments, interfaces, voltages } from "@/lib/data/catalog";
 import { brands, getBrand, getCategory, parseFilters, searchProducts, sorts, type Filters } from "@/lib/catalog";
 import { cn } from "@/lib/utils";
@@ -62,7 +63,7 @@ async function Results({ searchParams }: Pick<PageProps<"/shop">, "searchParams"
           {Object.entries(sorts).map(([v, t]) => <option key={v} value={v}>{t}</option>)}
         </select>
       </label>
-      <button type="submit" className="btn-dark w-full self-end">Apply filters</button>
+      <MagicButton type="submit" rainbow={false} className="w-full self-end">Apply filters</MagicButton>
     </Form>
   );
 
@@ -138,13 +139,13 @@ async function Results({ searchParams }: Pick<PageProps<"/shop">, "searchParams"
         )}
 
         {list.length ? (
-          <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl bg-line ring-1 ring-line sm:grid-cols-3 xl:grid-cols-4">
+          <div className={productGrid}>
             {list.map((p) => <ProductCard key={p.slug} product={p} />)}
           </div>
         ) : (
           <div className="rounded-2xl border border-dashed border-line bg-white px-6 py-16 text-center">
             <p className="font-semibold">No products match these filters.</p>
-            <Link href="/shop" className="btn-cta mt-5">View all products</Link>
+            <div className="mt-6"><MagicLink href="/shop" variant="accent">View all products</MagicLink></div>
           </div>
         )}
       </div>

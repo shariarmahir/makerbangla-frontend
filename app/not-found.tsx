@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { MagicLink } from "@/components/ui/magic-button";
 
 export default function NotFound() {
   return (
@@ -7,8 +7,8 @@ export default function NotFound() {
       <h1 className="mt-3 text-xl font-bold">This page took a wrong turn</h1>
       <p className="mt-2 text-[13px] text-subtle">The link may be outdated or the product is no longer listed.</p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">
-        <Link href="/" className="btn-dark">Go home</Link>
-        <Link href="/shop" className="btn-cta">Browse the shop</Link>
+        <MagicLink href="/">Go home</MagicLink>
+        <MagicLink href="/shop" variant="accent">Browse the shop</MagicLink>
       </div>
     </div>
   );

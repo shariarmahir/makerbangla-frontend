@@ -3,6 +3,7 @@
 import Form from "next/form";
 import { useMemo, useState } from "react";
 import { ArrowRight, ChevronDown, Cpu, RotateCcw } from "lucide-react";
+import { MagicButton } from "@/components/ui/magic-button";
 import { cn } from "@/lib/utils";
 
 export type FinderField = { name: "category" | "voltage" | "interface" | "application"; label: string; options: (readonly [string, string])[] };
@@ -69,13 +70,9 @@ export function FinderForm({ fields, index }: { fields: FinderField[]; index: Fi
         );
       })}
 
-      <button
-        type="submit"
-        disabled={count === 0}
-        className="col-span-2 inline-flex h-11 items-center justify-center gap-2 rounded-md bg-ink px-6 text-[12px] font-extrabold tracking-wide text-white uppercase transition-colors hover:bg-brand-strong disabled:opacity-50 md:col-span-1"
-      >
+      <MagicButton type="submit" disabled={count === 0} rainbow={active} className="col-span-2 md:col-span-1" faceClassName="h-11 uppercase tracking-wide">
         {active ? <>Show {count} <span className="normal-case">parts</span></> : "Go"} <ArrowRight className="size-4" />
-      </button>
+      </MagicButton>
     </Form>
   );
 }

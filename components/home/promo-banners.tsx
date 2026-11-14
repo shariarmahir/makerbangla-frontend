@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { whatsappLink } from "@/lib/site";
+import { MagicFace } from "@/components/ui/magic-button";
 import { cn } from "@/lib/utils";
 
 const promos = [
@@ -29,7 +30,7 @@ export function PromoBanners() {
                 <span className={cn("block text-[clamp(1.35rem,2.3vw,1.75rem)]", p.tone === "sale" ? "text-white" : "text-accent-yellow")}>{p.lines[1]}</span>
               </h3>
               {p.tone === "sale" ? (
-                <span className="btn-cta h-9">{p.cta}</span>
+                <MagicFace variant="accent" size="sm">{p.cta}</MagicFace>
               ) : (
                 <span className="inline-flex items-center gap-1 text-[11px] font-bold tracking-wider text-white uppercase underline-offset-4 group-hover:underline">
                   {p.cta} <ChevronRight className="size-3.5" />
@@ -40,7 +41,7 @@ export function PromoBanners() {
         );
         const className = cn(
           "group relative flex min-h-40 items-center overflow-hidden rounded-2xl p-6 sm:p-7",
-          p.tone === "sale" ? "justify-center bg-sale" : "bg-ink",
+          p.tone === "sale" ? "justify-center bg-tile-deep" : "bg-ink",
         );
         return external ? (
           <a key={p.cta} href={p.href} target="_blank" rel="noopener noreferrer" className={className}>{content}</a>

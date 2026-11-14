@@ -5,10 +5,10 @@ import { articles, formatDate, type Article, type Topic } from "@/lib/data/artic
 import { cn } from "@/lib/utils";
 
 export const topicTone: Record<Topic, string> = {
-  Innovation: "bg-tile-violet text-white",
-  "Future Tech": "bg-tile-blue text-white",
-  Learning: "bg-tile-green text-ink",
-  Research: "bg-tile-orange text-ink",
+  Innovation: "bg-tile-teal text-ink",
+  "Future Tech": "bg-tile-ink text-white",
+  Learning: "bg-tile-yellow text-ink",
+  Research: "bg-tile-amber text-ink",
 };
 
 export function TopicChip({ topic, className }: { topic: Topic; className?: string }) {

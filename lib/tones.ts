@@ -1,40 +1,48 @@
-/** Colourful stage per category. Literal class strings so Tailwind can see them. */
-export type Tone = { bg: string; text: string; soft: string; dark: boolean };
+/**
+ * Colour tones built from the logo (teal + charcoal) with yellow as the accent and warm amber/coral used sparingly.
+ * Literal class strings so Tailwind can see them.
+ */
+export type Tone = { bg: string; text: string; muted: string; glow: string; dark: boolean };
 
-const t = (bg: string, soft: string, dark = false): Tone => ({ bg, soft, dark, text: dark ? "text-white" : "text-ink" });
+const t = (bg: string, glow: string, dark = false): Tone => ({
+  bg,
+  glow,
+  dark,
+  text: dark ? "text-white" : "text-ink",
+  muted: dark ? "text-white/70" : "text-ink/60",
+});
 
 export const tones = {
-  yellow: t("bg-tile-yellow", "bg-tile-yellow/15"),
-  teal: t("bg-tile-teal", "bg-tile-teal/15"),
-  red: t("bg-tile-red", "bg-tile-red/12", true),
-  blue: t("bg-tile-blue", "bg-tile-blue/12", true),
-  green: t("bg-tile-green", "bg-tile-green/12"),
-  violet: t("bg-tile-violet", "bg-tile-violet/12", true),
-  orange: t("bg-tile-orange", "bg-tile-orange/15"),
-  pink: t("bg-tile-pink", "bg-tile-pink/15"),
-  sky: t("bg-tile-sky", "bg-tile-sky/15"),
-  lime: t("bg-tile-lime", "bg-tile-lime/20"),
-  ink: t("bg-tile-ink", "bg-tile-ink/8", true),
-  cloud: t("bg-tile-cloud", "bg-tile-cloud/60"),
+  yellow: t("bg-tile-yellow", "from-tile-yellow"),
+  butter: t("bg-tile-butter", "from-tile-butter"),
+  amber: t("bg-tile-amber", "from-tile-amber"),
+  teal: t("bg-tile-teal", "from-tile-teal"),
+  aqua: t("bg-tile-aqua", "from-tile-aqua"),
+  deep: t("bg-tile-deep", "from-tile-deep", true),
+  ink: t("bg-tile-ink", "from-tile-ink", true),
+  cloud: t("bg-tile-cloud", "from-tile-cloud"),
+  coral: t("bg-tile-coral", "from-tile-coral", true),
 } satisfies Record<string, Tone>;
 
 export type ToneName = keyof typeof tones;
 
 const byCategory: Record<string, ToneName> = {
-  sensors: "sky",
+  sensors: "aqua",
   microcontrollers: "yellow",
   motors: "teal",
-  power: "green",
-  prototyping: "violet",
-  ics: "orange",
-  "test-measurement": "blue",
-  tools: "pink",
-  kits: "red",
-  civil: "lime",
+  power: "amber",
+  prototyping: "cloud",
+  ics: "ink",
+  "test-measurement": "deep",
+  tools: "butter",
+  kits: "yellow",
+  civil: "aqua",
   architecture: "cloud",
   mechanical: "ink",
 };
 
 export const categoryTone = (slug: string): Tone => tones[byCategory[slug] ?? "cloud"];
 
-export const levelTone = { Beginner: "bg-tile-green text-ink", Intermediate: "bg-tile-yellow text-ink", Advanced: "bg-tile-red text-white" } as const;
+export const levelTone = { Beginner: "bg-tile-aqua text-ink", Intermediate: "bg-tile-yellow text-ink", Advanced: "bg-tile-coral text-white" } as const;
+
+export const deptTone: Record<string, ToneName> = { EEE: "yellow", CSE: "teal", CE: "amber", ARCH: "aqua", ME: "butter", BME: "deep" };

@@ -70,7 +70,7 @@ async function Recipe({ params }: Pick<PageProps<"/learn/[slug]">, "params">) {
           </ul>
         </div>
         <div className="relative min-h-56 md:min-h-0">
-          <ProductVisual slug={r.product} alt="" preload sizes="(min-width:768px) 480px, 100vw" inset="p-[12%]" plate="inset-[14%_18%]" className="motion-safe:animate-float" />
+          <ProductVisual slug={r.product} alt="" preload sizes="(min-width:768px) 480px, 100vw" inset="p-[12%]" className="motion-safe:animate-float" />
         </div>
       </header>
 
@@ -101,7 +101,7 @@ async function Recipe({ params }: Pick<PageProps<"/learn/[slug]">, "params">) {
               <li key={p.slug}>
                 <Link href={`/products/${p.slug}`} className="group flex items-center gap-3 py-2.5">
                   <span className={cn("relative size-12 shrink-0 overflow-hidden rounded-lg", categoryTone(p.category).bg)}>
-                    <ProductVisual slug={p.slug} alt="" sizes="48px" inset="p-1" plate="inset-1" />
+                    <ProductVisual slug={p.slug} alt="" sizes="48px" inset="p-1" />
                   </span>
                   <span className="line-clamp-2 flex-1 text-[12.5px] leading-snug font-semibold group-hover:text-brand-strong">{p.name}</span>
                   <Price price={p.price} className="text-[12.5px]" />

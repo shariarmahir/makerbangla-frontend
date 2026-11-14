@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { Heart, Menu, Minus, Plus, ShoppingCart, Trash2, X } from "lucide-react";
+import { MagicAnchor, MagicLink } from "@/components/ui/magic-button";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { cart, cartCount, cartTotal, useStore } from "@/lib/store";
 import { site } from "@/lib/site";
@@ -59,7 +60,7 @@ export function CartButton() {
             <div className="grid flex-1 place-content-center gap-4 px-6 text-center">
               <ShoppingCart className="mx-auto size-10 text-line" strokeWidth={1.4} />
               <p className="text-sm text-subtle">Your cart is empty.</p>
-              <Link href="/shop" onClick={() => setOpen(false)} className="btn-cta mx-auto">Browse the shop</Link>
+              <MagicLink href="/shop" onClick={() => setOpen(false)} variant="accent" className="mx-auto">Browse the shop</MagicLink>
             </div>
           ) : (
             <>
@@ -98,9 +99,9 @@ export function CartButton() {
                   <span className="text-lg font-bold tabular-nums">{bdt(total)}</span>
                 </div>
                 <p className="text-[11.5px] text-subtle">Choose delivery and see the final total at checkout.</p>
-                <Link href="/checkout" onClick={() => setOpen(false)} className="btn-pill h-12 w-full bg-linear-to-r from-sale to-tile-orange text-[13px] text-white shadow-[0_8px_20px_-8px_var(--color-sale)]">
+                <MagicLink href="/checkout" onClick={() => setOpen(false)} variant="accent" size="lg" rainbow className="w-full">
                   Proceed to Checkout
-                </Link>
+                </MagicLink>
                 <button type="button" onClick={cart.clear} className="w-full text-center text-[11px] font-semibold text-subtle underline-offset-2 hover:underline">
                   Clear cart
                 </button>
@@ -148,7 +149,7 @@ export function MobileMenu({ nav, categories }: { nav: readonly { label: string;
                 </li>
               ))}
             </ul>
-            <a href={`tel:${site.phoneIntl}`} className="btn-dark mt-6 w-full">Call {site.phone}</a>
+            <MagicAnchor href={`tel:${site.phoneIntl}`} className="mt-6 w-full">Call {site.phone}</MagicAnchor>
           </div>
         </SheetContent>
       </Sheet>

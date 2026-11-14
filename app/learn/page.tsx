@@ -3,10 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Clock, FlaskConical, Layers, Package } from "lucide-react";
 import { AddAllToCart } from "@/components/product/product-actions";
+import { MagicAnchor } from "@/components/ui/magic-button";
 import { ProductVisual } from "@/components/product/product-visual";
 import { getProduct, productVisual, toRef } from "@/lib/catalog";
 import { labGuides, recipes } from "@/lib/data/learning";
-import { levelTone, tones, type ToneName } from "@/lib/tones";
+import { deptTone, levelTone, tones } from "@/lib/tones";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
 
 
 
-const deptTone: Record<string, ToneName> = { EEE: "yellow", CSE: "teal", CE: "lime", ARCH: "pink", ME: "orange", BME: "sky" };
+
 
 export default function LearnPage() {
   return (
@@ -30,13 +31,13 @@ export default function LearnPage() {
       {/* Hub header */}
       <header className="relative isolate overflow-hidden rounded-2xl bg-tile-ink px-6 py-9 text-white sm:px-10 sm:py-12">
         <span aria-hidden className="absolute inset-0 -z-10 bg-[linear-gradient(rgb(255_255_255/0.05)_1px,transparent_1px),linear-gradient(90deg,rgb(255_255_255/0.05)_1px,transparent_1px)] bg-size-[28px_28px]" />
-        <span aria-hidden className="absolute -top-20 -right-20 -z-10 size-72 rounded-full bg-tile-violet/40 blur-3xl" />
+        <span aria-hidden className="absolute -top-20 -right-20 -z-10 size-72 rounded-full bg-brand/40 blur-3xl" />
         <h1 className="text-[clamp(2rem,4.6vw,3.4rem)] leading-none font-black tracking-tight">
           Learning <span className="text-accent-yellow">Hub</span>
         </h1>
-        <div className="mt-6 flex flex-wrap gap-3">
-          <a href="#recipes" className="btn-pill h-11 bg-accent-yellow px-6 text-ink hover:bg-white"><FlaskConical className="size-4" /> {recipes.length} Circuit Recipes</a>
-          <a href="#lab-guides" className="btn-pill h-11 px-6 text-white ring-1 ring-white/30 hover:bg-white/10"><Layers className="size-4" /> {labGuides.length} Lab Guides</a>
+        <div className="mt-7 flex flex-wrap gap-4">
+          <MagicAnchor href="#recipes" variant="accent" rainbow><FlaskConical className="size-4" /> {recipes.length} Circuit Recipes</MagicAnchor>
+          <MagicAnchor href="#lab-guides" variant="light"><Layers className="size-4" /> {labGuides.length} Lab Guides</MagicAnchor>
         </div>
       </header>
 
@@ -48,7 +49,7 @@ export default function LearnPage() {
             <article key={r.slug} className="reveal group relative flex flex-col overflow-hidden rounded-2xl border border-line bg-white transition-shadow hover:shadow-[0_20px_44px_-26px_rgb(0_0_0/0.45)]">
               <div className={cn("relative aspect-4/3 overflow-hidden", tones[r.tone].bg)}>
                 <span aria-hidden className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgb(255_255_255/0.4),transparent_62%)]" />
-                <ProductVisual slug={r.product} alt="" sizes="(min-width:1024px) 300px, (min-width:640px) 50vw, 100vw" inset="p-[14%]" plate="inset-[14%_20%]" className="transition-transform duration-500 group-hover:scale-105 group-hover:-rotate-2" />
+                <ProductVisual slug={r.product} alt="" sizes="(min-width:1024px) 300px, (min-width:640px) 50vw, 100vw" inset="p-[14%]" className="transition-transform duration-500 group-hover:scale-105 group-hover:-rotate-2" />
                 <span className={cn("absolute top-3 left-3 rounded-full px-2.5 py-1 text-[10.5px] font-extrabold", levelTone[r.level])}>{r.level}</span>
               </div>
               <div className="flex flex-1 flex-col gap-2 p-4">

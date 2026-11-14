@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import { MagicFace } from "@/components/ui/magic-button";
 import { cn } from "@/lib/utils";
 
 function Headline({ lines, className }: { lines: [string, string]; className?: string }) {
@@ -23,9 +24,9 @@ function ProductTile({ lines, href, image, alt, tone }: { lines: [string, string
     >
       <div className="relative z-10 flex max-w-[55%] flex-col justify-between gap-6">
         <Headline lines={lines} className="text-[clamp(1.6rem,3vw,2.4rem)] text-ink" />
-        <span className="btn-light w-fit">
+        <MagicFace variant={tone === "yellow" ? "default" : "light"} size="sm" className="w-fit">
           Shop now <ChevronRight className="size-3.5" />
-        </span>
+        </MagicFace>
       </div>
       <Image
         src={image}

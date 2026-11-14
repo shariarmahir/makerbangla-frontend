@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Heart } from "lucide-react";
 import { QuickAdd, WishlistButton } from "@/components/product/product-actions";
+import { MagicLink } from "@/components/ui/magic-button";
 import { useStore } from "@/lib/store";
 import { bdt } from "@/lib/utils";
 
@@ -15,7 +16,7 @@ export function WishlistGrid() {
       <div className="border border-dashed border-line px-6 py-16 text-center">
         <Heart className="mx-auto size-10 text-line" strokeWidth={1.4} />
         <p className="mt-4 text-sm text-subtle">Tap the heart on any product to save it here.</p>
-        <Link href="/shop" className="btn-cta mt-5">Browse the shop</Link>
+        <div className="mt-6"><MagicLink href="/shop" variant="accent">Browse the shop</MagicLink></div>
       </div>
     );
   }

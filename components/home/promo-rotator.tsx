@@ -4,11 +4,11 @@ import { bdt, discount } from "@/lib/utils";
 import { PromoSlides, type Offer } from "./promo-slides";
 
 const plan: { label: string; words: [string, string]; slug: string; tone: ToneName }[] = [
-  { label: "Latest Offer", words: ["Board", "Deals"], slug: "arduino-uno-r3", tone: "red" },
-  { label: "Best Offer", words: ["Solder", "Saver"], slug: "soldering-iron-kit", tone: "blue" },
-  { label: "This Week's Offer", words: ["Measure", "Right"], slug: "vernier-caliper", tone: "teal" },
-  { label: "New Arrival", words: ["Just", "Landed"], slug: "raspberry-pi-4", tone: "violet" },
-  { label: "Top Of The Week", words: ["Motion", "Pick"], slug: "nema17-stepper-motor", tone: "yellow" },
+  { label: "Latest Offer", words: ["Board", "Deals"], slug: "arduino-uno-r3", tone: "yellow" },
+  { label: "Best Offer", words: ["Solder", "Saver"], slug: "soldering-iron-kit", tone: "deep" },
+  { label: "This Week's Offer", words: ["Measure", "Right"], slug: "vernier-caliper", tone: "amber" },
+  { label: "New Arrival", words: ["Just", "Landed"], slug: "raspberry-pi-4", tone: "ink" },
+  { label: "Top Of The Week", words: ["Motion", "Pick"], slug: "nema17-stepper-motor", tone: "teal" },
 ];
 
 const offers: Offer[] = plan.flatMap(({ label, words, slug, tone }) => {
@@ -18,11 +18,12 @@ const offers: Offer[] = plan.flatMap(({ label, words, slug, tone }) => {
   return [{
     label,
     words,
-    badge: off ? `${off}% Off` : p.isNew ? "New In" : bdt(p.price),
+    sticker: off ? { big: `${off}%`, small: "Off" } : p.isNew ? { big: "New", small: "In" } : null,
     note: getCategory(p.category)?.name ?? "",
     name: p.name,
     text: p.summary,
     price: bdt(p.price),
+    oldPrice: p.oldPrice ? bdt(p.oldPrice) : undefined,
     href: `/products/${p.slug}`,
     image: productVisual(p.slug).src,
     bg: tones[tone].bg,

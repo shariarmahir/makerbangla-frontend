@@ -1,20 +1,21 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { ChevronRight } from "lucide-react";
+import { MagicLink } from "@/components/ui/magic-button";
 import { cn } from "@/lib/utils";
 
 export type Offer = {
   label: string;
   words: [string, string];
-  badge: string;
+  sticker: { big: string; small: string } | null;
   note: string;
   name: string;
   text: string;
   price: string;
+  oldPrice?: string;
   href: string;
   image: string;
   bg: string;
@@ -57,25 +58,42 @@ export function PromoSlides({ offers }: { offers: Offer[] }) {
           >
             {/* Left: big type */}
             <motion.div initial={{ opacity: 0, x: -28 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.5, ease }}>
-              <p className="text-[12px] font-extrabold tracking-wider uppercase opacity-90">{o.badge}</p>
+              <p className="text-[13px] font-black tracking-wide tabular-nums">
+                {o.price} {o.oldPrice && <s className="ml-1 font-bold opacity-55">{o.oldPrice}</s>}
+              </p>
               <p className="mt-1 text-[clamp(2.1rem,6.2vw,4.4rem)] leading-[0.84] font-black tracking-tight uppercase">
                 <span className="block">{o.words[0]}</span>
                 <span className="block">{o.words[1]}</span>
               </p>
-              <p className="mt-2.5 text-[11.5px] font-semibold opacity-85">{o.note}</p>
+              <p className="mt-2.5 text-[11.5px] font-bold tracking-wide uppercase opacity-75">{o.note}</p>
             </motion.div>
 
             {/* Centre: product breaking out of the top edge */}
             <div className="relative h-full min-h-40 md:min-h-0">
               <motion.div
-                initial={{ opacity: 0, y: 36, rotate: -8, scale: 0.92 }}
-                animate={{ opacity: 1, y: 0, rotate: -4, scale: 1 }}
-                exit={{ opacity: 0, y: -20, rotate: 4, scale: 0.95 }}
+                initial={{ opacity: 0, y: 36, rotate: -6, scale: 0.92 }}
+                animate={{ opacity: 1, y: 0, rotate: -3, scale: 1 }}
+                exit={{ opacity: 0, y: -20, rotate: 3, scale: 0.95 }}
                 transition={{ duration: 0.6, ease }}
-                className="absolute inset-x-0 -top-14 -bottom-4 sm:-top-20 md:-top-24 md:-bottom-2"
+                className="absolute inset-x-[6%] -top-12 bottom-0 sm:-top-16 md:-top-20"
               >
-                <Image src={o.image} alt={o.name} fill sizes="(min-width:768px) 380px, 42vw" className="cutout-shadow object-contain" />
+                <Image src={o.image} alt={o.name} fill sizes="(min-width:768px) 380px, 42vw" quality={85} className="cutout-shadow object-contain object-bottom" />
               </motion.div>
+              {o.sticker && (
+                <motion.p
+                  initial={{ scale: 0, rotate: -40 }}
+                  animate={{ scale: 1, rotate: -12 }}
+                  exit={{ scale: 0 }}
+                  transition={{ type: "spring", stiffness: 320, damping: 14, delay: 0.25 }}
+                  className={cn(
+                    "absolute -top-14 left-0 z-10 grid size-[4.6rem] place-content-center rounded-full text-center leading-none shadow-[0_10px_24px_-8px_rgb(0_0_0/0.45)] sm:-top-16 sm:size-24 md:-top-20",
+                    o.dark ? "bg-accent-yellow text-ink" : "bg-tile-coral text-white",
+                  )}
+                >
+                  <span className="text-[1.45rem] font-black tracking-tight tabular-nums sm:text-[1.9rem]">{o.sticker.big}</span>
+                  <span className="mt-0.5 text-[0.7rem] font-black tracking-[0.2em] uppercase sm:text-[0.8rem]">{o.sticker.small}</span>
+                </motion.p>
+              )}
             </div>
 
             {/* Right: details + CTA */}
@@ -84,14 +102,16 @@ export function PromoSlides({ offers }: { offers: Offer[] }) {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 20 }}
               transition={{ duration: 0.5, ease, delay: 0.08 }}
-              className="col-span-2 md:col-span-1"
+              className="relative z-10 col-span-2 md:col-span-1"
             >
-              <p className="text-[12px] font-bold opacity-90">{o.label}</p>
-              <p className="mt-1 text-[clamp(1.25rem,2.2vw,1.75rem)] leading-tight font-extrabold tracking-tight">{o.name}</p>
+              <p className="text-[12px] font-black tracking-wide uppercase opacity-80">{o.label}</p>
+              <p className="mt-1 line-clamp-2 text-[clamp(1.2rem,2vw,1.6rem)] leading-tight font-black tracking-tight">{o.name}</p>
               <p className="mt-1.5 line-clamp-2 max-w-sm text-[12.5px] leading-relaxed opacity-90">{o.text}</p>
-              <Link href={o.href} className="btn-pill mt-4 h-9 bg-white px-5 text-ink shadow-sm hover:shadow-md">
-                Shop · {o.price} <ChevronRight className="size-3.5" />
-              </Link>
+              <div className="mt-4">
+                <MagicLink href={o.href} variant={o.dark ? "accent" : "light"} size="sm">
+                  Shop now <ChevronRight className="size-3.5" />
+                </MagicLink>
+              </div>
             </motion.div>
           </motion.div>
         </AnimatePresence>

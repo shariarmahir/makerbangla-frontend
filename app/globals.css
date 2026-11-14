@@ -18,19 +18,16 @@
   --color-stage: #eceeef;
   --color-warn: #a86a12;
 
-  /* Colourful tiles — product stages, category heads, promos */
+  /* Colourful tiles — logo teal + charcoal, yellow accent, warm amber, coral only for sales */
   --color-tile-yellow: #f8c928;
+  --color-tile-butter: #fbe29a;
+  --color-tile-amber: #f4a51c;
   --color-tile-teal: #3fb0b2;
-  --color-tile-red: #ef5350;
-  --color-tile-blue: #4f7cff;
-  --color-tile-green: #2fbf71;
-  --color-tile-violet: #8b6cf6;
-  --color-tile-orange: #ff8c42;
-  --color-tile-pink: #f472b6;
-  --color-tile-sky: #4cc3f5;
-  --color-tile-lime: #b5dc4c;
+  --color-tile-aqua: #bfe6e7;
+  --color-tile-deep: #157d80;
   --color-tile-ink: #24262b;
-  --color-tile-cloud: #e9ebee;
+  --color-tile-cloud: #e8eaed;
+  --color-tile-coral: #ef6a5a;
   --color-hero-a: #fbfbfc;
   --color-hero-b: #dfe1e5;
 
@@ -60,6 +57,7 @@
   --animate-rise: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
   --animate-float: float 6s ease-in-out infinite;
   --animate-marquee: marquee 40s linear infinite;
+  --animate-magic-rainbow: magic-rainbow 3s linear infinite;
 }
 
 :root {
@@ -80,6 +78,25 @@
   --input: #e6e8eb;
   --ring: #3fb0b2;
   --radius: 0.375rem;
+
+  /* MagicButton */
+  --rainbow-1: #3fb0b2;
+  --rainbow-2: #f8c928;
+  --rainbow-3: #157d80;
+  --rainbow-4: #f4a51c;
+  --rainbow-5: #7fd6d8;
+  --button-px-sm: 0.875rem;
+  --button-py-sm: 0.5rem;
+  --button-text-sm: 0.75rem;
+  --button-leading-sm: 1rem;
+  --button-px-md: 1.25rem;
+  --button-py-md: 0.65rem;
+  --button-text-md: 0.8125rem;
+  --button-leading-md: 1.25rem;
+  --button-px-lg: 1.75rem;
+  --button-py-lg: 0.85rem;
+  --button-text-lg: 0.9375rem;
+  --button-leading-lg: 1.5rem;
 }
 
 @layer base {
@@ -110,23 +127,11 @@
   .rail {
     @apply flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
   }
-  .btn-cta {
-    @apply inline-flex h-10 items-center justify-center gap-2 rounded-sm bg-accent-yellow px-5 text-[11px] font-bold tracking-wider text-ink uppercase transition-[background-color,transform] duration-200 hover:bg-[#ffd84d] active:translate-y-px;
-  }
-  .btn-light {
-    @apply inline-flex h-9 items-center justify-center gap-1.5 rounded-sm bg-white px-4 text-[11px] font-bold tracking-wider text-ink uppercase transition-colors duration-200 hover:bg-accent-yellow;
-  }
-  .btn-dark {
-    @apply inline-flex h-10 items-center justify-center gap-2 rounded-sm bg-ink px-5 text-[11px] font-bold tracking-wider text-white uppercase transition-colors duration-200 hover:bg-brand-strong;
-  }
-  .btn-pill {
-    @apply inline-flex h-10 items-center justify-center gap-2 rounded-full px-6 text-[12px] font-bold tracking-wide transition-[background-color,transform,box-shadow] duration-200 active:scale-[0.97];
-  }
   .section-title {
     @apply text-xl font-extrabold tracking-tight text-ink sm:text-2xl;
   }
   .text-gradient {
-    @apply bg-linear-to-r from-brand-strong via-tile-violet to-sale bg-clip-text text-transparent;
+    @apply bg-linear-to-r from-brand-strong via-brand to-tile-amber bg-clip-text text-transparent;
   }
   .cutout-shadow {
     filter: drop-shadow(0 14px 16px rgb(0 0 0 / 0.26));
@@ -139,6 +144,12 @@
 @keyframes float {
   50% {
     transform: translateY(-10px);
+  }
+}
+
+@keyframes magic-rainbow {
+  to {
+    background-position: 200% 0;
   }
 }
 

@@ -6,25 +6,30 @@ import { bdt, cn, discount } from "@/lib/utils";
 import { BuyNow, QuickAdd, WishlistButton } from "./product-actions";
 import { ProductVisual } from "./product-visual";
 
-export function Price({ price, oldPrice, className }: { price: number; oldPrice?: number; className?: string }) {
+/** Grid for product cards: extra row gap + top padding so products can break out of the card top. */
+export const productGrid = "grid grid-cols-2 gap-x-3 gap-y-14 pt-12 sm:grid-cols-3 sm:gap-x-5 xl:grid-cols-4";
+
+export function Price({ price, oldPrice, className, showOff }: { price: number; oldPrice?: number; className?: string; showOff?: boolean }) {
+  const off = discount(price, oldPrice);
   return (
     <p className={cn("flex flex-wrap items-baseline gap-x-2 tabular-nums", className)}>
-      <span className="font-extrabold text-ink">{bdt(price)}</span>
-      {oldPrice ? <s className="text-[0.75em] font-medium text-subtle">{bdt(oldPrice)}</s> : null}
+      <span className="font-black">{bdt(price)}</span>
+      {oldPrice ? <s className="text-[0.72em] font-semibold opacity-60">{bdt(oldPrice)}</s> : null}
+      {showOff && off > 0 ? <span className="text-[0.82em] font-black text-sale">-{off}%</span> : null}
     </p>
   );
 }
 
-export function StockCue({ stock }: { stock: number }) {
-  if (stock <= 0) return <span className="text-[10.5px] font-semibold text-sale">Out of stock</span>;
+export function StockCue({ stock, className }: { stock: number; className?: string }) {
+  if (stock <= 0) return <span className={cn("text-[10.5px] font-bold text-sale", className)}>Out of stock</span>;
   return (
-    <span className={cn("shrink-0 text-[10.5px] font-semibold whitespace-nowrap", stock < 10 ? "text-warn" : "text-brand-strong")}>
+    <span className={cn("shrink-0 text-[10.5px] font-bold whitespace-nowrap", stock < 10 ? "text-warn" : "text-brand-strong", className)}>
       {stock < 10 ? `Only ${stock} left` : "In stock"}
     </span>
   );
 }
 
-export function ProductCard({ product, className, sizes = "(min-width:1024px) 220px, (min-width:640px) 30vw, 45vw" }: {
+export function ProductCard({ product, className, sizes = "(min-width:1280px) 300px, (min-width:640px) 32vw, 48vw" }: {
   product: Product;
   className?: string;
   sizes?: string;
@@ -34,35 +39,44 @@ export function ProductCard({ product, className, sizes = "(min-width:1024px) 22
   const href = `/products/${product.slug}`;
   const tone = categoryTone(product.category);
   return (
-    <article className={cn("group relative flex flex-col bg-white p-2.5 sm:p-3", className)}>
-      <div className={cn("relative aspect-square overflow-hidden rounded-lg", tone.bg)}>
-        <span aria-hidden className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgb(255_255_255/0.38),transparent_62%)]" />
-        <Link href={href} tabIndex={-1} aria-hidden className="absolute inset-0">
-          <ProductVisual slug={product.slug} alt={product.name} sizes={sizes} className="transition-transform duration-500 ease-out group-hover:scale-[1.06]" />
-        </Link>
-        {off > 0 && (
-          <span className="absolute top-2 left-2 rounded-full bg-white px-2 py-0.5 text-[10.5px] font-extrabold text-sale shadow-sm">-{off}%</span>
-        )}
-        {!off && product.isNew && (
-          <span className="absolute top-2 left-2 rounded-full bg-ink px-2 py-0.5 text-[10.5px] font-extrabold text-white">NEW</span>
-        )}
-        <WishlistButton product={ref} className="absolute top-2 right-2 shadow-sm" />
-        <div className="absolute right-2 bottom-2 translate-y-1 opacity-100 transition-[opacity,translate] duration-200 sm:opacity-0 sm:group-focus-within:translate-y-0 sm:group-focus-within:opacity-100 sm:group-hover:translate-y-0 sm:group-hover:opacity-100">
-          <QuickAdd product={ref} disabled={product.stock <= 0} />
-        </div>
-      </div>
-      <div className="mt-3 flex flex-1 flex-col gap-1 px-0.5">
-        <Price price={product.price} oldPrice={product.oldPrice} className="text-[14.5px]" />
-        <h3 className="line-clamp-2 min-h-[2.6em] text-[13px] leading-[1.3] font-semibold text-ink">
-          <Link href={href} className="transition-colors hover:text-brand-strong">
-            {product.name}
-          </Link>
+    <article
+      className={cn(
+        "group relative isolate flex flex-col rounded-[22px] shadow-[0_28px_40px_-30px_rgb(0_0_0/0.55)] transition-[translate,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_34px_48px_-30px_rgb(0_0_0/0.6)]",
+        tone.bg,
+        tone.text,
+        className,
+      )}
+    >
+      {/* Product breaks out of the top edge and dissolves into the card colour */}
+      <Link href={href} tabIndex={-1} aria-hidden className="relative -mt-11 block aspect-[1/0.92]">
+        <ProductVisual
+          slug={product.slug}
+          alt={product.name}
+          sizes={sizes}
+          fade
+          position="object-bottom"
+          inset="px-[7%] pt-0 pb-[4%]"
+          className="transition-transform duration-500 ease-out group-hover:scale-[1.05] group-hover:-rotate-2"
+        />
+      </Link>
+
+      {!off && product.isNew && <span className="absolute top-3.5 left-4 z-10 text-[11px] font-black tracking-[0.14em] uppercase">New</span>}
+      <WishlistButton product={ref} className="absolute top-1.5 right-2 z-10" />
+
+      <div className="flex flex-1 flex-col px-4 pb-4 sm:px-5 sm:pb-5">
+        <p className={cn("text-[10px] font-extrabold tracking-[0.14em] uppercase", tone.muted)}>{getCategory(product.category)?.name}</p>
+        <h3 className="mt-1.5 line-clamp-2 text-[15px] leading-[1.22] font-black tracking-tight sm:text-[16px]">
+          <Link href={href} className="hover:underline hover:decoration-2 hover:underline-offset-4">{product.name}</Link>
         </h3>
-        <div className="flex items-center justify-between gap-2">
-          <span className="truncate text-[11px] text-subtle">{getCategory(product.category)?.name}</span>
-          <StockCue stock={product.stock} />
+        <p className={cn("mt-1.5 line-clamp-2 text-[11.5px] leading-snug sm:text-[12px]", tone.muted)}>{product.summary}</p>
+
+        <div className="mt-auto pt-4">
+          <div className="flex items-end justify-between gap-2">
+            <Price price={product.price} oldPrice={product.oldPrice} showOff className="text-[16px] sm:text-[17px]" />
+            <QuickAdd product={ref} disabled={product.stock <= 0} className="-mr-1.5 -mb-1" />
+          </div>
+          <BuyNow product={ref} disabled={product.stock <= 0} variant={tone.dark ? "accent" : "default"} className="mt-3 w-full" />
         </div>
-        <BuyNow product={ref} disabled={product.stock <= 0} className="mt-2.5" />
       </div>
     </article>
   );

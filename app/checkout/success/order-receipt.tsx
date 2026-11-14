@@ -1,11 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState, useSyncExternalStore } from "react";
 import { motion } from "motion/react";
 import { Check, Download, Loader2, Printer, ShoppingBag } from "lucide-react";
+import { MagicButton, MagicLink } from "@/components/ui/magic-button";
 import { getOrder } from "@/lib/orders-store";
 import { site } from "@/lib/site";
 import { bdt } from "@/lib/utils";
@@ -25,7 +25,7 @@ export function OrderReceipt() {
       <div className="mx-auto max-w-lg rounded-2xl border border-dashed border-line px-6 py-16 text-center">
         <p className="text-[15px] font-bold">We couldn’t find this order on this device.</p>
         <p className="mt-2 text-[13px] text-subtle">If you placed it on another phone or browser, open the receipt there — or call {site.phone}.</p>
-        <Link href="/shop" className="btn-pill mt-6 h-11 bg-ink px-6 text-white hover:bg-brand-strong">Continue shopping</Link>
+        <div className="mt-6"><MagicLink href="/shop">Continue shopping</MagicLink></div>
       </div>
     );
   }
@@ -39,7 +39,7 @@ export function OrderReceipt() {
           initial={{ scale: 0.4, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ type: "spring", stiffness: 260, damping: 16 }}
-          className="mx-auto grid size-16 place-items-center rounded-full bg-tile-green text-white shadow-[0_12px_30px_-10px_var(--color-tile-green)]"
+          className="mx-auto grid size-16 place-items-center rounded-full bg-brand text-white shadow-[0_12px_30px_-10px_var(--color-brand)]"
         >
           <Check className="size-8" strokeWidth={3} />
         </motion.span>
@@ -55,8 +55,10 @@ export function OrderReceipt() {
           </p>
         )}
         <div className="mt-6 flex flex-wrap justify-center gap-3">
-          <button
+          <MagicButton
             type="button"
+            variant="accent"
+            rainbow
             disabled={busy}
             onClick={async () => {
               setBusy(true);
@@ -66,22 +68,21 @@ export function OrderReceipt() {
                 setBusy(false);
               }
             }}
-            className="btn-pill h-11 bg-ink px-6 text-white hover:bg-brand-strong disabled:opacity-60"
           >
             {busy ? <Loader2 className="size-4 animate-spin" /> : <Download className="size-4" />} Download receipt
-          </button>
-          <button type="button" onClick={() => window.print()} className="btn-pill h-11 px-6 ring-1 ring-line hover:bg-soft">
+          </MagicButton>
+          <MagicButton type="button" variant="default" rainbow={false} onClick={() => window.print()}>
             <Printer className="size-4" /> Print
-          </button>
-          <Link href="/shop" className="btn-pill h-11 px-6 text-brand-strong hover:bg-brand/10">
+          </MagicButton>
+          <MagicLink href="/shop" variant="secondary">
             <ShoppingBag className="size-4" /> Continue shopping
-          </Link>
+          </MagicLink>
         </div>
       </div>
 
       {/* Printable receipt */}
       <article className="mt-8 overflow-hidden rounded-2xl border border-line bg-white print:mt-0 print:border-0">
-        <div className="h-1.5 bg-linear-to-r from-brand-strong via-tile-violet to-sale" />
+        <div className="h-1.5 bg-linear-to-r from-brand-strong via-brand to-tile-yellow" />
         <header className="flex flex-wrap items-start justify-between gap-4 border-b border-line p-6">
           <div>
             <Image src="/brand/logo.png" alt={site.name} width={416} height={144} className="h-10 w-auto" />

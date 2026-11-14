@@ -27,14 +27,14 @@ export function Countdown() {
 
   return (
     <div>
-      <p className="mb-1.5 text-[10.5px] text-subtle">Sale ends in</p>
-      <div className="inline-flex divide-x divide-line border border-line" role="timer" aria-live="off">
+      <p className="mb-1.5 text-[10.5px] font-bold tracking-wider uppercase opacity-70">Sale ends in</p>
+      <div className="inline-flex gap-1.5" role="timer" aria-live="off">
         {units.map(([label, size], i) => {
           const value = left === null ? null : i === 0 ? Math.floor(left / size) : Math.floor((left % units[i - 1][1]) / size);
           return (
-            <span key={label} className="flex w-11 flex-col items-center py-1">
-              <span className="text-[14px] font-bold text-sale tabular-nums">{value === null ? "--" : String(value).padStart(2, "0")}</span>
-              <span className="text-[8.5px] tracking-wide text-subtle uppercase">{label}</span>
+            <span key={label} className="flex w-12 flex-col items-center rounded-lg bg-black/[0.07] py-1.5">
+              <span className="text-[16px] font-black tabular-nums">{value === null ? "--" : String(value).padStart(2, "0")}</span>
+              <span className="text-[8.5px] font-bold tracking-wide uppercase opacity-70">{label}</span>
             </span>
           );
         })}

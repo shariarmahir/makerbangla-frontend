@@ -41,11 +41,14 @@ Makerbangla.com — "Let's Make a Better World". An education-first e-commerce s
 ## Design rules
 
 - Visual reference: AUTOZPRO-style dense retail layout, colourful Gen-Z tiles. Section order on `/` must stay: top bar → header → nav → component finder (yellow) → hero (watermark style) → category rail → campaign tiles → animated feature strip → deals + newsletter → promo rotator → category showcase rows → closing promos → brand strip → Education Hub + Make Your Recipe → two more category rows → Tech Insights → contact CTA → footer.
-- Tokens live in `app/globals.css` (`--color-brand`, `--color-accent-yellow`, `--color-ink`, `--color-sale`, `--color-tile-*` stage colours, `--color-soft`, `--color-line`). Never hard-code hex values in components.
+- Tokens live in `app/globals.css` (`--color-brand`, `--color-accent-yellow`, `--color-ink`, `--color-sale`, `--color-tile-*`, `--color-soft`, `--color-line`). Never hard-code hex values in components (Simple Icons brand colours are data, not styling).
+- Palette is logo-led: teal (`tile-teal`, `tile-aqua`, `tile-deep`) + charcoal (`tile-ink`) with yellow as the main accent (`tile-yellow`, `tile-butter`, `tile-amber`); coral only for sale/advanced highlights. No greens, pinks, violets or blues. Tones per category/level/department live in `lib/tones.ts`.
+- Product cards (`components/product/product-card.tsx`): solid tone card, product cut-out breaking out of the top edge and fading into the card, uppercase category label, bold title, two-line summary, price, Buy Now. No chip/background behind the heart, the discount or any text. Wrap cards in `productGrid` (extra top padding/row gap for the overflow) — never `overflow-hidden` on a card grid.
+- All buttons use `components/ui/magic-button.tsx` (3D push button): `MagicButton` (button), `MagicLink` (Next link), `MagicAnchor` (tel/mailto/hash), `MagicFace` (visual only, inside an already-clickable card). `rainbow` (brand-colour animated edge) only on primary CTAs; small icon buttons (heart, quick-add, qty, carousel arrows) stay plain.
 - Prices are shown as "BDT 1,250" via `bdt()` — never the ৳ glyph.
 - Font: Inter via `next/font`; prices use tabular numerals (`tabular-nums`).
 - Copy: no eyebrow labels above headings and no filler sub-notes under them. Keep it clean.
-- Product images sit on colourful category stages via `ProductVisual`: transparent cut-outs (`public/images/cutouts`, generated from the photos by background flood-fill) float with `.cutout-shadow`; photos without a clean background sit on a white rounded plate.
+- Product images use `ProductVisual`: transparent cut-outs (`public/images/cutouts`, made from the hi-res photos with an ML background-removal model, max 1400px) float with `.cutout-shadow`. Never put a white plate or border behind a product image.
 - Motion: CSS for hover/reveal/marquee; `motion` only for lucide-animated icons, the promo rotator and the order-success check. Everything respects `prefers-reduced-motion`.
 
 ## Data honesty

@@ -9,20 +9,15 @@
     "license": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:AM2302_(DHT22)_digital_temperature_and_humidity_sensor_module.jpg"
   },
-  "pir-motion-sensor": {
-    "author": "Lethalattraction",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:PIR-inexpensive.jpg"
-  },
   "acs712-current-sensor": {
     "author": "SparkFun",
     "license": "CC BY 2.0",
     "source": "https://commons.wikimedia.org/wiki/File:SparkFun_ACS712_HallSensor_08882-01.jpg"
   },
   "arduino-uno-r3": {
-    "author": "SparkFun Electronics from Boulder, USA",
-    "license": "CC BY 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Arduino_Uno_-_R3.jpg"
+    "author": "MakeMagazinDE",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Arduino_uno_r3_isometr.jpg"
   },
   "arduino-mega-2560": {
     "author": "Dsimic",
@@ -117,12 +112,12 @@
   "lcd-16x2-i2c": {
     "author": "Retired electrician",
     "license": "CC0",
-    "source": "https://commons.wikimedia.org/wiki/File:MELT_16x2_LCD_alphanumeric_display_07(DXO).jpg"
+    "source": "https://commons.wikimedia.org/wiki/File:MELT_16x2_LCD_alphanumeric_display_04(DXO).jpg"
   },
   "seven-segment-display": {
-    "author": "RetroEditor",
+    "author": "Mister rf",
     "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:LED_7_Segment_Display.jpg"
+    "source": "https://commons.wikimedia.org/wiki/File:FND500.jpg"
   },
   "relay-module-5v": {
     "author": "Suyash Dwivedi",
@@ -175,14 +170,9 @@
     "source": "https://commons.wikimedia.org/wiki/File:Digital_universal_multimeter_(ubt).jpeg"
   },
   "digital-oscilloscope": {
-    "author": "Radarvector",
+    "author": "Draconichiaro",
     "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Digital_oscilloscope_in_use.jpg"
-  },
-  "function-generator": {
-    "author": "Anselm Schüler",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Function_Generator_FG100.jpg"
+    "source": "https://commons.wikimedia.org/wiki/File:RIGOL_DS1054Z_Digital_Storage_Oscilloscope.jpg"
   },
   "bench-power-supply": {
     "author": "Derrick Parker",
@@ -195,9 +185,9 @@
     "source": "https://commons.wikimedia.org/wiki/File:8_Channel_USB_logic_analyzer_(5172098012).jpg"
   },
   "pulse-oximeter": {
-    "author": "ParasharSarthak",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Pulse_Oximeter_Blue_Colour.jpg"
+    "author": "Thinkpaul",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:FingertipPulseOximeterMD300C2.jpg"
   },
   "soldering-station": {
     "author": "YuriyTer",
@@ -279,11 +269,6 @@
     "license": "CC BY-SA 2.5",
     "source": "https://commons.wikimedia.org/wiki/File:Cono_de_Abrams_01.jpg"
   },
-  "ph-meter": {
-    "author": "Pakideadithya",
-    "license": "CC BY 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Digital_pH_meter_.jpg"
-  },
   "turbidity-meter": {
     "author": "Unknown",
     "license": "Public domain",
@@ -313,21 +298,6 @@
     "author": "Central Intelligence Agency from Washington, D.C.",
     "license": "Public domain",
     "source": "https://commons.wikimedia.org/wiki/File:Triangular_24-Inch_Engineering_Scale_(30245415113).jpg"
-  },
-  "balsa-wood-sheets": {
-    "author": "Joseph Francis",
-    "license": "CC BY 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Balsa_Wood_Texture.jpg"
-  },
-  "foam-board": {
-    "author": "Sweetie candykim",
-    "license": "CC0",
-    "source": "https://commons.wikimedia.org/wiki/File:Foamboard.JPG"
-  },
-  "lux-meter": {
-    "author": "Hannes Grobe",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Photometer-skalar-1_hg.jpg"
   },
   "anemometer": {
     "author": "Tpdwkouaa",

@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { ChevronRight, Loader2 } from "lucide-react";
 import { subscribe } from "@/app/actions";
+import { MagicButton } from "@/components/ui/magic-button";
 import { cn } from "@/lib/utils";
 
 export function Newsletter() {
@@ -24,9 +25,9 @@ export function Newsletter() {
         />
       </label>
       <input type="text" name="company" tabIndex={-1} autoComplete="off" aria-hidden className="hidden" />
-      <button type="submit" disabled={pending} className="btn-cta mt-3 w-full">
+      <MagicButton type="submit" disabled={pending} variant="accent" rainbow={false} className="mt-4 w-full">
         {pending ? <Loader2 className="size-4 animate-spin" /> : <>Subscribe <ChevronRight className="size-3.5" /></>}
-      </button>
+      </MagicButton>
       <p role="status" className={cn("mt-3 min-h-4 text-[11px]", state?.ok ? "text-brand-strong" : "text-sale")}>
         {state?.message}
       </p>
