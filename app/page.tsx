@@ -58,8 +58,21 @@ export default function HomePage() {
       <CampaignTiles />
       <FeatureStrip />
       <Deals />
+      <CategoryShowcase
+        rows={[
+          { slug: "sensors", image: "hc-sr04-ultrasonic-sensor" },
+          { slug: "motors", image: "nema17-stepper-motor" },
+        ]}
+      />
       <PromoRotator />
-      <CategoryShowcase />
+      <CategoryShowcase
+        label="More categories"
+        className="pt-0 sm:pt-0"
+        rows={[
+          { slug: "power", image: "lm2596-buck-converter" },
+          { slug: "microcontrollers", image: "arduino-uno-r3" },
+        ]}
+      />
       <PromoBanners />
       <BrandStrip />
       <EduHub />

@@ -1,26 +1,25 @@
-import { getCategory, getProduct, productVisual } from "@/lib/catalog";
+import { getProduct, productVisual } from "@/lib/catalog";
 import { tones, type ToneName } from "@/lib/tones";
-import { bdt, discount } from "@/lib/utils";
+import { bdt } from "@/lib/utils";
 import { PromoSlides, type Offer } from "./promo-slides";
 
-const plan: { label: string; words: [string, string]; slug: string; tone: ToneName }[] = [
-  { label: "Latest Offer", words: ["Board", "Deals"], slug: "arduino-uno-r3", tone: "yellow" },
-  { label: "Best Offer", words: ["Solder", "Saver"], slug: "soldering-iron-kit", tone: "navy" },
-  { label: "This Week's Offer", words: ["Measure", "Right"], slug: "vernier-caliper", tone: "blue" },
-  { label: "New Arrival", words: ["Just", "Landed"], slug: "raspberry-pi-4", tone: "midnight" },
-  { label: "Top Of The Week", words: ["Motion", "Pick"], slug: "nema17-stepper-motor", tone: "sky" },
+/** `title` is the short one-line name shown on the banner (the full name stays in the image alt). */
+const plan: { label: string; words: [string, string]; slug: string; title: string; tone: ToneName }[] = [
+  { label: "Latest Offer", words: ["Board", "Deals"], slug: "arduino-uno-r3", title: "Arduino Uno R3", tone: "yellow" },
+  { label: "Best Offer", words: ["Solder", "Saver"], slug: "soldering-iron-kit", title: "Soldering Iron Kit, 60 W", tone: "navy" },
+  { label: "This Week's Offer", words: ["Measure", "Right"], slug: "vernier-caliper", title: "Digital Vernier Caliper", tone: "blue" },
+  { label: "New Arrival", words: ["Just", "Landed"], slug: "raspberry-pi-4", title: "Raspberry Pi 4 · 4 GB", tone: "midnight" },
+  { label: "Top Of The Week", words: ["Motion", "Pick"], slug: "nema17-stepper-motor", title: "NEMA 17 Stepper Motor", tone: "sky" },
 ];
 
-const offers: Offer[] = plan.flatMap(({ label, words, slug, tone }) => {
+const offers: Offer[] = plan.flatMap(({ label, words, slug, title, tone }) => {
   const p = getProduct(slug);
   if (!p) return [];
-  const off = discount(p.price, p.oldPrice);
   return [{
     label,
     words,
-    sticker: off ? { big: `${off}%`, small: "Off" } : p.isNew ? { big: "New", small: "In" } : null,
-    note: getCategory(p.category)?.name ?? "",
     name: p.name,
+    title,
     text: p.summary,
     price: bdt(p.price),
     oldPrice: p.oldPrice ? bdt(p.oldPrice) : undefined,
@@ -36,8 +35,11 @@ const offers: Offer[] = plan.flatMap(({ label, words, slug, tone }) => {
 
 export function PromoRotator() {
   return (
-    <section aria-label="Offers" className="container-x reveal pt-16 pb-4 sm:pt-20">
-      <PromoSlides offers={offers} />
+    // Sits between the category rows on the same soft background, so it reads as a break in one flow.
+    <section aria-label="Offers" className="bg-soft">
+      <div className="container-x reveal pt-14 pb-10 sm:pt-16 sm:pb-12">
+        <PromoSlides offers={offers} />
+      </div>
     </section>
   );
 }

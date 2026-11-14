@@ -4,6 +4,7 @@ import { toRef } from "@/lib/catalog";
 import { categoryTone } from "@/lib/tones";
 import { bdt, cn, discount } from "@/lib/utils";
 import { BuyNow, QuickAdd, WishlistButton } from "./product-actions";
+import { OfferBadge } from "./offer-badge";
 import { ProductVisual } from "./product-visual";
 
 /** Grid for product cards: extra row gap + top padding so products can break out of the card top. */
@@ -62,12 +63,9 @@ export function ProductCard({ product, className, sizes = "(min-width:1280px) 30
         />
       </Link>
 
-      {/* Offer callout, top-left — plain bold type, no chip */}
+      {/* Ad-style offer sticker on the top-left corner */}
       {off > 0 ? (
-        <p className={cn("pointer-events-none absolute top-3 left-4 z-10 flex flex-col leading-none font-black tabular-nums", tone.offer)}>
-          <span className="text-[20px] tracking-tight sm:text-[22px]">{off}%</span>
-          <span className="mt-0.5 text-[9.5px] tracking-[0.2em] uppercase">Off</span>
-        </p>
+        <OfferBadge off={off} dark={tone.dark} className="absolute -top-3 -left-2 z-20 sm:-top-4 sm:-left-3" />
       ) : product.isNew ? (
         <p className={cn("pointer-events-none absolute top-3.5 left-4 z-10 text-[11px] font-black tracking-[0.18em] uppercase", tone.offer)}>New</p>
       ) : null}

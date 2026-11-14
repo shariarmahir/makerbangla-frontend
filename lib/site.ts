@@ -17,11 +17,15 @@ export const site = {
 export const mainNav = [
   { label: "Home", href: "/" },
   { label: "Shop", href: "/shop" },
+  { label: "New Arrivals", href: "/shop?collection=new" },
+  { label: "Discount", href: "/shop?collection=deals" },
   { label: "Brands", href: "/brands" },
   { label: "Learning Hub", href: "/learn" },
   { label: "Lab Guides", href: "/learn#lab-guides" },
   { label: "Tech Insights", href: "/blog" },
+  { label: "Info", href: "/info" },
   { label: "Contact", href: "#contact" },
+  { label: "Sign in", href: "/account" },
 ] as const;
 
 /** Delivery options shown at checkout. Fees are placeholders until confirmed by the business. */

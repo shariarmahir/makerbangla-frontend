@@ -8,11 +8,11 @@ import { MagicAnchor, MagicLink } from "@/components/ui/magic-button";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { cart, cartCount, cartTotal, useStore } from "@/lib/store";
 import { site } from "@/lib/site";
-import { bdt } from "@/lib/utils";
+import { bdt, cn } from "@/lib/utils";
 
 function Badge({ n }: { n: number }) {
   return (
-    <span className="absolute -top-1.5 -right-2 grid h-4 min-w-4 place-items-center rounded-full bg-sale px-1 text-[9px] leading-none font-bold text-white tabular-nums">
+    <span className="absolute -top-1 -right-1 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-sale px-1 text-[9.5px] leading-none font-bold text-white tabular-nums ring-2 ring-white">
       {n > 99 ? "99+" : n}
     </span>
   );
@@ -21,8 +21,12 @@ function Badge({ n }: { n: number }) {
 export function WishlistLink() {
   const n = useStore((s) => s.wishlist.length);
   return (
-    <Link href="/wishlist" aria-label={`Wishlist, ${n} items`} className="relative grid size-9 place-items-center text-ink transition-colors hover:text-brand-strong">
-      <Heart className="size-[22px]" strokeWidth={1.6} />
+    <Link
+      href="/wishlist"
+      aria-label={`Wishlist, ${n} items`}
+      className="group relative grid size-10 place-items-center text-sale transition-transform hover:scale-110"
+    >
+      <Heart className={cn("size-[25px] transition-[fill] group-hover:fill-current", n > 0 && "fill-current")} strokeWidth={2.1} />
       {n > 0 && <Badge n={n} />}
     </Link>
   );
@@ -37,8 +41,9 @@ export function CartButton() {
   return (
     <>
       <button type="button" onClick={() => setOpen(true)} className="flex items-center gap-2.5 text-left" aria-label={`Open cart, ${count} items`}>
-        <span className="relative grid size-9 place-items-center text-ink">
-          <ShoppingCart className="size-[22px]" strokeWidth={1.6} />
+        {/* Yellow cart with a periodic nudge to draw the eye */}
+        <span className="relative grid size-10 place-items-center rounded-full bg-tile-yellow text-tile-navy shadow-[0_8px_16px_-8px_rgb(180_130_0/0.8)]">
+          <ShoppingCart className="size-[19px] motion-safe:animate-cart-nudge" strokeWidth={2.3} />
           {count > 0 && <Badge n={count} />}
         </span>
         <span className="hidden leading-tight xl:block">

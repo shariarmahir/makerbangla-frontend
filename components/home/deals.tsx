@@ -4,6 +4,7 @@ import { categoryTone } from "@/lib/tones";
 import { cn, discount } from "@/lib/utils";
 import { Price } from "@/components/product/product-card";
 import { BuyNow, QuickAdd, WishlistButton } from "@/components/product/product-actions";
+import { OfferBadge } from "@/components/product/offer-badge";
 import { ProductVisual } from "@/components/product/product-visual";
 import { Carousel } from "./carousel";
 import { Countdown } from "./countdown";
@@ -31,18 +32,7 @@ export function Deals() {
                   <Link href={`/products/${p.slug}`} tabIndex={-1} aria-hidden className="group relative aspect-square">
                     <span className="absolute inset-[10%] rounded-full bg-white/25 blur-2xl" />
                     <ProductVisual slug={p.slug} alt={p.name} sizes="(min-width:768px) 200px, 40vw" inset="p-[6%]" className="transition-transform duration-500 group-hover:scale-105 group-hover:-rotate-2" />
-                    {off > 0 && (
-                      // Same round sticker as the offer banner, scaled down
-                      <span
-                        className={cn(
-                          "absolute -top-1 -left-1 grid size-14 -rotate-12 place-content-center rounded-full text-center leading-none shadow-[0_8px_18px_-6px_rgb(0_0_0/0.45)] motion-safe:animate-sticker-pop sm:size-16",
-                          tone.dark ? "bg-accent-yellow text-tile-navy" : "bg-tile-coral text-white",
-                        )}
-                      >
-                        <span className="text-[1.05rem] font-black tracking-tight tabular-nums sm:text-[1.2rem]">{off}%</span>
-                        <span className="mt-0.5 text-[0.55rem] font-black tracking-[0.2em] uppercase">Off</span>
-                      </span>
-                    )}
+                    {off > 0 && <OfferBadge off={off} dark={tone.dark} size="md" className="absolute -top-2 -left-2 z-10" />}
                   </Link>
 
                   <div className="flex min-w-0 flex-col pt-1">

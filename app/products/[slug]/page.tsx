@@ -6,6 +6,7 @@ import { BookOpen, Cable, Lightbulb, Phone, Truck } from "lucide-react";
 import { JsonLd } from "@/components/json-ld";
 import { BuyBox, TrackRecent } from "@/components/product/product-actions";
 import { Price, ProductCard, StockCue } from "@/components/product/product-card";
+import { OfferBadge } from "@/components/product/offer-badge";
 import { ProductVisual } from "@/components/product/product-visual";
 import { departmentNames, products } from "@/lib/data/catalog";
 import { getCategory, getProduct, imageCredit, productImage, productVisual, related, toRef } from "@/lib/catalog";
@@ -96,6 +97,7 @@ async function ProductDetails({ params }: Pick<PageProps<"/products/[slug]">, "p
           <div className={cn("relative aspect-square overflow-hidden rounded-2xl", tone.bg)}>
             <span aria-hidden className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgb(255_255_255/0.4),transparent_62%)]" />
             <ProductVisual slug={p.slug} alt={p.name} preload sizes="(min-width:1024px) 600px, 100vw" inset="p-[12%]" />
+            {off > 0 && <OfferBadge off={off} dark={tone.dark} size="lg" className="absolute top-5 left-5 z-10" />}
             {!off && p.isNew && <span className="absolute top-5 left-5 text-[13px] font-black tracking-[0.16em] uppercase">New</span>}
           </div>
           {credit ? (
