@@ -1,0 +1,38 @@
+# Makerbangla
+
+> Makerbangla (makerbangla.com, "Let's Make a Better World") is an education-first online store in Dhaka, Bangladesh. It sells electronics components, lab equipment and project kits for engineering students and makers — EEE, CSE, Civil, Mechanical, Architecture and Biomedical — and publishes circuit recipes and lab guides that explain what to build with each part. Prices are in Bangladeshi Taka (BDT). Orders are placed through online checkout (delivery inside or outside Dhaka, or store pickup; cash on delivery) or by phone (+880 1711-991079).
+
+## Shop
+
+- [All products](https://makerbangla.com/shop): searchable by name, SKU, brand, category, tags/hashtags, color and specification; filterable by department, voltage, interface and application.
+- [Sensors & Modules](https://makerbangla.com/shop?category=sensors)
+- [Microcontrollers & Boards](https://makerbangla.com/shop?category=microcontrollers): Arduino Uno/Mega, ESP32, ESP32-CAM, STM32, Raspberry Pi 4
+- [Motors & Drivers](https://makerbangla.com/shop?category=motors)
+- [Power & Energy](https://makerbangla.com/shop?category=power)
+- [Circuit & Prototyping](https://makerbangla.com/shop?category=prototyping)
+- [ICs & Semiconductors](https://makerbangla.com/shop?category=ics): 74xx logic, NE555, LM741, LM358, 8086
+- [Test & Measurement](https://makerbangla.com/shop?category=test-measurement)
+- [Tools & Accessories](https://makerbangla.com/shop?category=tools)
+- [Lab Trainers & Kits](https://makerbangla.com/shop?category=kits)
+- [Civil & Survey Lab](https://makerbangla.com/shop?category=civil)
+- [Architecture Studio](https://makerbangla.com/shop?category=architecture)
+- [Mechanical Workshop](https://makerbangla.com/shop?category=mechanical)
+
+## Brands
+
+- [All brands](https://makerbangla.com/brands): Arduino, Espressif, Raspberry Pi, STMicroelectronics, Texas Instruments, Intel, Infineon, Allegro, Aosong, AI-Thinker, Songle, TowerPro
+- Filter any search by brand: https://makerbangla.com/shop?brand=arduino
+
+## Learn
+
+- [Learning Hub](https://makerbangla.com/learn): circuit recipes with parts lists, build steps and safety notes
+- [Lab Guides](https://makerbangla.com/learn#lab-guides): equipment needed for each university sessional lab, by department
+- Recipe pages, e.g. [CNC Pen Plotter](https://makerbangla.com/learn/cnc-plotter): parts list with prices, numbered steps, safety notes
+- [Tech Insights](https://makerbangla.com/blog): explainers on edge AI, RISC-V, datasheets, oscilloscope measurements, IoT research and GaN/SiC power electronics
+
+## Company
+
+- Owner: Md. Khairul Alam
+- Address: Adabor 10, Mohammadpur, Dhaka, Bangladesh
+- Email: info.makerbangla@gmail.com
+- [Privacy Policy](https://makerbangla.com/privacy) · [Terms](https://makerbangla.com/terms)

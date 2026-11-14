@@ -16,32 +16,46 @@ Makerbangla.com — "Let's Make a Better World". An education-first e-commerce s
 
 ## Structure (no `src/`)
 
-- `app/` — routes only: `/`, `/shop`, `/products/[slug]`, `/learn`, `/wishlist`, `/privacy`, `/terms`, plus `sitemap.ts`, `robots.ts`, `manifest.ts`, `actions.ts` (server actions)
+- `app/` — routes only: `/`, `/shop`, `/products/[slug]`, `/brands`, `/learn`, `/learn/[slug]` (recipes), `/blog`, `/blog/[slug]`, `/checkout`, `/checkout/success`, `/wishlist`, `/privacy`, `/terms`, plus `sitemap.ts`, `robots.ts`, `manifest.ts`, `actions.ts` (newsletter) and `checkout/actions.ts` (place order)
+- `proxy.ts` — returns a real 404 for unknown `/products/*`, `/learn/*` and `/blog/*` slugs (detail pages stream inside Suspense, so status can't change later)
 - `components/layout` — top bar, header, nav, footer, cart sheet
 - `components/home` — landing page sections, one file per section, in page order
-- `components/product` — product card and product actions
-- `components/ui` — shadcn primitives (do not hand-edit beyond theming)
-- `lib/data` — catalog (categories, products, recipes, lab guides). Sample data until the backend exists.
+- `components/product` — product card, `ProductVisual` (cut-out or framed photo on a colourful stage), product actions (Buy Now, Add all to cart)
+- `components/brand` — `BrandLogo` (Simple Icons glyph or typeset wordmark)
+- `components/ui` — shadcn primitives and lucide-animated icons (added via the shadcn CLI from lucide-animated.com; do not hand-edit beyond theming)
+- `lib/data` — catalog (categories, products), recipes + lab guides, Tech Insights articles, `cutouts.json` (slugs that have a transparent cut-out). Sample data until the backend exists.
+- `lib/tones.ts` — colour tone per category / level (literal Tailwind classes)
+- `lib/order.ts`, `lib/orders-store.ts`, `lib/receipt-pdf.ts` — order types, on-device receipt history, PDF receipt (jsPDF, loaded on click)
 - `lib/catalog.ts` — query/filter/search helpers (server side)
 - `lib/store.ts` — client cart/wishlist/recently-viewed store (`useSyncExternalStore` + localStorage)
 - `lib/site.ts` — brand, contact and navigation config
 - `public/brand` — logo assets; `public/images` — optimized WebP product and banner images
 
+## Next.js 16 notes
+
+- `cacheComponents` + `partialPrefetching` are on. Read `params`/`searchParams` only inside a `<Suspense>`-wrapped child (see `app/shop/page.tsx`, `app/products/[slug]/page.tsx`), otherwise the dev overlay reports "URL data outside of Suspense". `dynamicParams`/`dynamic`/`revalidate` segment configs are not allowed. Page files may only export Next's page fields.
+- No `new Date()` in server components outside a `"use cache"` function (see footer year).
+- `next/image` uses `preload` (not `priority`); allowed `quality` values are set in `next.config.ts`.
+- Docs for this exact version live in `node_modules/next/dist/docs/`.
+
 ## Design rules
 
-- Visual reference: AUTOZPRO-style dense retail layout. Section order on `/` must stay: top bar → header → nav → component finder → hero → category rail → campaign tiles → deals + newsletter → category showcase rows → closing promos → footer.
-- Tokens live in `app/globals.css` (`--color-brand`, `--color-accent` yellow CTA, `--color-ink` charcoal, `--color-sale` red, `--color-soft`, `--color-line`). Never hard-code hex values in components.
+- Visual reference: AUTOZPRO-style dense retail layout, colourful Gen-Z tiles. Section order on `/` must stay: top bar → header → nav → component finder (yellow) → hero (watermark style) → category rail → campaign tiles → animated feature strip → deals + newsletter → promo rotator → category showcase rows → closing promos → brand strip → Education Hub + Make Your Recipe → two more category rows → Tech Insights → contact CTA → footer.
+- Tokens live in `app/globals.css` (`--color-brand`, `--color-accent-yellow`, `--color-ink`, `--color-sale`, `--color-tile-*` stage colours, `--color-soft`, `--color-line`). Never hard-code hex values in components.
+- Prices are shown as "BDT 1,250" via `bdt()` — never the ৳ glyph.
 - Font: Inter via `next/font`; prices use tabular numerals (`tabular-nums`).
 - Copy: no eyebrow labels above headings and no filler sub-notes under them. Keep it clean.
-- Product images sit on white/soft stages with `mix-blend-multiply` so white backgrounds disappear.
-- Animations are CSS only (hover transitions, scroll-driven reveal via `.reveal`) and respect `prefers-reduced-motion`.
+- Product images sit on colourful category stages via `ProductVisual`: transparent cut-outs (`public/images/cutouts`, generated from the photos by background flood-fill) float with `.cutout-shadow`; photos without a clean background sit on a white rounded plate.
+- Motion: CSS for hover/reveal/marquee; `motion` only for lucide-animated icons, the promo rotator and the order-success check. Everything respects `prefers-reduced-motion`.
 
 ## Data honesty
 
 - Never invent ratings, reviews, stock or compatibility claims. Specs must be factual for the named part.
-- Prices in `lib/data/products.ts` are placeholder sample prices (BDT) until the backend supplies live data.
+- Prices in `lib/data/catalog.ts` are placeholder sample prices (BDT) until the backend supplies live data.
 - Product photos are from Wikimedia Commons (credited per product via `imageCredit`) and must be replaced by owned photography before launch.
-- Ordering goes through WhatsApp (`lib/site.ts`); there is no payment, account or email integration yet. The newsletter action only forwards to `API_URL` when set.
+- Checkout (`/checkout`) re-prices every line from the catalog on the server and POSTs the order to `${API_URL}/orders`. Without `API_URL` it works as a marked preview in development and refuses in production (asks the customer to call) so no order is silently lost. Payment is cash on delivery / pay at pickup only.
+- Delivery fees in `lib/site.ts` (`deliveryOptions`) and the "Cash On Delivery" feature claim are placeholders until confirmed by the business.
+- The newsletter action only forwards to `API_URL` when set.
 
 ## Security
 

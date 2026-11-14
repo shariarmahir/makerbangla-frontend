@@ -17,10 +17,21 @@ export const site = {
 export const mainNav = [
   { label: "Home", href: "/" },
   { label: "Shop", href: "/shop" },
+  { label: "Brands", href: "/brands" },
   { label: "Learning Hub", href: "/learn" },
   { label: "Lab Guides", href: "/learn#lab-guides" },
+  { label: "Tech Insights", href: "/blog" },
   { label: "Contact", href: "#contact" },
 ] as const;
+
+/** Delivery options shown at checkout. Fees are placeholders until confirmed by the business. */
+export const deliveryOptions = [
+  { id: "inside-dhaka", label: "Inside Dhaka", fee: 70, note: "Home, hostel or office delivery in Dhaka city" },
+  { id: "outside-dhaka", label: "Outside Dhaka", fee: 130, note: "Courier delivery to any district" },
+  { id: "pickup", label: "Store pickup", fee: 0, note: "Collect from Adabor, Mohammadpur" },
+] as const;
+
+export type DeliveryId = (typeof deliveryOptions)[number]["id"];
 
 export function whatsappLink(text: string) {
   return `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(text)}`;
