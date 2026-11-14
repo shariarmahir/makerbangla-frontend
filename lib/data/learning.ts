@@ -18,7 +18,7 @@ export type Recipe = {
 export const recipes: Recipe[] = [
   {
     slug: "obstacle-avoiding-robot", title: "Obstacle-Avoiding Robot", level: "Beginner", hours: 4,
-    product: "hc-sr04-ultrasonic-sensor", tone: "aqua",
+    product: "hc-sr04-ultrasonic-sensor", tone: "sky",
     outcome: "Read an ultrasonic sensor, drive two motors through an H-bridge and write simple decision logic.",
     parts: ["arduino-uno-r3", "hc-sr04-ultrasonic-sensor", "l298n-motor-driver", "sg90-micro-servo", "li-ion-18650-cell", "jumper-wire-set"],
     steps: [
@@ -31,7 +31,7 @@ export const recipes: Recipe[] = [
   },
   {
     slug: "iot-energy-sub-meter", title: "IoT Energy Sub-Meter", level: "Intermediate", hours: 6,
-    product: "acs712-current-sensor", tone: "ink",
+    product: "acs712-current-sensor", tone: "midnight",
     outcome: "Measure load current, compute energy over time and publish readings to a web dashboard over Wi-Fi.",
     parts: ["esp32-devkit-v1", "acs712-current-sensor", "lcd-16x2-i2c", "lm2596-buck-converter", "dc-power-adapter-12v"],
     steps: [
@@ -44,7 +44,7 @@ export const recipes: Recipe[] = [
   },
   {
     slug: "555-astable-blinker", title: "555 Astable LED Blinker", level: "Beginner", hours: 1,
-    product: "ne555-timer-ic", tone: "amber",
+    product: "ne555-timer-ic", tone: "blue",
     outcome: "Understand RC timing and duty cycle by building the classic astable multivibrator.",
     parts: ["ne555-timer-ic", "resistor-kit", "capacitor-kit-electrolytic", "led-5mm-assorted", "breadboard-830"],
     steps: [
@@ -56,7 +56,7 @@ export const recipes: Recipe[] = [
   },
   {
     slug: "4-bit-counter", title: "4-Bit Counter with 7-Segment Output", level: "Intermediate", hours: 3,
-    product: "seven-segment-display", tone: "deep",
+    product: "seven-segment-display", tone: "navy",
     outcome: "Build a synchronous counter from JK flip-flops and display its state — a core DLD sessional.",
     parts: ["ttl-74xx-ic-kit", "seven-segment-display", "breadboard-830", "jumper-wire-set", "led-5mm-assorted"],
     steps: [
@@ -67,7 +67,7 @@ export const recipes: Recipe[] = [
   },
   {
     slug: "iot-weather-station", title: "IoT Weather Station", level: "Beginner", hours: 3,
-    product: "dht22-temperature-humidity", tone: "teal",
+    product: "dht22-temperature-humidity", tone: "yellow",
     outcome: "Log temperature and humidity to the cloud and learn single-wire sensor protocols.",
     parts: ["esp32-devkit-v1", "dht22-temperature-humidity", "lcd-16x2-i2c", "breadboard-830"],
     steps: [
@@ -90,7 +90,7 @@ export const recipes: Recipe[] = [
   },
   {
     slug: "wifi-security-camera", title: "Wi-Fi Security Camera", level: "Intermediate", hours: 3,
-    product: "esp32-cam", tone: "cloud",
+    product: "esp32-cam", tone: "white",
     outcome: "Stream video over Wi-Fi and trigger snapshots from a motion sensor.",
     parts: ["esp32-cam", "pir-motion-sensor", "lm2596-buck-converter"],
     steps: [
@@ -101,7 +101,7 @@ export const recipes: Recipe[] = [
   },
   {
     slug: "cnc-plotter", title: "CNC Pen Plotter", level: "Advanced", hours: 12,
-    product: "nema17-stepper-motor", tone: "yellow",
+    product: "nema17-stepper-motor", tone: "blue",
     outcome: "Combine stepper control, G-code and mechanics in a two-axis drawing machine.",
     parts: ["arduino-mega-2560", "nema17-stepper-motor", "sg90-micro-servo", "dc-power-adapter-12v"],
     steps: [

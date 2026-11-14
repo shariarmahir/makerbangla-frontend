@@ -29,7 +29,7 @@ export default function LearnPage() {
       </nav>
 
       {/* Hub header */}
-      <header className="relative isolate overflow-hidden rounded-2xl bg-tile-ink px-6 py-9 text-white sm:px-10 sm:py-12">
+      <header className="relative isolate overflow-hidden rounded-2xl bg-tile-navy px-6 py-9 text-white sm:px-10 sm:py-12">
         <span aria-hidden className="absolute inset-0 -z-10 bg-[linear-gradient(rgb(255_255_255/0.05)_1px,transparent_1px),linear-gradient(90deg,rgb(255_255_255/0.05)_1px,transparent_1px)] bg-size-[28px_28px]" />
         <span aria-hidden className="absolute -top-20 -right-20 -z-10 size-72 rounded-full bg-brand/40 blur-3xl" />
         <h1 className="text-[clamp(2rem,4.6vw,3.4rem)] leading-none font-black tracking-tight">
@@ -75,7 +75,7 @@ export default function LearnPage() {
         <h2 id="lab-guides-title" className="section-title">Lab Guides</h2>
         <ul className="mt-5 grid grid-cols-3 gap-3 sm:grid-cols-6">
           {labGuides.map((g) => {
-            const t = tones[deptTone[g.department] ?? "cloud"];
+            const t = tones[deptTone[g.department] ?? "white"];
             return (
               <li key={g.department}>
                 <a href={`#lab-${g.department.toLowerCase()}`} className={cn("flex h-full flex-col justify-between gap-3 rounded-2xl p-4 transition-transform hover:-translate-y-1", t.bg, t.text)}>
@@ -89,7 +89,7 @@ export default function LearnPage() {
 
         <div className="mt-8 space-y-10">
           {labGuides.map((g) => {
-            const t = tones[deptTone[g.department] ?? "cloud"];
+            const t = tones[deptTone[g.department] ?? "white"];
             return (
               <section key={g.department} id={`lab-${g.department.toLowerCase()}`} aria-labelledby={`lab-${g.department}-title`} className="scroll-mt-4">
                 <div className="mb-4 flex flex-wrap items-center justify-between gap-3">

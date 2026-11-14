@@ -41,7 +41,7 @@ export function PromoBanners() {
         );
         const className = cn(
           "group relative flex min-h-40 items-center overflow-hidden rounded-2xl p-6 sm:p-7",
-          p.tone === "sale" ? "justify-center bg-tile-deep" : "bg-ink",
+          p.tone === "sale" ? "justify-center bg-tile-navy" : "bg-ink",
         );
         return external ? (
           <a key={p.cta} href={p.href} target="_blank" rel="noopener noreferrer" className={className}>{content}</a>

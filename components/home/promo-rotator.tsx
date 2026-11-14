@@ -5,10 +5,10 @@ import { PromoSlides, type Offer } from "./promo-slides";
 
 const plan: { label: string; words: [string, string]; slug: string; tone: ToneName }[] = [
   { label: "Latest Offer", words: ["Board", "Deals"], slug: "arduino-uno-r3", tone: "yellow" },
-  { label: "Best Offer", words: ["Solder", "Saver"], slug: "soldering-iron-kit", tone: "deep" },
-  { label: "This Week's Offer", words: ["Measure", "Right"], slug: "vernier-caliper", tone: "amber" },
-  { label: "New Arrival", words: ["Just", "Landed"], slug: "raspberry-pi-4", tone: "ink" },
-  { label: "Top Of The Week", words: ["Motion", "Pick"], slug: "nema17-stepper-motor", tone: "teal" },
+  { label: "Best Offer", words: ["Solder", "Saver"], slug: "soldering-iron-kit", tone: "navy" },
+  { label: "This Week's Offer", words: ["Measure", "Right"], slug: "vernier-caliper", tone: "blue" },
+  { label: "New Arrival", words: ["Just", "Landed"], slug: "raspberry-pi-4", tone: "midnight" },
+  { label: "Top Of The Week", words: ["Motion", "Pick"], slug: "nema17-stepper-motor", tone: "sky" },
 ];
 
 const offers: Offer[] = plan.flatMap(({ label, words, slug, tone }) => {
@@ -28,6 +28,9 @@ const offers: Offer[] = plan.flatMap(({ label, words, slug, tone }) => {
     image: productVisual(p.slug).src,
     bg: tones[tone].bg,
     dark: tones[tone].dark,
+    fg: tones[tone].text,
+    muted: tones[tone].muted,
+    button: tones[tone].button,
   }];
 });
 

@@ -45,7 +45,7 @@ const edgeBg: Record<MagicButtonVariant, string> = {
   secondary:
     "[background:linear-gradient(to_left,color-mix(in_srgb,var(--secondary)_50%,black)_0%,color-mix(in_srgb,var(--secondary)_75%,black)_8%,color-mix(in_srgb,var(--secondary)_75%,black)_92%,color-mix(in_srgb,var(--secondary)_50%,black)_100%)]",
   brand:
-    "[background:linear-gradient(to_left,color-mix(in_srgb,var(--color-brand-strong)_50%,black)_0%,color-mix(in_srgb,var(--color-brand-strong)_75%,black)_8%,color-mix(in_srgb,var(--color-brand-strong)_75%,black)_92%,color-mix(in_srgb,var(--color-brand-strong)_50%,black)_100%)]",
+    "[background:linear-gradient(to_left,color-mix(in_srgb,var(--color-brand)_50%,black)_0%,color-mix(in_srgb,var(--color-brand)_75%,black)_8%,color-mix(in_srgb,var(--color-brand)_75%,black)_92%,color-mix(in_srgb,var(--color-brand)_50%,black)_100%)]",
   accent:
     "[background:linear-gradient(to_left,color-mix(in_srgb,var(--color-accent-yellow)_50%,black)_0%,color-mix(in_srgb,var(--color-accent-yellow)_75%,black)_8%,color-mix(in_srgb,var(--color-accent-yellow)_75%,black)_92%,color-mix(in_srgb,var(--color-accent-yellow)_50%,black)_100%)]",
   light:
@@ -55,9 +55,9 @@ const edgeBg: Record<MagicButtonVariant, string> = {
 const frontVariant: Record<MagicButtonVariant, string> = {
   default: "bg-primary text-primary-foreground",
   secondary: "bg-secondary text-secondary-foreground",
-  brand: "bg-brand-strong text-white",
-  accent: "bg-accent-yellow text-ink",
-  light: "bg-white text-ink",
+  brand: "bg-brand text-white",
+  accent: "bg-accent-yellow text-tile-navy",
+  light: "bg-white text-brand",
 };
 
 const frontSize: Record<MagicButtonSize, string> = {

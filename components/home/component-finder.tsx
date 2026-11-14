@@ -13,7 +13,7 @@ const index: FinderRow[] = products.map((p) => [p.category, p.voltage ? [p.volta
 
 export function ComponentFinder() {
   return (
-    <section aria-labelledby="finder-title" className="relative overflow-hidden bg-accent-yellow text-ink">
+    <section aria-labelledby="finder-title" className="relative overflow-hidden bg-accent-yellow text-tile-navy">
       <span aria-hidden className="absolute inset-y-0 right-0 w-1/3 bg-[repeating-linear-gradient(-45deg,rgb(0_0_0/0.045)_0_14px,transparent_14px_28px)]" />
       <FinderForm fields={fields} index={index} />
     </section>

@@ -34,19 +34,21 @@ export function FeatureStrip() {
   }, [active]);
 
   return (
-    <section aria-label="Why Makerbangla" className="container-x reveal pt-4 sm:pt-5">
-      <ul className="grid grid-cols-2 gap-x-4 gap-y-6 rounded-2xl border border-line bg-white px-5 py-6 sm:px-8 lg:grid-cols-4 lg:divide-x lg:divide-line lg:px-4">
+    <section aria-label="Why Makerbangla" className="mt-8 bg-tile-yellow text-tile-navy sm:mt-10">
+      <ul className="container-x reveal grid grid-cols-2 gap-x-4 gap-y-6 py-7 sm:py-8 lg:grid-cols-4 lg:divide-x lg:divide-tile-navy/15">
         {items.map(({ Icon, title, text }, i) => (
           <li
             key={title}
             onPointerEnter={() => setHover(i)}
             onPointerLeave={() => setHover(null)}
-            className="flex items-center gap-3.5 lg:justify-center lg:px-4"
+            className="flex items-center gap-3 sm:gap-4 lg:justify-center lg:px-5"
           >
-            <Icon ref={(h: Handle | null) => { refs.current[i] = h; }} size={34} className="shrink-0 text-sale" aria-hidden />
+            <span className="grid size-11 shrink-0 place-items-center rounded-full bg-tile-navy text-tile-yellow shadow-[0_10px_18px_-10px_rgb(14_31_77/0.7)] sm:size-12">
+              <Icon ref={(h: Handle | null) => { refs.current[i] = h; }} size={24} aria-hidden />
+            </span>
             <div className="min-w-0">
-              <p className="text-[13.5px] leading-tight font-extrabold text-ink">{title}</p>
-              <p className="mt-0.5 text-[11.5px] text-subtle">{text}</p>
+              <p className="text-[13px] leading-tight font-black sm:text-[14.5px]">{title}</p>
+              <p className="mt-0.5 text-[11.5px] leading-snug font-medium text-tile-navy/75 sm:text-[12px]">{text}</p>
             </div>
           </li>
         ))}

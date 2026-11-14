@@ -1,20 +1,20 @@
 import Link from "next/link";
 import type { Product } from "@/lib/data/catalog";
-import { getCategory, toRef } from "@/lib/catalog";
+import { toRef } from "@/lib/catalog";
 import { categoryTone } from "@/lib/tones";
 import { bdt, cn, discount } from "@/lib/utils";
 import { BuyNow, QuickAdd, WishlistButton } from "./product-actions";
 import { ProductVisual } from "./product-visual";
 
 /** Grid for product cards: extra row gap + top padding so products can break out of the card top. */
-export const productGrid = "grid grid-cols-2 gap-x-3 gap-y-14 pt-12 sm:grid-cols-3 sm:gap-x-5 xl:grid-cols-4";
+export const productGrid = "grid grid-cols-2 gap-x-3 gap-y-12 pt-9 sm:grid-cols-3 sm:gap-x-5 xl:grid-cols-4";
 
 export function Price({ price, oldPrice, className, showOff }: { price: number; oldPrice?: number; className?: string; showOff?: boolean }) {
   const off = discount(price, oldPrice);
   return (
     <p className={cn("flex flex-wrap items-baseline gap-x-2 tabular-nums", className)}>
-      <span className="font-black">{bdt(price)}</span>
-      {oldPrice ? <s className="text-[0.72em] font-semibold opacity-60">{bdt(oldPrice)}</s> : null}
+      <span className="font-black whitespace-nowrap">{bdt(price)}</span>
+      {oldPrice ? <s className="text-[0.72em] font-semibold whitespace-nowrap opacity-60">{bdt(oldPrice)}</s> : null}
       {showOff && off > 0 ? <span className="text-[0.82em] font-black text-sale">-{off}%</span> : null}
     </p>
   );
@@ -38,44 +38,54 @@ export function ProductCard({ product, className, sizes = "(min-width:1280px) 30
   const ref = toRef(product);
   const href = `/products/${product.slug}`;
   const tone = categoryTone(product.category);
+  const soldOut = product.stock <= 0;
   return (
     <article
       className={cn(
-        "group relative isolate flex flex-col rounded-[22px] shadow-[0_28px_40px_-30px_rgb(0_0_0/0.55)] transition-[translate,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_34px_48px_-30px_rgb(0_0_0/0.6)]",
+        "group relative isolate flex flex-col rounded-[22px] shadow-[0_26px_36px_-28px_rgb(14_31_77/0.55)] transition-[translate,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_32px_44px_-28px_rgb(14_31_77/0.6)]",
         tone.bg,
         tone.text,
         className,
       )}
     >
-      {/* Product breaks out of the top edge and dissolves into the card colour */}
-      <Link href={href} tabIndex={-1} aria-hidden className="relative -mt-11 block aspect-[1/0.92]">
+      {/* Same frame on every card: the product rises a fixed amount above the top edge, sits on the
+          bottom of the frame and dissolves into the card colour. */}
+      <Link href={href} tabIndex={-1} aria-hidden className="relative -mt-8 block aspect-[1/0.84]">
         <ProductVisual
           slug={product.slug}
           alt={product.name}
           sizes={sizes}
           fade
           position="object-bottom"
-          inset="px-[7%] pt-0 pb-[4%]"
-          className="transition-transform duration-500 ease-out group-hover:scale-[1.05] group-hover:-rotate-2"
+          inset={off > 0 || product.isNew ? "pl-[25%] pr-[5%] pt-0 pb-[3%]" : "px-[11%] pt-0 pb-[3%]"}
+          className="transition-transform duration-500 ease-out group-hover:scale-[1.04] group-hover:-rotate-2"
         />
       </Link>
 
-      {!off && product.isNew && <span className="absolute top-3.5 left-4 z-10 text-[11px] font-black tracking-[0.14em] uppercase">New</span>}
-      <WishlistButton product={ref} className="absolute top-1.5 right-2 z-10" />
+      {/* Offer callout, top-left — plain bold type, no chip */}
+      {off > 0 ? (
+        <p className={cn("pointer-events-none absolute top-3 left-4 z-10 flex flex-col leading-none font-black tabular-nums", tone.offer)}>
+          <span className="text-[20px] tracking-tight sm:text-[22px]">{off}%</span>
+          <span className="mt-0.5 text-[9.5px] tracking-[0.2em] uppercase">Off</span>
+        </p>
+      ) : product.isNew ? (
+        <p className={cn("pointer-events-none absolute top-3.5 left-4 z-10 text-[11px] font-black tracking-[0.18em] uppercase", tone.offer)}>New</p>
+      ) : null}
 
-      <div className="flex flex-1 flex-col px-4 pb-4 sm:px-5 sm:pb-5">
-        <p className={cn("text-[10px] font-extrabold tracking-[0.14em] uppercase", tone.muted)}>{getCategory(product.category)?.name}</p>
-        <h3 className="mt-1.5 line-clamp-2 text-[15px] leading-[1.22] font-black tracking-tight sm:text-[16px]">
+      <div className="flex flex-1 flex-col px-3.5 pt-2 pb-3.5 sm:px-5 sm:pb-5">
+        <h3 className="mt-1 line-clamp-2 min-h-[2.44em] text-[14.5px] leading-[1.22] font-black tracking-tight sm:text-[16px]">
           <Link href={href} className="hover:underline hover:decoration-2 hover:underline-offset-4">{product.name}</Link>
         </h3>
         <p className={cn("mt-1.5 line-clamp-2 text-[11.5px] leading-snug sm:text-[12px]", tone.muted)}>{product.summary}</p>
 
-        <div className="mt-auto pt-4">
-          <div className="flex items-end justify-between gap-2">
-            <Price price={product.price} oldPrice={product.oldPrice} showOff className="text-[16px] sm:text-[17px]" />
-            <QuickAdd product={ref} disabled={product.stock <= 0} className="-mr-1.5 -mb-1" />
+        {/* Price + wishlist/cart side by side; on narrow phones the icons drop beside Buy Now */}
+        <div className="mt-auto grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-1.5 gap-y-2.5 pt-3.5">
+          <Price price={product.price} oldPrice={product.oldPrice} className="col-span-2 text-[15px] sm:col-span-1 sm:text-[17px]" />
+          <div className="order-3 -mr-1.5 flex items-center sm:order-none">
+            <WishlistButton product={ref} className="size-8" />
+            <QuickAdd product={ref} disabled={soldOut} className="size-8" />
           </div>
-          <BuyNow product={ref} disabled={product.stock <= 0} variant={tone.dark ? "accent" : "default"} className="mt-3 w-full" />
+          <BuyNow product={ref} disabled={soldOut} variant={tone.button} className="order-2 w-full sm:order-none sm:col-span-2" />
         </div>
       </div>
     </article>

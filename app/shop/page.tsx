@@ -6,7 +6,7 @@ import { SlidersHorizontal, X } from "lucide-react";
 import { ProductCard, productGrid } from "@/components/product/product-card";
 import { MagicButton, MagicLink } from "@/components/ui/magic-button";
 import { applications, categories, departmentNames, departments, interfaces, voltages } from "@/lib/data/catalog";
-import { brands, getBrand, getCategory, parseFilters, searchProducts, sorts, type Filters } from "@/lib/catalog";
+import { brands, getBrand, getCategory, parseFilters, searchProducts, sorts, type Filters, collections } from "@/lib/catalog";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -41,7 +41,7 @@ async function Results({ searchParams }: Pick<PageProps<"/shop">, "searchParams"
   const list = searchProducts(f);
   const category = f.category ? getCategory(f.category) : undefined;
   const brand = f.brand ? getBrand(f.brand) : undefined;
-  const active = (["q", "brand", "department", "voltage", "interface", "application"] as const).filter((k) => f[k]);
+  const active = (["q", "collection", "brand", "department", "voltage", "interface", "application"] as const).filter((k) => f[k]);
 
   const allCats = [{ slug: undefined, name: "All products" }, ...categories];
   const filterForm = (
@@ -120,7 +120,7 @@ async function Results({ searchParams }: Pick<PageProps<"/shop">, "searchParams"
       <div className="min-w-0">
         <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
           <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
-            {f.q ? <>Results for “{f.q}”</> : [brand?.name, category?.name].filter(Boolean).join(" · ") || "All Products"}
+            {f.q ? <>Results for “{f.q}”</> : [f.collection && collections[f.collection], brand?.name, category?.name].filter(Boolean).join(" · ") || "All Products"}
           </h1>
           <p className="text-[12px] text-subtle tabular-nums">{list.length} products</p>
         </div>
@@ -130,7 +130,7 @@ async function Results({ searchParams }: Pick<PageProps<"/shop">, "searchParams"
             {active.map((k) => (
               <li key={k}>
                 <Link href={hrefWith(f, { [k]: undefined })} className="inline-flex items-center gap-1.5 rounded-full border border-line bg-white px-3 py-1 text-[11.5px] hover:border-sale hover:text-sale">
-                  {k === "department" ? departmentNames[f[k] as keyof typeof departmentNames] : k === "brand" ? brand?.name : f[k]} <X className="size-3" />
+                  {k === "department" ? departmentNames[f[k] as keyof typeof departmentNames] : k === "brand" ? brand?.name : k === "collection" && f.collection ? collections[f.collection] : f[k]} <X className="size-3" />
                 </Link>
               </li>
             ))}

@@ -18,7 +18,7 @@ export function ProductVisual({ slug, alt, sizes, preload, className, inset = "p
   position?: string;
 }) {
   const v = productVisual(slug);
-  const mask = fade ? "[mask-image:linear-gradient(to_bottom,black_62%,transparent_100%)]" : "";
+  const mask = fade ? "[mask-image:linear-gradient(to_bottom,black_76%,transparent_100%)]" : "";
   if (v.cutout) {
     return <Image src={v.src} alt={alt} fill sizes={sizes} preload={preload} className={cn("cutout-shadow object-contain", position, inset, mask, className)} />;
   }

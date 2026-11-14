@@ -5,10 +5,10 @@ import { articles, formatDate, type Article, type Topic } from "@/lib/data/artic
 import { cn } from "@/lib/utils";
 
 export const topicTone: Record<Topic, string> = {
-  Innovation: "bg-tile-teal text-ink",
-  "Future Tech": "bg-tile-ink text-white",
-  Learning: "bg-tile-yellow text-ink",
-  Research: "bg-tile-amber text-ink",
+  Innovation: "bg-tile-blue text-white",
+  "Future Tech": "bg-tile-navy text-tile-yellow",
+  Learning: "bg-tile-yellow text-tile-navy",
+  Research: "bg-tile-sky text-tile-navy",
 };
 
 export function TopicChip({ topic, className }: { topic: Topic; className?: string }) {
@@ -48,7 +48,7 @@ export function TechInsights() {
         </div>
 
         <div className="reveal grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <article className="group relative isolate flex min-h-80 flex-col justify-end overflow-hidden rounded-2xl bg-tile-ink p-6 text-white sm:col-span-2 lg:row-span-2 lg:min-h-full lg:p-8">
+          <article className="group relative isolate flex min-h-80 flex-col justify-end overflow-hidden rounded-2xl bg-tile-navy p-6 text-white sm:col-span-2 lg:row-span-2 lg:min-h-full lg:p-8">
             <Image src={lead.image} alt="" fill sizes="(min-width:1024px) 640px, 100vw" className="-z-10 object-cover opacity-70 transition-transform duration-700 ease-out group-hover:scale-105" />
             <span aria-hidden className="absolute inset-0 -z-10 bg-linear-to-t from-ink via-ink/60 to-ink/0" />
             <TopicChip topic={lead.topic} className="w-fit" />

@@ -57,6 +57,10 @@ export function imageCredit(slug: string) {
 
 /* ── Search ─────────────────────────────────────────────────────────── */
 
+/** Curated collections shown in the navigation. */
+export const collections = { new: "New Arrivals", deals: "Discount Deals" } as const;
+export type Collection = keyof typeof collections;
+
 export const sorts = { featured: "Featured", "price-asc": "Price: low to high", "price-desc": "Price: high to low", name: "Name" } as const;
 
 export type Filters = {
@@ -67,6 +71,7 @@ export type Filters = {
   voltage?: string;
   interface?: string;
   application?: string;
+  collection?: Collection;
   sort: keyof typeof sorts;
 };
 
@@ -88,6 +93,7 @@ export function parseFilters(sp: Record<string, string | string[] | undefined>):
     voltage: pick(one(sp.voltage), voltages),
     interface: pick(one(sp.interface), interfaces),
     application: pick(one(sp.application), applications),
+    collection: pick(one(sp.collection), Object.keys(collections) as Collection[]),
     sort: pick(one(sp.sort), Object.keys(sorts) as (keyof typeof sorts)[]) ?? "featured",
   };
 }
@@ -114,6 +120,7 @@ export function searchProducts(f: Filters) {
       (!f.voltage || p.voltage === f.voltage) &&
       (!f.interface || p.interfaces?.includes(f.interface as never)) &&
       (!f.application || p.applications.includes(f.application as never)) &&
+      (!f.collection || (f.collection === "new" ? !!p.isNew : !!p.oldPrice)) &&
       terms.every((t) => {
         const text = haystack.get(p.slug)!;
         return text.includes(t) || text.includes(t.replace(/^#/, ""));

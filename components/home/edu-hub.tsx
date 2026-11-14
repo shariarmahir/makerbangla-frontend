@@ -18,11 +18,11 @@ export function EduHub() {
   return (
     <section aria-label="Education Hub" className="container-x reveal grid gap-5 py-10 sm:py-12 lg:grid-cols-[1.3fr_1fr]">
       {/* Education Hub */}
-      <div className="relative isolate flex flex-col overflow-hidden rounded-[26px] bg-tile-ink p-6 text-white sm:p-9">
+      <div className="relative isolate flex flex-col overflow-hidden rounded-[26px] bg-tile-navy p-6 text-white sm:p-9">
         <span aria-hidden className="absolute inset-0 -z-10 bg-[linear-gradient(rgb(255_255_255/0.05)_1px,transparent_1px),linear-gradient(90deg,rgb(255_255_255/0.05)_1px,transparent_1px)] bg-size-[28px_28px]" />
-        <span aria-hidden className="absolute -top-24 -right-24 -z-10 size-72 rounded-full bg-brand/35 blur-3xl" />
-        <h2 className="text-[clamp(1.9rem,3.6vw,2.9rem)] leading-none font-black tracking-tight">
-          Education <span className="text-accent-yellow">Hub</span>
+        <span aria-hidden className="absolute -top-24 -right-24 -z-10 size-72 rounded-full bg-brand/45 blur-3xl" />
+        <h2 className="text-[clamp(1.9rem,3.6vw,2.9rem)] leading-none font-black tracking-tight text-accent-yellow">
+          Education <span className="text-white">Hub</span>
         </h2>
         <p className="mt-3 max-w-md text-[14px] text-white/80">Circuit recipes, sessional lab guides and the exact parts for every experiment — in one place.</p>
 
@@ -38,7 +38,7 @@ export function EduHub() {
 
         <ul className="mt-6 flex flex-wrap gap-2">
           {labGuides.map((g) => {
-            const t = tones[deptTone[g.department] ?? "cloud"];
+            const t = tones[deptTone[g.department] ?? "white"];
             return (
               <li key={g.department}>
                 <Link href={`/learn#lab-${g.department.toLowerCase()}`} className={cn("inline-block rounded-full px-3.5 py-1.5 text-[11.5px] font-black transition-transform hover:-translate-y-0.5", t.bg, t.text)}>
@@ -56,7 +56,7 @@ export function EduHub() {
       </div>
 
       {/* Make Your Recipe */}
-      <div className="relative isolate flex flex-col overflow-hidden rounded-[26px] bg-tile-yellow p-6 text-ink sm:p-9">
+      <div className="relative isolate flex flex-col overflow-hidden rounded-[26px] bg-tile-yellow p-6 text-tile-navy sm:p-9">
         <span aria-hidden className="absolute -right-20 -bottom-20 -z-10 size-64 rounded-full bg-white/30" />
         <h2 className="text-[clamp(1.9rem,3.6vw,2.9rem)] leading-none font-black tracking-tight">
           Make Your <span className="block">Recipe</span>
@@ -64,7 +64,7 @@ export function EduHub() {
         <ol className="mt-6 space-y-3">
           {steps.map((s, i) => (
             <li key={s} className="flex items-center gap-3 text-[14px] font-bold">
-              <span className="grid size-8 shrink-0 place-items-center rounded-full bg-ink text-[12px] text-accent-yellow">{i + 1}</span>
+              <span className="grid size-8 shrink-0 place-items-center rounded-full bg-tile-navy text-[12px] text-accent-yellow">{i + 1}</span>
               {s}
             </li>
           ))}

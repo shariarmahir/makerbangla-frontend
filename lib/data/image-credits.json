@@ -1,382 +1,367 @@
 {
-  "hc-sr04-ultrasonic-sensor": {
-    "author": "SparkFun",
-    "license": "CC BY 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:SparkFun_HC-SR04_Ultrasonic-Sensor_13959-01a.jpg"
-  },
-  "dht22-temperature-humidity": {
-    "author": "Suyash Dwivedi",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:AM2302_(DHT22)_digital_temperature_and_humidity_sensor_module.jpg"
-  },
-  "acs712-current-sensor": {
-    "author": "SparkFun",
-    "license": "CC BY 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:SparkFun_ACS712_HallSensor_08882-01.jpg"
-  },
-  "arduino-uno-r3": {
-    "author": "MakeMagazinDE",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Arduino_uno_r3_isometr.jpg"
-  },
-  "arduino-mega-2560": {
-    "author": "Dsimic",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Arduino_MEGA_2560_R3,_front_side.jpg"
-  },
-  "esp32-devkit-v1": {
-    "author": "Edwiyanto",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:ESP32_Dev_Board.jpg"
-  },
-  "esp32-cam": {
-    "author": "Nowforever",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:ESP32-CAM.jpg"
-  },
-  "stm32-blue-pill": {
-    "author": "Popolon",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Core_Learning_Board_module_Arduino_STM32_F103_C8T6.jpg"
-  },
-  "raspberry-pi-4": {
-    "author": "Laserlicht",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Raspberry_Pi_4_Model_B_-_Side.jpg"
-  },
-  "sg90-micro-servo": {
-    "author": "Suyash Dwivedi",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Tower_Pro_SG90_micro_servo_motor.jpg"
-  },
-  "nema17-stepper-motor": {
-    "author": "oomlout",
-    "license": "CC BY-SA 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Nema_17_Stepper_Motor.jpg"
-  },
-  "l298n-motor-driver": {
-    "author": "Quel.soler",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Dosmotorsl298n.jpg"
-  },
-  "stepper-28byj48-uln2003": {
-    "author": "Kushagra Keshari",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:28BYJ-48_unipolar_stepper_motor_with_ULN2003_driver.jpg"
-  },
-  "dc-power-adapter-12v": {
-    "author": "Evan-Amos",
-    "license": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:Notebook-Computer-AC-Adapter.jpg"
-  },
-  "lm2596-buck-converter": {
-    "author": "Matthew Berardi",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:LM2596_buck_converter_module,_MP1584_buck_converter_module,_and_SDB628_boost_converter_module.jpg"
-  },
-  "li-ion-18650-cell": {
-    "author": "Sevenethics",
-    "license": "CC0",
-    "source": "https://commons.wikimedia.org/wiki/File:18650_and_21700_lithium_ion_battery_cell.jpg"
-  },
-  "step-down-transformer": {
-    "author": "Hannes Grobe",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Transformer-1_hg.jpg"
-  },
-  "breadboard-830": {
-    "author": "Guhuru",
-    "license": "CC0",
-    "source": "https://commons.wikimedia.org/wiki/File:Breadboard.png"
-  },
-  "jumper-wire-set": {
-    "author": "oomlout",
-    "license": "CC BY-SA 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:A_few_Jumper_Wires.jpg"
-  },
-  "resistor-kit": {
-    "author": "Evan-Amos",
-    "license": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:Electronic-Axial-Lead-Resistors-Array.jpg"
-  },
-  "capacitor-kit-electrolytic": {
-    "author": "Elcap",
-    "license": "CC0",
-    "source": "https://commons.wikimedia.org/wiki/File:Electrolytic_capacitors-P1090328.JPG"
-  },
-  "led-5mm-assorted": {
-    "author": "SparkFun Electronics",
-    "license": "CC BY 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:LED_Rainbow_Pack_-_5mm_PTH_12903-01.jpg"
-  },
-  "lcd-16x2-i2c": {
-    "author": "Retired electrician",
-    "license": "CC0",
-    "source": "https://commons.wikimedia.org/wiki/File:MELT_16x2_LCD_alphanumeric_display_04(DXO).jpg"
-  },
-  "seven-segment-display": {
-    "author": "Mister rf",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:FND500.jpg"
-  },
-  "relay-module-5v": {
-    "author": "Suyash Dwivedi",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:SRD-05VDC-SL-C_5V_one-channel_relay_module.jpg"
-  },
-  "stripboard-pcb": {
-    "author": "Alexander Jones",
-    "license": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:Stripboard.jpg"
-  },
-  "ne555-timer-ic": {
-    "author": "Swift.Hg",
-    "license": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:NE555_DIP_%26_SOIC.jpg"
-  },
-  "lm741-op-amp": {
-    "author": "Raimond Spekking",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:DOV-1X_-_National_Semiconductor_LM741CN_on_printed_circuit_board-9801.jpg"
-  },
-  "lm358-dual-op-amp": {
-    "author": "Raimond Spekking",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Nedap_ESD1_-_Keyboard_controller_PCB_-_Philips_LM358D-8584.jpg"
-  },
-  "ttl-74xx-ic-kit": {
-    "author": "Robert.Baruch",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:74F00_Moto_8352_package_top.jpg"
-  },
-  "diode-1n4007-pack": {
-    "author": "Zxelt",
-    "license": "CC0",
-    "source": "https://commons.wikimedia.org/wiki/File:Diode_1N4007.jpg"
-  },
-  "bjt-transistor-kit": {
-    "author": "Suyash Dwivedi",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:BC547_Transistor_-_01.jpg"
-  },
-  "irf540n-mosfet": {
-    "author": "Suyash Dwivedi",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Power_MOSFET.jpg"
-  },
-  "digital-multimeter": {
-    "author": "© 2010 by Tomasz Sienicki [user: tsca, mail: tomasz.sienicki at gmail.com]",
-    "license": "CC BY 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Digital_universal_multimeter_(ubt).jpeg"
-  },
-  "digital-oscilloscope": {
-    "author": "Draconichiaro",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:RIGOL_DS1054Z_Digital_Storage_Oscilloscope.jpg"
-  },
-  "bench-power-supply": {
-    "author": "Derrick Parker",
-    "license": "CC0",
-    "source": "https://commons.wikimedia.org/wiki/File:Bench_power_supply.jpg"
-  },
-  "usb-logic-analyzer": {
-    "author": "Dilshan Jayakody from Maharagama, Sri Lanka",
-    "license": "CC BY-SA 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:8_Channel_USB_logic_analyzer_(5172098012).jpg"
-  },
-  "pulse-oximeter": {
-    "author": "Thinkpaul",
-    "license": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:FingertipPulseOximeterMD300C2.jpg"
-  },
-  "soldering-station": {
-    "author": "YuriyTer",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Accta_301_Soldering_Station.png"
-  },
-  "soldering-iron-kit": {
-    "author": "Soldering_iron_and_accessories.jpg: oomlout derivative work: Bomazi",
-    "license": "CC BY-SA 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Soldering_iron_(UK_Plug).jpg"
-  },
-  "solder-wire": {
-    "author": "Wikideas1",
-    "license": "CC0",
-    "source": "https://commons.wikimedia.org/wiki/File:Solder_on_spool.jpeg"
-  },
-  "rj45-crimping-tool": {
-    "author": "Adamantios",
-    "license": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Crimping-pliers-pro-RJ-0a.jpg"
-  },
-  "wire-stripper": {
-    "author": "Scott Ehardt",
-    "license": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:Wire_Stripper_Automatic.jpg"
-  },
-  "arduino-starter-kit": {
-    "author": "oomlout",
-    "license": "CC BY-SA 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:ARDX_-_Arduino_Experimentation_Kit_(Inside_the_box).jpg"
-  },
-  "digital-logic-trainer": {
-    "author": "Shengtaoliu",
-    "license": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Logic_Board.jpg"
-  },
-  "microprocessor-8086": {
-    "author": "Thomas Nguyen",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Intel_C8086.jpg"
-  },
-  "fiber-patch-cord": {
-    "author": "Asurnipal",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Optical_fiber_connectors-optical_patch_cable-01ASD.jpg"
-  },
-  "plc-trainer": {
-    "author": "Projuktiponno",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Delta_PLC_CPU.jpg"
-  },
-  "digital-theodolite": {
-    "author": "No machine-readable author provided. PhY assumed (based on copyright claims).",
-    "license": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:DTM-A20LG-04.jpg"
-  },
-  "auto-level-tripod": {
-    "author": "Original uploader was Clicgauche at fr.wikipedia",
-    "license": "CC BY-SA 1.0",
-    "source": "https://commons.wikimedia.org/wiki/File:DumpyLevel.jpg"
-  },
-  "prismatic-compass": {
-    "author": "Slashme",
-    "license": "CC0",
-    "source": "https://commons.wikimedia.org/wiki/File:Casella_6555_prismatic_compass_top_open.jpg"
-  },
-  "measuring-tape": {
-    "author": "Junkyardsparkle",
-    "license": "CC0",
-    "source": "https://commons.wikimedia.org/wiki/File:Lufkin_Universal_50_ft_tape_measure.jpg"
-  },
-  "handheld-gps": {
-    "author": "Siarhei Besarab",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Magellan_Triton_2000_handheld_GPS_receiver_01.jpg"
-  },
-  "slump-cone-set": {
-    "author": "No machine-readable author provided. Tano4595 assumed (based on copyright claims",
-    "license": "CC BY-SA 2.5",
-    "source": "https://commons.wikimedia.org/wiki/File:Cono_de_Abrams_01.jpg"
-  },
-  "turbidity-meter": {
-    "author": "Unknown",
-    "license": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:Nephelometer.jpg"
-  },
-  "drafting-board-a1": {
-    "author": "Swtpc6800 Michael Holley",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Drafting_board_with_T_square_and_drawingtools.jpg"
-  },
-  "t-square": {
-    "author": "Swtpc6800 en:User:Swtpc6800 Michael Holley",
-    "license": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:Drafting_board_with_T_Square.jpg"
-  },
-  "set-square-pair": {
-    "author": "not researched",
-    "license": "CC BY 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Set-square_(AM_2015.34.65-2).jpg"
-  },
-  "technical-pen-set": {
-    "author": "Slashme",
-    "license": "CC0",
-    "source": "https://commons.wikimedia.org/wiki/File:ROtring_technical_pens_with_photographic_target.jpg"
-  },
-  "architect-scale-ruler": {
-    "author": "Central Intelligence Agency from Washington, D.C.",
-    "license": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:Triangular_24-Inch_Engineering_Scale_(30245415113).jpg"
-  },
-  "anemometer": {
-    "author": "Tpdwkouaa",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Digital_Handheld_Anemometer.jpg"
-  },
-  "sound-level-meter": {
-    "author": "Jin Zan",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Sound_level_meter,_DVM85.jpg"
-  },
-  "fdm-3d-printer": {
-    "author": "Chris Davis",
-    "license": "CC BY-SA 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Stratasys_FDM_2000.jpg"
-  },
-  "vernier-caliper": {
-    "author": "Jacek Halicki",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:2020_Suwmiarka_cyfrowa.jpg"
-  },
-  "micrometer": {
-    "author": "Al Riaz Uddin",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Micrometer_(screw_gauge).jpg"
-  },
-  "thermocouple-k-type": {
-    "author": "Harke",
-    "license": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:Thermocouple_K_(2).jpg"
-  },
-  "pneumatic-cylinder": {
-    "author": "Jonashtand",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:A_pneumatic_cylinder_(Max._press_1.0MPa).jpg"
-  },
-  "banner-workbench": {
-    "author": "James Bastow",
-    "license": "CC BY-SA 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Electronics_workbench.jpg"
-  },
-  "banner-robotics-lab": {
-    "author": "Joe Mabel",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:University_of_Washington_-_Bill_and_Melinda_Gates_Center_for_CSE_-_robotics_lab_grad_student_offices.jpg"
-  },
-  "banner-breadboard": {
-    "author": "Zeroping",
-    "license": "CC BY 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Multimeter_probes_on_breadboard.jpg"
-  },
-  "banner-lab": {
-    "author": "Radarvector",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Keysight_InfiniiVision_DSOX_4024A_and_digital_multimeter_and_power_supply_in_laboratory_use.jpg"
-  },
-  "banner-bridge": {
-    "author": "BrickArt!san from Canada",
-    "license": "CC BY-SA 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Balsa_wood_model_Bridge.jpg"
-  },
-  "banner-kit": {
-    "author": "Nick Ames",
-    "license": "CC BY-SA 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Tin_Electronics_Lab_(open).jpg"
-  },
-  "banner-cnc": {
-    "author": "DotEagle",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Arduino_UNO_compatible_board,_CNC_shield_stepper_motor_controller,_and_a_NEMA_17_stepper_motor.jpg"
-  },
-  "banner-arduino-iso": {
-    "author": "MakeMagazinDE",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Arduino_uno_r3_isometr.jpg"
-  },
-  "banner-raspberry-top": {
-    "author": "Laserlicht",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Raspberry_Pi_4_Model_B_-_Top.jpg"
-  }
+ "hc-sr04-ultrasonic-sensor": {
+  "author": "SparkFun Electronics",
+  "license": "CC BY 2.0",
+  "source": "https://www.sparkfun.com/ultrasonic-distance-sensor-hc-sr04.html"
+ },
+ "dht22-temperature-humidity": {
+  "author": "Ubahnverleih",
+  "license": "CC0",
+  "source": "https://commons.wikimedia.org/wiki/File:DHT22-Temperatur-Sensor.jpg"
+ },
+ "acs712-current-sensor": {
+  "author": "SparkFun",
+  "license": "CC BY 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:SparkFun_ACS712_HallSensor_08882-01.jpg"
+ },
+ "arduino-uno-r3": {
+  "author": "SparkFun Electronics",
+  "license": "CC BY 2.0",
+  "source": "https://www.sparkfun.com/arduino-uno-r3.html"
+ },
+ "arduino-mega-2560": {
+  "author": "SparkFun Electronics",
+  "license": "CC BY 2.0",
+  "source": "https://www.sparkfun.com/arduino-mega-2560-r3.html"
+ },
+ "esp32-devkit-v1": {
+  "author": "Edwiyanto",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:ESP32_Dev_Board.jpg"
+ },
+ "esp32-cam": {
+  "author": "Nowforever",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:ESP32-CAM.jpg"
+ },
+ "stm32-blue-pill": {
+  "author": "Popolon",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Core_Learning_Board_module_Arduino_STM32_F103_C8T6.jpg"
+ },
+ "raspberry-pi-4": {
+  "author": "SparkFun Electronics",
+  "license": "CC BY 2.0",
+  "source": "https://www.sparkfun.com/raspberry-pi-4-model-b-4-gb.html"
+ },
+ "sg90-micro-servo": {
+  "author": "Suyash Dwivedi",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Tower_Pro_SG90_micro_servo_motor.jpg"
+ },
+ "nema17-stepper-motor": {
+  "author": "SparkFun Electronics",
+  "license": "CC BY 2.0",
+  "source": "https://www.sparkfun.com/stepper-motor-125-oz-in-200-steps-rev-600mm-wire.html"
+ },
+ "stepper-28byj48-uln2003": {
+  "author": "Kushagra Keshari",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:28BYJ-48_unipolar_stepper_motor_with_ULN2003_driver.jpg"
+ },
+ "dc-power-adapter-12v": {
+  "author": "Evan-Amos",
+  "license": "Public domain",
+  "source": "https://commons.wikimedia.org/wiki/File:Notebook-Computer-AC-Adapter.jpg"
+ },
+ "lm2596-buck-converter": {
+  "author": "Matthew Berardi",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:LM2596_buck_converter_module,_MP1584_buck_converter_module,_and_SDB628_boost_converter_module.jpg"
+ },
+ "li-ion-18650-cell": {
+  "author": "SparkFun Electronics",
+  "license": "CC BY 2.0",
+  "source": "https://www.sparkfun.com/lithium-ion-battery-18650-cell-2600mah.html"
+ },
+ "step-down-transformer": {
+  "author": "Hannes Grobe",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Transformer-1_hg.jpg"
+ },
+ "breadboard-830": {
+  "author": "SparkFun Electronics",
+  "license": "CC BY 2.0",
+  "source": "https://www.sparkfun.com/breadboard-full-size-bare.html"
+ },
+ "jumper-wire-set": {
+  "author": "SparkFun Electronics",
+  "license": "CC BY 2.0",
+  "source": "https://www.sparkfun.com/jumper-wires-standard-7-m-m-30-awg-30-pack.html"
+ },
+ "resistor-kit": {
+  "author": "SparkFun Electronics",
+  "license": "CC BY 2.0",
+  "source": "https://www.sparkfun.com/resistor-kit-1-4w-500-total.html"
+ },
+ "capacitor-kit-electrolytic": {
+  "author": "Elcap",
+  "license": "CC0",
+  "source": "https://commons.wikimedia.org/wiki/File:Electrolytic_capacitors-P1090328.JPG"
+ },
+ "led-5mm-assorted": {
+  "author": "SparkFun Electronics",
+  "license": "CC BY 2.0",
+  "source": "https://www.sparkfun.com/led-assorted-20-pack.html"
+ },
+ "lcd-16x2-i2c": {
+  "author": "Retired electrician",
+  "license": "CC0",
+  "source": "https://commons.wikimedia.org/wiki/File:MELT_16x2_LCD_alphanumeric_display_04(DXO).jpg"
+ },
+ "seven-segment-display": {
+  "author": "Mister rf",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:FND500.jpg"
+ },
+ "relay-module-5v": {
+  "author": "Suyash Dwivedi",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:SRD-05VDC-SL-C_5V_one-channel_relay_module.jpg"
+ },
+ "stripboard-pcb": {
+  "author": "Alexander Jones",
+  "license": "Public domain",
+  "source": "https://commons.wikimedia.org/wiki/File:Stripboard.jpg"
+ },
+ "ne555-timer-ic": {
+  "author": "Swift.Hg",
+  "license": "CC BY-SA 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:NE555_DIP_%26_SOIC.jpg"
+ },
+ "lm741-op-amp": {
+  "author": "Raimond Spekking",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:DOV-1X_-_National_Semiconductor_LM741CN_on_printed_circuit_board-9801.jpg"
+ },
+ "lm358-dual-op-amp": {
+  "author": "Raimond Spekking",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Nedap_ESD1_-_Keyboard_controller_PCB_-_Philips_LM358D-8584.jpg"
+ },
+ "ttl-74xx-ic-kit": {
+  "author": "Robert.Baruch",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:74F00_Moto_8352_package_top.jpg"
+ },
+ "bjt-transistor-kit": {
+  "author": "Pxchanh",
+  "license": "CC0",
+  "source": "https://commons.wikimedia.org/wiki/File:Transistor_-_1.jpg"
+ },
+ "irf540n-mosfet": {
+  "author": "Suyash Dwivedi",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Power_MOSFET.jpg"
+ },
+ "digital-multimeter": {
+  "author": "© 2010 by Tomasz Sienicki [user: tsca, mail: tomasz.sienicki at gmail.com]",
+  "license": "CC BY 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Digital_universal_multimeter_(ubt).jpeg"
+ },
+ "digital-oscilloscope": {
+  "author": "Draconichiaro",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:RIGOL_DS1054Z_Digital_Storage_Oscilloscope.jpg"
+ },
+ "bench-power-supply": {
+  "author": "Derrick Parker",
+  "license": "CC0",
+  "source": "https://commons.wikimedia.org/wiki/File:Bench_power_supply.jpg"
+ },
+ "usb-logic-analyzer": {
+  "author": "SparkFun Electronics",
+  "license": "CC BY 2.0",
+  "source": "https://www.sparkfun.com/usb-logic-analyzer-24mhz-8-channel.html"
+ },
+ "pulse-oximeter": {
+  "author": "Thinkpaul",
+  "license": "CC BY-SA 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:FingertipPulseOximeterMD300C2.jpg"
+ },
+ "soldering-station": {
+  "author": "YuriyTer",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Accta_301_Soldering_Station.png"
+ },
+ "soldering-iron-kit": {
+  "author": "SparkFun Electronics",
+  "license": "CC BY 2.0",
+  "source": "https://www.sparkfun.com/soldering-iron-60w-adjustable-temperature.html"
+ },
+ "solder-wire": {
+  "author": "SparkFun Electronics",
+  "license": "CC BY 2.0",
+  "source": "https://www.sparkfun.com/solder-lead-free-100-gram-spool.html"
+ },
+ "rj45-crimping-tool": {
+  "author": "Adamantios",
+  "license": "CC BY-SA 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Crimping-pliers-pro-RJ-0a.jpg"
+ },
+ "wire-stripper": {
+  "author": "Varnav",
+  "license": "CC0",
+  "source": "https://commons.wikimedia.org/wiki/File:Automatic_combined_wire_stripper.JPG"
+ },
+ "arduino-starter-kit": {
+  "author": "oomlout",
+  "license": "CC BY-SA 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:ARDX_-_Arduino_Experimentation_Kit_(Inside_the_box).jpg"
+ },
+ "microprocessor-8086": {
+  "author": "Thomas Nguyen",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Intel_C8086.jpg"
+ },
+ "fiber-patch-cord": {
+  "author": "Asurnipal",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Optical_fiber_connectors-optical_patch_cable-01ASD.jpg"
+ },
+ "plc-trainer": {
+  "author": "Projuktiponno",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Delta_PLC_CPU.jpg"
+ },
+ "digital-theodolite": {
+  "author": "No machine-readable author provided. PhY assumed (based on copyright claims).",
+  "license": "CC BY-SA 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:DTM-A20LG-04.jpg"
+ },
+ "auto-level-tripod": {
+  "author": "Original uploader was Clicgauche at fr.wikipedia",
+  "license": "CC BY-SA 1.0",
+  "source": "https://commons.wikimedia.org/wiki/File:DumpyLevel.jpg"
+ },
+ "prismatic-compass": {
+  "author": "Slashme",
+  "license": "CC0",
+  "source": "https://commons.wikimedia.org/wiki/File:Casella_6555_prismatic_compass_top_open.jpg"
+ },
+ "measuring-tape": {
+  "author": "Junkyardsparkle",
+  "license": "CC0",
+  "source": "https://commons.wikimedia.org/wiki/File:Lufkin_Universal_50_ft_tape_measure.jpg"
+ },
+ "handheld-gps": {
+  "author": "Siarhei Besarab",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Magellan_Triton_2000_handheld_GPS_receiver_01.jpg"
+ },
+ "slump-cone-set": {
+  "author": "No machine-readable author provided. Tano4595 assumed (based on copyright claims",
+  "license": "CC BY-SA 2.5",
+  "source": "https://commons.wikimedia.org/wiki/File:Cono_de_Abrams_01.jpg"
+ },
+ "drafting-board-a1": {
+  "author": "Swtpc6800 Michael Holley",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Drafting_board_with_T_square_and_drawingtools.jpg"
+ },
+ "set-square-pair": {
+  "author": "not researched",
+  "license": "CC BY 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Set-square_(AM_2015.34.65-2).jpg"
+ },
+ "architect-scale-ruler": {
+  "author": "Tiia Monto",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Scale_ruler.jpg"
+ },
+ "anemometer": {
+  "author": "Tpdwkouaa",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Digital_Handheld_Anemometer.jpg"
+ },
+ "sound-level-meter": {
+  "author": "Jin Zan",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Sound_level_meter,_DVM85.jpg"
+ },
+ "fdm-3d-printer": {
+  "author": "John Abella",
+  "license": "CC BY 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Prusa_i3_3D_Printer_-_Reprap_-_Completed.jpg"
+ },
+ "vernier-caliper": {
+  "author": "SparkFun Electronics",
+  "license": "CC BY 2.0",
+  "source": "https://www.sparkfun.com/6-digital-calipers.html"
+ },
+ "micrometer": {
+  "author": "Stephanie cheks",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Micrometer_screw_gauge.jpg"
+ },
+ "thermocouple-k-type": {
+  "author": "SparkFun Electronics",
+  "license": "CC BY 2.0",
+  "source": "https://www.sparkfun.com/thermocouple-type-k-stainless-steel.html"
+ },
+ "pneumatic-cylinder": {
+  "author": "Grummelbacke",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Pneumatic_cylinder.jpg"
+ },
+ "banner-workbench": {
+  "author": "James Bastow",
+  "license": "CC BY-SA 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Electronics_workbench.jpg"
+ },
+ "banner-robotics-lab": {
+  "author": "Joe Mabel",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:University_of_Washington_-_Bill_and_Melinda_Gates_Center_for_CSE_-_robotics_lab_grad_student_offices.jpg"
+ },
+ "banner-breadboard": {
+  "author": "Zeroping",
+  "license": "CC BY 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Multimeter_probes_on_breadboard.jpg"
+ },
+ "banner-lab": {
+  "author": "Radarvector",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Keysight_InfiniiVision_DSOX_4024A_and_digital_multimeter_and_power_supply_in_laboratory_use.jpg"
+ },
+ "banner-bridge": {
+  "author": "BrickArt!san from Canada",
+  "license": "CC BY-SA 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Balsa_wood_model_Bridge.jpg"
+ },
+ "banner-kit": {
+  "author": "Nick Ames",
+  "license": "CC BY-SA 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Tin_Electronics_Lab_(open).jpg"
+ },
+ "banner-cnc": {
+  "author": "DotEagle",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Arduino_UNO_compatible_board,_CNC_shield_stepper_motor_controller,_and_a_NEMA_17_stepper_motor.jpg"
+ },
+ "banner-arduino-iso": {
+  "author": "MakeMagazinDE",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Arduino_uno_r3_isometr.jpg"
+ },
+ "banner-raspberry-top": {
+  "author": "Laserlicht",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Raspberry_Pi_4_Model_B_-_Top.jpg"
+ },
+ "tt-gear-motor-pair": {
+  "author": "SparkFun Electronics",
+  "license": "CC BY 2.0",
+  "source": "https://www.sparkfun.com/hobby-gearmotor-140-rpm-pair.html"
+ },
+ "robot-wheel-65mm": {
+  "author": "SparkFun Electronics",
+  "license": "CC BY 2.0",
+  "source": "https://www.sparkfun.com/wheel-65mm-rubber-tire-pair.html"
+ },
+ "nokia-5110-lcd": {
+  "author": "SparkFun Electronics",
+  "license": "CC BY 2.0",
+  "source": "https://www.sparkfun.com/graphic-lcd-84x48-nokia-5110.html"
+ }
 }

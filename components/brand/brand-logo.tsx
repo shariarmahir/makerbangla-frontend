@@ -11,7 +11,7 @@ const icons: Record<string, { path: string; hex: string; glyphOnly?: boolean }> 
 };
 
 // Brands without an open-licensed glyph are typeset in a colour from the site palette (not the brand's own artwork).
-const wordTone = ["text-brand-strong", "text-tile-amber", "text-ink", "text-tile-teal", "text-tile-coral", "text-tile-deep"];
+const wordTone = ["text-brand-strong", "text-tile-blue", "text-ink", "text-tile-navy", "text-brand", "text-tile-midnight"];
 
 /** Transparent brand mark: official glyph (Simple Icons, brand colour) when available, otherwise a typeset wordmark. */
 export function BrandLogo({ slug, name, className, size = "md", index = 0 }: { slug: string; name: string; className?: string; size?: "md" | "lg"; index?: number }) {

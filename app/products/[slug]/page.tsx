@@ -100,8 +100,8 @@ async function ProductDetails({ params }: Pick<PageProps<"/products/[slug]">, "p
           </div>
           {credit ? (
             <figcaption className="mt-2 text-[10.5px] text-subtle">
-              Photo{productVisual(p.slug).cutout ? " (background removed)" : ""}: {credit.author} · {credit.license} ·{" "}
-              <a href={credit.source} target="_blank" rel="noopener noreferrer nofollow" className="underline underline-offset-2">Wikimedia Commons</a>
+              Photo{productVisual(p.slug).cutout ? " (background removed & enhanced)" : ""}: {credit.author} · {credit.license} ·{" "}
+              <a href={credit.source} target="_blank" rel="noopener noreferrer nofollow" className="underline underline-offset-2">{credit.source.includes("sparkfun.com") ? "SparkFun" : "Wikimedia Commons"}</a>
             </figcaption>
           ) : (
             <figcaption className="mt-2 text-[10.5px] text-subtle">Product illustration</figcaption>
@@ -188,7 +188,7 @@ async function ProductDetails({ params }: Pick<PageProps<"/products/[slug]">, "p
 
       <section className="mt-12" aria-labelledby="related">
         <h2 id="related" className="section-title mb-5">You may also need</h2>
-        <div className="grid grid-cols-2 gap-x-3 gap-y-14 pt-12 sm:grid-cols-4 sm:gap-x-5">
+        <div className="grid grid-cols-2 gap-x-3 gap-y-12 pt-9 sm:grid-cols-4 sm:gap-x-5">
           {related(p).map((r) => <ProductCard key={r.slug} product={r} />)}
         </div>
       </section>

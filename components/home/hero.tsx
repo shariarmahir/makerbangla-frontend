@@ -14,7 +14,8 @@ type Slide = {
   cta: string;
   href: string;
   bg: string;
-  dark?: boolean;
+  /** Font colour paired with the background (yellow → dark blue, dark blue → yellow, light blue → white). */
+  fg: string;
   watermarkTone: string;
   button: MagicButtonVariant;
   description: string;
@@ -29,8 +30,9 @@ const slides: Slide[] = [
     watermark: "Arduino",
     cta: "Shop Boards",
     href: "/shop?category=microcontrollers",
-    bg: "bg-[radial-gradient(ellipse_at_62%_42%,var(--color-tile-butter)_0%,var(--color-tile-yellow)_42%,var(--color-tile-amber)_100%)]",
-    watermarkTone: "text-white/55",
+    bg: "bg-[radial-gradient(ellipse_at_62%_42%,color-mix(in_srgb,var(--color-tile-yellow)_25%,white)_0%,var(--color-tile-butter)_22%,var(--color-tile-yellow)_62%,color-mix(in_oklab,var(--color-tile-yellow)_88%,var(--color-sale))_100%)]",
+    fg: "text-tile-navy",
+    watermarkTone: "text-white/60",
     button: "default",
     description: "The ATmega328P board behind most microprocessor sessionals, robots and first IoT builds.",
   },
@@ -42,9 +44,9 @@ const slides: Slide[] = [
     watermark: "Raspberry",
     cta: "Explore Pi 4",
     href: "/products/raspberry-pi-4",
-    bg: "bg-[radial-gradient(ellipse_at_62%_40%,var(--color-tile-deep)_0%,var(--color-tile-ink)_70%)]",
-    dark: true,
-    watermarkTone: "text-white/[0.07]",
+    bg: "bg-[radial-gradient(ellipse_at_62%_40%,color-mix(in_srgb,var(--color-tile-blue)_45%,var(--color-tile-navy))_0%,var(--color-tile-navy)_42%,var(--color-tile-midnight)_100%)]",
+    fg: "text-tile-yellow",
+    watermarkTone: "text-white/[0.08]",
     button: "accent",
     description: "Quad-core Linux computer for computer vision, ML inference and campus IoT gateways.",
   },
@@ -56,8 +58,9 @@ const slides: Slide[] = [
     watermark: "Robotics",
     cta: "Shop Motors",
     href: "/shop?category=motors",
-    bg: "bg-[radial-gradient(ellipse_at_62%_42%,var(--color-tile-aqua)_0%,var(--color-tile-teal)_75%)]",
-    watermarkTone: "text-white/45",
+    bg: "bg-[radial-gradient(ellipse_at_62%_42%,color-mix(in_srgb,var(--color-tile-blue)_50%,white)_0%,var(--color-tile-blue)_55%,color-mix(in_srgb,var(--color-tile-blue)_80%,var(--color-tile-navy))_100%)]",
+    fg: "text-white",
+    watermarkTone: "text-white/25",
     button: "default",
     description: "200 precise steps per revolution for CNC plotters, 3D printers and camera sliders.",
   },
@@ -69,17 +72,17 @@ const slides: Slide[] = [
     watermark: "Precision",
     cta: "Shop Workshop",
     href: "/shop?category=mechanical",
-    bg: "bg-[radial-gradient(ellipse_at_62%_42%,var(--color-tile-teal)_0%,var(--color-tile-deep)_80%)]",
-    dark: true,
-    watermarkTone: "text-white/[0.12]",
-    button: "accent",
+    bg: "bg-[radial-gradient(ellipse_at_62%_42%,white_0%,color-mix(in_srgb,var(--color-tile-sky)_35%,white)_35%,var(--color-tile-sky)_100%)]",
+    fg: "text-tile-blue",
+    watermarkTone: "text-tile-blue/[0.09]",
+    button: "brand",
     description: "0.01 mm resolution for the machine shop, metrology lab and every project fit check.",
   },
 ];
 
 function SlideView({ s, first }: { s: Slide; first: boolean }) {
   return (
-    <div className={cn("relative isolate grid h-full min-h-[460px] grid-rows-[auto_1fr_auto] overflow-hidden rounded-[26px] p-6 sm:min-h-[420px] sm:p-10 lg:aspect-[16/6.2] lg:min-h-0 lg:p-14", s.bg, s.dark ? "text-white" : "text-ink")}>
+    <div className={cn("relative isolate grid h-full min-h-[460px] grid-rows-[auto_1fr_auto] overflow-hidden rounded-[26px] p-6 sm:min-h-[420px] sm:p-10 lg:aspect-[16/6.2] lg:min-h-0 lg:p-14", s.bg, s.fg)}>
       <span aria-hidden className="absolute -top-1/3 -left-1/4 -z-20 size-[70%] rounded-full bg-white/10 blur-3xl" />
       {/* Giant watermark word behind the product */}
       <p

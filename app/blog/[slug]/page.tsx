@@ -72,7 +72,7 @@ async function ArticleBody({ params }: Pick<PageProps<"/blog/[slug]">, "params">
       {parts.length > 0 && (
         <section className="mt-12" aria-labelledby="parts-title">
           <h2 id="parts-title" className="section-title mb-5">Parts used in this article</h2>
-          <div className="grid grid-cols-2 gap-x-3 gap-y-14 pt-12 sm:grid-cols-4 sm:gap-x-5">
+          <div className="grid grid-cols-2 gap-x-3 gap-y-12 pt-9 sm:grid-cols-4 sm:gap-x-5">
             {parts.map((p) => <ProductCard key={p.slug} product={p} />)}
           </div>
         </section>

@@ -29,7 +29,7 @@ export function FinderForm({ fields, index }: { fields: FinderField[]; index: Fi
   return (
     <Form action="/shop" className="container-x relative grid grid-cols-2 items-center gap-2.5 py-4 md:grid-cols-[auto_repeat(4,1fr)_auto] md:gap-3 md:py-5">
       <h2 id="finder-title" className="col-span-2 flex items-center gap-3 md:col-span-1 md:pr-2">
-        <span className="grid size-10 shrink-0 place-items-center rounded-full bg-ink text-accent-yellow">
+        <span className="grid size-10 shrink-0 place-items-center rounded-full bg-tile-navy text-accent-yellow">
           <Cpu className="size-5" strokeWidth={1.8} />
         </span>
         <span className="text-[14px] leading-tight font-extrabold">
@@ -47,7 +47,7 @@ export function FinderForm({ fields, index }: { fields: FinderField[]; index: Fi
         const others = { ...picks, [f.name]: undefined };
         return (
           <label key={f.name} className="relative flex h-11 items-center rounded-md bg-white shadow-[0_2px_0_rgb(0_0_0/0.08)] ring-1 ring-ink/5 transition-shadow focus-within:ring-2 focus-within:ring-ink">
-            <span className={cn("ml-2.5 grid size-5 shrink-0 place-items-center rounded-full text-[10px] font-bold", picks[f.name] ? "bg-brand text-white" : "bg-ink text-white")}>{i + 1}</span>
+            <span className={cn("ml-2.5 grid size-5 shrink-0 place-items-center rounded-full text-[10px] font-bold", picks[f.name] ? "bg-brand text-white" : "bg-tile-navy text-accent-yellow")}>{i + 1}</span>
             <span className="sr-only">{f.label}</span>
             <select
               name={f.name}

@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { ChevronRight } from "lucide-react";
-import { MagicLink } from "@/components/ui/magic-button";
+import { MagicLink, type MagicButtonVariant } from "@/components/ui/magic-button";
 import { cn } from "@/lib/utils";
 
 export type Offer = {
@@ -20,6 +20,9 @@ export type Offer = {
   image: string;
   bg: string;
   dark: boolean;
+  fg: string;
+  muted: string;
+  button: MagicButtonVariant;
 };
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -38,7 +41,6 @@ export function PromoSlides({ offers }: { offers: Offer[] }) {
 
   const o = offers[i];
   if (!o) return null;
-  const fg = o.dark ? "text-white" : "text-ink";
 
   return (
     <MotionConfig reducedMotion="user">
@@ -47,7 +49,7 @@ export function PromoSlides({ offers }: { offers: Offer[] }) {
         onPointerLeave={() => (paused.current = false)}
         onFocus={() => (paused.current = true)}
         onBlur={() => (paused.current = false)}
-        className={cn("relative rounded-2xl transition-colors duration-700 ease-out", o.bg, fg)}
+        className={cn("relative rounded-2xl transition-colors duration-700 ease-out", o.bg, o.fg)}
       >
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
@@ -87,7 +89,7 @@ export function PromoSlides({ offers }: { offers: Offer[] }) {
                   transition={{ type: "spring", stiffness: 320, damping: 14, delay: 0.25 }}
                   className={cn(
                     "absolute -top-14 left-0 z-10 grid size-[4.6rem] place-content-center rounded-full text-center leading-none shadow-[0_10px_24px_-8px_rgb(0_0_0/0.45)] sm:-top-16 sm:size-24 md:-top-20",
-                    o.dark ? "bg-accent-yellow text-ink" : "bg-tile-coral text-white",
+                    o.dark ? "bg-accent-yellow text-tile-navy" : "bg-tile-coral text-white",
                   )}
                 >
                   <span className="text-[1.45rem] font-black tracking-tight tabular-nums sm:text-[1.9rem]">{o.sticker.big}</span>
@@ -106,9 +108,9 @@ export function PromoSlides({ offers }: { offers: Offer[] }) {
             >
               <p className="text-[12px] font-black tracking-wide uppercase opacity-80">{o.label}</p>
               <p className="mt-1 line-clamp-2 text-[clamp(1.2rem,2vw,1.6rem)] leading-tight font-black tracking-tight">{o.name}</p>
-              <p className="mt-1.5 line-clamp-2 max-w-sm text-[12.5px] leading-relaxed opacity-90">{o.text}</p>
+              <p className={cn("mt-1.5 line-clamp-2 max-w-sm text-[12.5px] leading-relaxed", o.muted)}>{o.text}</p>
               <div className="mt-4">
-                <MagicLink href={o.href} variant={o.dark ? "accent" : "light"} size="sm">
+                <MagicLink href={o.href} variant={o.button} size="sm">
                   Shop now <ChevronRight className="size-3.5" />
                 </MagicLink>
               </div>

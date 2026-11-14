@@ -21,29 +21,31 @@ function HeadTile({ row }: { row: Row }) {
   const tone = categoryTone(row.slug);
   const href = `/shop?category=${row.slug}`;
   return (
-    <div className={cn("relative isolate flex min-h-72 flex-col overflow-hidden rounded-[22px] p-6 shadow-[0_28px_40px_-30px_rgb(0_0_0/0.55)] lg:mt-12 lg:min-h-0", tone.bg, tone.text)}>
-      <p className={cn("text-[11px] font-extrabold tracking-[0.14em] uppercase tabular-nums", tone.muted)}>{categoryCount(row.slug)} products</p>
-      <h2 className="mt-2 text-[clamp(1.4rem,1.75vw,1.65rem)] leading-[1.05] font-black tracking-tight [overflow-wrap:anywhere]">
+    <div className={cn("relative isolate flex min-h-80 flex-col overflow-hidden rounded-[22px] p-5 shadow-[0_26px_36px_-28px_rgb(14_31_77/0.55)] sm:p-6 lg:mt-9 lg:min-h-0", tone.bg, tone.text)}>
+      <h2 className="text-[clamp(1.4rem,1.75vw,1.65rem)] leading-[1.05] font-black tracking-tight [overflow-wrap:anywhere]">
         <Link href={href} className="hover:underline hover:decoration-2 hover:underline-offset-4">{category.name}</Link>
       </h2>
-      <ul className="relative z-10 mt-5 space-y-1.5">
+
+      {/* Sub-categories as a clean index: hairline rows with an arrow that wakes on hover */}
+      <ul className="mt-3.5 border-t border-current/15">
         {category.links.map((l) => (
-          <li key={l}>
-            <Link href={`${href}&q=${encodeURIComponent(l)}`} className="group/l inline-flex items-center gap-1.5 text-[13.5px] font-bold">
-              <span className="underline-offset-4 group-hover/l:underline">{l}</span>
-              <ArrowUpRight className="size-3.5 opacity-0 transition-opacity group-hover/l:opacity-100" />
+          <li key={l} className="border-b border-current/15">
+            <Link href={`${href}&q=${encodeURIComponent(l)}`} className="group/l flex items-center justify-between gap-2 py-1.5 text-[12.5px] font-bold">
+              <span className="transition-transform duration-200 group-hover/l:translate-x-1">{l}</span>
+              <ArrowUpRight className="size-3.5 shrink-0 opacity-40 transition-[opacity,translate] duration-200 group-hover/l:-translate-y-0.5 group-hover/l:opacity-100" />
             </Link>
           </li>
         ))}
       </ul>
 
-      <div aria-hidden className="pointer-events-none absolute -right-3 -bottom-3 aspect-square w-32 -rotate-12 sm:w-36 lg:w-32 xl:w-36">
-        <ProductVisual slug={row.image} alt="" sizes="200px" inset="p-0" />
+      {/* Category hero product, fully visible and centred in the free space */}
+      <div aria-hidden className="pointer-events-none relative my-2.5 min-h-36 flex-1 lg:min-h-20">
+        <ProductVisual slug={row.image} alt="" sizes="240px" inset="p-[4%]" className="-rotate-6" />
       </div>
 
-      <div className="relative mt-auto pt-8">
-        <MagicLink href={href} variant={tone.dark ? "accent" : "default"} size="sm">
-          View All <ArrowRight className="size-3.5" />
+      <div>
+        <MagicLink href={href} variant={tone.button} size="sm">
+          View all <span className={cn("tabular-nums", tone.dark ? "opacity-80" : "opacity-70")}>{categoryCount(row.slug)}</span> <ArrowRight className="size-3.5" />
         </MagicLink>
       </div>
     </div>
@@ -57,7 +59,7 @@ export function CategoryShowcase({ rows = defaultRows, className, label = "Shop 
         {rows.map((row) => (
           <div key={row.slug} className="reveal grid gap-x-5 gap-y-4 lg:grid-cols-[1fr_4fr]">
             <HeadTile row={row} />
-            <div className="grid grid-cols-2 gap-x-3 gap-y-14 pt-12 sm:grid-cols-4 sm:gap-x-4">
+            <div className="grid grid-cols-2 gap-x-3 gap-y-12 pt-9 sm:grid-cols-4 sm:gap-x-4">
               {productsIn(row.slug).map((p) => (
                 <ProductCard key={p.slug} product={p} sizes="(min-width:1024px) 250px, (min-width:640px) 24vw, 48vw" />
               ))}

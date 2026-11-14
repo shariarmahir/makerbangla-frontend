@@ -4,51 +4,63 @@ import { ChevronRight } from "lucide-react";
 import { MagicFace } from "@/components/ui/magic-button";
 import { cn } from "@/lib/utils";
 
-function Headline({ lines, className }: { lines: [string, string]; className?: string }) {
+/** Two-line title: a lighter lead word over a heavy second line. */
+function Headline({ lines, className, lead, strong }: { lines: [string, string]; className?: string; lead: string; strong: string }) {
   return (
-    <h3 className={cn("leading-[0.95] font-extrabold tracking-tight uppercase", className)}>
-      <span className="block">{lines[0]}</span>
-      <span className="block">{lines[1]}</span>
+    <h3 className={cn("tracking-tight", className)}>
+      <span className={cn("block text-[0.62em] leading-tight font-semibold", lead)}>{lines[0]}</span>
+      <span className={cn("block leading-[1.02] font-black", strong)}>{lines[1]}</span>
     </h3>
   );
 }
 
 function ProductTile({ lines, href, image, alt, tone }: { lines: [string, string]; href: string; image: string; alt: string; tone: "yellow" | "brand" }) {
+  const yellow = tone === "yellow";
   return (
     <Link
       href={href}
       className={cn(
-        "group relative flex min-h-56 overflow-hidden rounded-2xl p-6 sm:min-h-64 sm:p-8 lg:min-h-full",
-        tone === "yellow" ? "bg-accent-yellow" : "bg-brand",
+        "group relative isolate flex min-h-80 flex-col overflow-hidden rounded-[22px] p-6 shadow-[0_26px_36px_-28px_rgb(14_31_77/0.5)] sm:p-7 lg:min-h-full",
+        yellow ? "bg-tile-yellow" : "bg-tile-blue",
       )}
     >
-      <div className="relative z-10 flex max-w-[55%] flex-col justify-between gap-6">
-        <Headline lines={lines} className="text-[clamp(1.6rem,3vw,2.4rem)] text-ink" />
-        <MagicFace variant={tone === "yellow" ? "default" : "light"} size="sm" className="w-fit">
-          Shop now <ChevronRight className="size-3.5" />
-        </MagicFace>
-      </div>
-      <Image
-        src={image}
-        alt={alt}
-        width={420}
-        height={420}
-        sizes="(min-width:1024px) 260px, 45vw"
-        className="cutout-shadow absolute top-1/2 -right-4 w-[58%] max-w-80 -translate-y-1/2 -rotate-6 object-contain transition-transform duration-500 ease-out group-hover:scale-105 group-hover:-rotate-2"
+      <Headline
+        lines={lines}
+        className="relative z-10 text-[clamp(1.85rem,2.6vw,2.4rem)]"
+        lead={yellow ? "text-tile-navy/75" : "text-white/85"}
+        strong={yellow ? "text-tile-navy" : "text-white"}
       />
+
+      {/* Product stage: lower-right, never under the title */}
+      <div aria-hidden className="pointer-events-none absolute right-2 bottom-2 -z-10 aspect-square h-[64%] max-h-72 sm:right-4 sm:bottom-4">
+        <span className={cn("absolute inset-[12%] rounded-full blur-2xl", yellow ? "bg-white/45" : "bg-white/25")} />
+        <Image
+          src={image}
+          alt=""
+          fill
+          sizes="(min-width:1024px) 300px, 60vw"
+          className="cutout-shadow object-contain p-[4%] transition-transform duration-500 ease-out group-hover:scale-105 group-hover:-rotate-3"
+        />
+      </div>
+      <span className="sr-only">{alt}</span>
+
+      <MagicFace variant={yellow ? "default" : "accent"} size="sm" className="relative z-10 mt-auto w-fit">
+        Shop now <ChevronRight className="size-3.5" />
+      </MagicFace>
     </Link>
   );
 }
 
-function PhotoTile({ lines, href, image, accent }: { lines: [string, string]; href: string; image: string; accent?: boolean }) {
+function PhotoTile({ lines, href, image }: { lines: [string, string]; href: string; image: string }) {
   return (
-    <Link href={href} className="group relative flex min-h-40 items-center overflow-hidden rounded-2xl bg-ink p-6 sm:p-7">
-      <Image src={image} alt="" fill sizes="(min-width:1024px) 420px, 100vw" className="object-cover opacity-80 transition-transform duration-700 ease-out group-hover:scale-105" />
-      <div className="absolute inset-0 bg-linear-to-r from-ink via-ink/75 to-ink/10" />
-      <div className="relative z-10 space-y-4">
-        <Headline lines={lines} className={cn("text-[clamp(1.25rem,2.2vw,1.65rem)] text-white", accent && "[&>span:last-child]:text-accent-yellow")} />
-        <span className="inline-flex items-center gap-1 text-[11px] font-bold tracking-wider text-white uppercase transition-colors group-hover:text-accent-yellow">
-          Shop now <ChevronRight className="size-3.5" />
+    <Link href={href} className="group relative isolate flex min-h-44 items-end overflow-hidden rounded-[22px] bg-tile-midnight p-6 shadow-[0_26px_36px_-28px_rgb(14_31_77/0.5)] sm:p-7">
+      <Image src={image} alt="" fill sizes="(min-width:1024px) 420px, 100vw" className="-z-10 object-cover opacity-75 transition-transform duration-700 ease-out group-hover:scale-105" />
+      <div className="absolute inset-0 -z-10 bg-linear-to-tr from-tile-midnight via-tile-midnight/80 to-tile-navy/10" />
+      <div className="flex w-full items-end justify-between gap-4">
+        <Headline lines={lines} className="text-[clamp(1.45rem,2vw,1.8rem)]" lead="text-white/85" strong="text-tile-yellow" />
+        <span className="grid size-10 shrink-0 place-items-center rounded-full bg-tile-yellow text-tile-navy transition-transform duration-300 group-hover:translate-x-1">
+          <ChevronRight className="size-5" strokeWidth={2.6} />
+          <span className="sr-only">Shop now</span>
         </span>
       </div>
     </Link>
@@ -62,7 +74,7 @@ export function CampaignTiles() {
       <ProductTile lines={["Maker", "Essentials"]} href="/shop?category=prototyping" image="/images/cutouts/resistor-kit.webp" alt="Resistor assortment" tone="brand" />
       <div className="grid gap-3 sm:col-span-2 sm:grid-cols-2 lg:col-span-1 lg:grid-cols-1 lg:gap-4">
         <PhotoTile lines={["Lab & Test", "Equipment"]} href="/shop?category=test-measurement" image="/images/banners/lab.webp" />
-        <PhotoTile lines={["Robotics &", "Motion Parts"]} href="/shop?category=motors" image="/images/banners/robotics-lab.webp" accent />
+        <PhotoTile lines={["Robotics &", "Motion Parts"]} href="/shop?category=motors" image="/images/banners/robotics-lab.webp" />
       </div>
     </section>
   );
