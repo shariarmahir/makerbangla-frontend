@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 import { day, idOf, mediaOrPath, money, run, str, UserError } from "../action";
+import { adminEmail } from "../admin-account";
 import { log, mutate, uid } from "../db";
 import { generatePassword, hashPassword } from "../session";
 import { expenseCategories, leadSources, leadStatuses, sections, type Section } from "../types";
@@ -96,7 +97,7 @@ export async function saveEmployee(input: unknown) {
     const hash = password ? await hashPassword(password) : null;
     return mutate((db) => {
       const email = d.email.toLowerCase();
-      if (db.employees.some((e) => e.email.toLowerCase() === email && e.id !== d.id) || email === process.env.ADMIN_EMAIL?.toLowerCase()) throw new UserError("That email is already used by another account.");
+      if (db.employees.some((e) => e.email.toLowerCase() === email && e.id !== d.id) || email === adminEmail) throw new UserError("That email is already used by another account.");
       const existing = db.employees.find((e) => e.id === d.id);
       if (existing) {
         Object.assign(existing, { name: d.name, designation: d.designation, email, phone: d.phone, access: d.access, photo: d.photo || undefined });

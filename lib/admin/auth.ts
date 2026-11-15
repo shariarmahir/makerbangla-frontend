@@ -2,6 +2,7 @@ import "server-only";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { connection } from "next/server";
+import { adminEmail } from "./admin-account";
 import { readDb } from "./db";
 import { SESSION_COOKIE, SESSION_TTL, signSession, verifySession, type SessionPayload } from "./session";
 import { sections, type Section, type User } from "./types";
@@ -16,7 +17,7 @@ export async function getUser(): Promise<User | null> {
   const db = await readDb();
   if (session.role === "admin") {
     if (session.sub !== "admin" || session.v !== (db.profile.sessionVersion ?? 1)) return null;
-    return { id: "admin", role: "admin", name: db.profile.name, title: db.profile.title, email: process.env.ADMIN_EMAIL ?? "", photo: db.profile.photo, access: Object.keys(sections) as Section[] };
+    return { id: "admin", role: "admin", name: db.profile.name, title: db.profile.title, email: adminEmail, photo: db.profile.photo, access: Object.keys(sections) as Section[] };
   }
   const e = db.employees.find((x) => x.id === session.sub);
   if (!e || !e.active || e.sessionVersion !== session.v) return null;

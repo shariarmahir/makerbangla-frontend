@@ -132,7 +132,7 @@ export type DayVisits = { views: number; visits: number; returning: number; sour
 
 export type Activity = { id: string; at: string; who: string; text: string };
 
-/** Super admin profile. The first password comes from ADMIN_PASSWORD_HASH; a changed one is stored (hashed) here. */
+/** Super admin profile. The first password comes from `admin-account.ts`; a changed one is stored (hashed) here. */
 export type Profile = { name: string; title: string; photo?: string; passwordHash?: string; sessionVersion?: number };
 
 export type Db = {

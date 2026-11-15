@@ -1,4 +1,6 @@
+import { randomBytes } from "node:crypto";
 import type { NextConfig } from "next";
+import { PHASE_PRODUCTION_SERVER } from "next/constants";
 
 const isDev = process.env.NODE_ENV !== "production";
 
@@ -27,7 +29,10 @@ const securityHeaders = [
   { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
 ];
 
-const nextConfig: NextConfig = {
+const nextConfig = (phase: string): NextConfig => ({
+  // Session signing key for deploys without SESSION_SECRET: random per build, inlined into server code only
+  // (lib/admin/session.ts, marked server-only). `next start` keeps the key the build inlined.
+  env: phase === PHASE_PRODUCTION_SERVER || process.env.SESSION_SECRET ? {} : { MB_SESSION_KEY: randomBytes(32).toString("base64url") },
   cacheComponents: true,
   partialPrefetching: true,
   poweredByHeader: false,
@@ -54,6 +59,6 @@ const nextConfig: NextConfig = {
       { source: "/brand/:path*", headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }] },
     ];
   },
-};
+});
 
 export default nextConfig;

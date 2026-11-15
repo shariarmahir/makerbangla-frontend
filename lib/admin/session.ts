@@ -1,3 +1,4 @@
+import "server-only";
 import { createHmac, randomBytes, scrypt as scryptCb, timingSafeEqual } from "node:crypto";
 import { promisify } from "node:util";
 import type { Role } from "./types";
@@ -10,10 +11,18 @@ export const SESSION_TTL = 60 * 60 * 12; // 12 hours
 
 export type SessionPayload = { sub: string; role: Role; v: number; exp: number };
 
+/**
+ * Signing key: SESSION_SECRET when set (≥ 32 chars), otherwise MB_SESSION_KEY — a random key next.config.ts creates
+ * for every build and inlines into server code only. So sign-in works with no env vars; a new deploy signs everyone out.
+ */
 const secret = () => {
   const s = process.env.SESSION_SECRET;
-  return s && s.length >= 32 ? s : null;
+  if (s && s.length >= 32) return s;
+  const k = process.env.MB_SESSION_KEY;
+  return k && k.length >= 32 ? k : null;
 };
+
+export const sessionReady = () => secret() !== null;
 
 const mac = (body: string, key: string) => createHmac("sha256", key).update(body).digest("base64url");
 
@@ -24,7 +33,7 @@ const safeEqual = (a: string, b: string) => {
 
 export function signSession(p: Omit<SessionPayload, "exp">) {
   const key = secret();
-  if (!key) throw new Error("SESSION_SECRET is missing or shorter than 32 characters.");
+  if (!key) throw new Error("No session key: set SESSION_SECRET or build with next.config.ts.");
   const body = Buffer.from(JSON.stringify({ ...p, exp: Math.floor(Date.now() / 1000) + SESSION_TTL })).toString("base64url");
   return `${body}.${mac(body, key)}`;
 }

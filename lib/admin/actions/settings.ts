@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { mediaOrPath, run, str, UserError } from "../action";
 import { endSession, startSession } from "../auth";
+import { adminPasswordHash } from "../admin-account";
 import { log, mutate, readDb } from "../db";
 import { hashPassword, verifyPassword } from "../session";
 
@@ -29,7 +30,7 @@ const passwordSchema = z
 export async function changePassword(input: unknown) {
   return run(null, passwordSchema, input, async (d, user) => {
     const db = await readDb();
-    const stored = user.role === "admin" ? db.profile.passwordHash ?? process.env.ADMIN_PASSWORD_HASH ?? "" : db.employees.find((e) => e.id === user.id)?.passwordHash ?? "";
+    const stored = user.role === "admin" ? db.profile.passwordHash ?? adminPasswordHash : db.employees.find((e) => e.id === user.id)?.passwordHash ?? "";
     if (!(await verifyPassword(d.current, stored))) throw new UserError("Your current password isn't right.");
     const hash = await hashPassword(d.next);
     const v = await mutate((db2) => {

@@ -4,7 +4,8 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { endSession, startSession } from "./auth";
 import { log, mutate, readDb } from "./db";
-import { verifyPassword } from "./session";
+import { adminEmail, adminPasswordHash } from "./admin-account";
+import { sessionReady, verifyPassword } from "./session";
 
 /** `id` is echoed back so the form keeps what was typed (React resets forms after an action). */
 export type SignInState = { error?: string; id?: string } | null;
@@ -32,15 +33,14 @@ export async function signIn(_: SignInState, form: FormData): Promise<SignInStat
   const password = String(form.get("password") ?? "").slice(0, 200);
   if (!id || !password) return { id, error: "Enter your email or username and password." };
 
-  if ((process.env.SESSION_SECRET?.length ?? 0) < 32) return { id, error: "Sign-in isn't configured on this server yet." };
+  if (!sessionReady()) return { id, error: "Sign-in isn't configured on this server yet." };
 
   const db = await readDb();
-  const adminEmail = process.env.ADMIN_EMAIL?.toLowerCase();
   const employee = db.employees.find((e) => e.active && (e.username === id || e.email.toLowerCase() === id));
 
   let ok = false;
-  if (adminEmail && id === adminEmail) {
-    ok = await verifyPassword(password, db.profile.passwordHash ?? process.env.ADMIN_PASSWORD_HASH ?? DUMMY);
+  if (id === adminEmail) {
+    ok = await verifyPassword(password, db.profile.passwordHash ?? adminPasswordHash);
     if (ok) await startSession({ sub: "admin", role: "admin", v: db.profile.sessionVersion ?? 1 });
   } else if (employee) {
     ok = await verifyPassword(password, employee.passwordHash);

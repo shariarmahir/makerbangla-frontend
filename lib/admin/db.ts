@@ -9,7 +9,8 @@ import type { Db } from "./types";
  * Reads are cached and re-loaded when the file changes; writes are serialised and atomic (temp file + rename).
  * Swap `readDb`/`mutate` for API calls once `../makerbangla-backend` exists — the rest of the dashboard is unaware.
  */
-export const dataDir = path.resolve(process.env.DATA_DIR ?? path.join(process.cwd(), ".data"));
+// On Vercel only /tmp is writable (and it is per instance and temporary) — see CLAUDE.md "Dashboard".
+export const dataDir = path.resolve(process.env.DATA_DIR || (process.env.VERCEL ? "/tmp/makerbangla-data" : path.join(process.cwd(), ".data")));
 const file = path.join(dataDir, "db.json");
 
 // One cache and one write queue per server process. Next.js may load this module more than once (route handlers,
