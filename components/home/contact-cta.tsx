@@ -1,5 +1,5 @@
 import { Mail, MapPin, Phone } from "lucide-react";
-import { MagicAnchor } from "@/components/ui/magic-button";
+import { MagicAnchor, MagicLink } from "@/components/ui/magic-button";
 import { site } from "@/lib/site";
 
 export function ContactCta() {
@@ -19,9 +19,9 @@ export function ContactCta() {
           <MagicAnchor href={`tel:${site.phoneIntl}`} variant="accent" rainbow>
             <Phone className="size-4" /> {site.phone}
           </MagicAnchor>
-          <MagicAnchor href={`mailto:${site.email}`} variant="light">
-            <Mail className="size-4" /> Email us
-          </MagicAnchor>
+          <MagicLink href="/contact" variant="light">
+            <Mail className="size-4" /> Send a message
+          </MagicLink>
         </div>
       </div>
     </section>

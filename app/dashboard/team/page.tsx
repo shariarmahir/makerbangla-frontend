@@ -15,6 +15,8 @@ export default async function TeamPage() {
     access: e.access.filter((a) => a in sections), active: e.active, lastLogin: e.lastLogin, sample: e.sample,
     open: db.tasks.filter((t) => t.assignee === e.id && t.status !== "done").length,
     done: db.tasks.filter((t) => t.assignee === e.id && t.status === "done").length,
+    waiting: db.tasks.filter((t) => t.assignee === e.id && t.response === "pending").length,
+    declined: db.tasks.filter((t) => t.assignee === e.id && t.response === "declined" && t.status !== "done").length,
   }));
   const leaves = db.leaves
     .map((l) => {

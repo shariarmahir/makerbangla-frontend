@@ -72,6 +72,10 @@ export async function clearSampleData() {
       db.notes = db.notes.filter((x) => !x.sample && !sampleTeam.has(x.owner));
       db.leaves = db.leaves.filter((x) => !x.sample);
       db.employees = db.employees.filter((x) => !x.sample);
+      db.contacts = db.contacts.filter((x) => !x.sample);
+      db.mails = db.mails.filter((x) => !x.sample);
+      // Real orders that were handed to a sample team member go back to the owner.
+      for (const o of db.orders) if (o.assignee && sampleTeam.has(o.assignee)) o.assignee = "admin";
       db.sampleVisits = {};
       log(db, user.name, "cleared all sample data");
       return null;

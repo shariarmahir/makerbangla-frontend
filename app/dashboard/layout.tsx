@@ -42,9 +42,17 @@ async function Frame({ children }: { children: React.ReactNode }) {
   if (leads && canAccess(user, "clients")) alerts.push({ text: `${leads} new lead${leads > 1 ? "s" : ""} to approve`, href: "/dashboard/clients", tone: "info" });
 
   const isAdmin = user.role === "admin";
+  const assigned = db.tasks.filter((t) => t.assignee === user.id && t.response === "pending").length;
+  if (assigned) alerts.unshift({ text: `${assigned} new task${assigned > 1 ? "s" : ""} assigned to you — accept or decline`, href: "/dashboard", tone: "warn" });
+  const declined = isAdmin ? db.tasks.filter((t) => t.response === "declined" && t.status !== "done").length : 0;
+  if (declined) alerts.push({ text: `${declined} task${declined > 1 ? "s were" : " was"} declined — reassign`, href: "/dashboard/tasks", tone: "warn" });
+  const inbox = canAccess(user, "clients") ? db.contacts.filter((c) => c.status === "new").length : 0;
+  if (inbox) alerts.push({ text: `${inbox} website message${inbox > 1 ? "s" : ""} to approve`, href: "/dashboard/inbox", tone: "info" });
   const badges: Record<string, number> = {
     "/dashboard/orders": canAccess(user, "orders") ? (isAdmin ? pending : db.orders.filter((o) => o.assignee === user.id && ["confirmed", "packed"].includes(o.status)).length) : 0,
-    "/dashboard/tasks": db.tasks.filter((t) => t.assignee === user.id && t.status !== "done" && (t.priority === "emergency" || t.status === "review")).length,
+    "/dashboard": assigned,
+    "/dashboard/tasks": isAdmin ? declined + db.tasks.filter((t) => t.status === "review").length : db.tasks.filter((t) => t.assignee === user.id && t.status !== "done" && t.priority === "emergency").length,
+    "/dashboard/inbox": inbox,
     "/dashboard/team": isAdmin ? leaves : 0,
     "/dashboard/clients": canAccess(user, "clients") ? leads : 0,
   };

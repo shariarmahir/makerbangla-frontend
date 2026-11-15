@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Approvals, type Decision } from "@/components/dashboard/approvals";
+import { Assignments } from "@/components/dashboard/assignments";
 import { Calendar, PinnedNotes } from "@/components/dashboard/calendar";
 import { Bars, BarChart, CalendarHeat, ComboChart, Funnel, Gauge, Legend, RadialRings, Ring, Sparkline } from "@/components/dashboard/charts";
 import { Icon } from "@/components/dashboard/icon";
@@ -78,7 +79,7 @@ function AdminOverview({ db, user, now }: { db: Db; user: User; now: number }) {
 
   // Everything that waits on the owner's yes or no.
   const decisions: Decision[] = [
-    ...db.orders.filter((o) => o.status === "pending").map((o) => ({ kind: "order" as const, id: o.id, title: o.customer.name, sub: `${o.id} · ${o.lines.reduce((n, l) => n + l.qty, 0)} items · ${sourceLabel(o.source)}`, amount: o.total, at: o.createdAt })),
+    ...db.orders.filter((o) => o.status === "pending").map((o) => ({ kind: "order" as const, id: o.id, title: o.customer.name, sub: `${o.id} · ${o.lines.reduce((n, l) => n + l.qty, 0)} item${o.lines.reduce((n, l) => n + l.qty, 0) === 1 ? "" : "s"} · ${sourceLabel(o.source)}`, amount: o.total, at: o.createdAt })),
     ...db.leaves.filter((l) => l.status === "pending").map((l) => ({ kind: "leave" as const, id: l.id, title: db.employees.find((e) => e.id === l.employeeId)?.name ?? "Team member", sub: `${l.from}${l.to !== l.from ? ` → ${l.to}` : ""} · ${l.reason}`, at: l.createdAt })),
     ...db.leads.filter((l) => !l.approved && l.status === "new").map((l) => ({ kind: "lead" as const, id: l.id, title: l.name, sub: `${l.org ? `${l.org} · ` : ""}${sourceLabel(l.source)} · ${l.country}`, amount: l.value, at: l.createdAt })),
   ].sort((a, b) => b.at.localeCompare(a.at));
@@ -265,6 +266,8 @@ function StaffHome({ db, user, now }: { db: Db; user: User; now: number }) {
         {queue.length > 0 && <MagicLink href="/dashboard/orders" variant="accent" size="sm"><Icon name="truck" className="size-4" /> My orders · {queue.length}</MagicLink>}
         <MagicLink href="/dashboard/tasks" variant="light" size="sm"><Icon name="calendar-check-2" className="size-4" /> Tasks & calendar</MagicLink>
       </Hero>
+
+      <Assignments tasks={mine.filter((t) => t.response === "pending")} from={Object.fromEntries(people(db).map((p) => [p.id, p.name]))} />
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-4">
         <Kpi icon="clipboard-check" label="Open tasks" value={String(open)} tone="blue" />

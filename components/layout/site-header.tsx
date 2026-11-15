@@ -173,7 +173,7 @@ export function SiteHeader() {
             <Link href="/shop" className="underline-offset-4 hover:underline">Catalogue</Link>
             <Link href="/learn#lab-guides" className="underline-offset-4 hover:underline">Lab Guides</Link>
             <Link href="/info" className="underline-offset-4 hover:underline">Info</Link>
-            <Link href="#contact" className="underline-offset-4 hover:underline">Contact Us</Link>
+            <Link href="/contact" className="underline-offset-4 hover:underline">Contact Us</Link>
             <a href={`tel:${site.phoneIntl}`} className="font-black tabular-nums underline-offset-4 hover:underline">{site.phone}</a>
           </nav>
         </div>
@@ -262,7 +262,7 @@ export function SiteHeader() {
                 <RecentlyViewed />
               </Dropdown>
               <Link href="/info" className={navLink}>Info</Link>
-              <Link href="#contact" className={navLink}>Contact</Link>
+              <Link href="/contact" className={navLink}>Contact</Link>
             </nav>
             <Link
               href="/account"

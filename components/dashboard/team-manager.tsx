@@ -7,16 +7,19 @@ import { decideLeave, deleteEmployee, resetEmployeePassword, saveEmployee, setEm
 import { sections, type Leave, type Section } from "@/lib/admin/types";
 import { cn } from "@/lib/utils";
 import { ImagePicker } from "./image-picker";
+import { TaskForm } from "./tasks-board";
 import { Btn, ConfirmButton, Field, input, Modal, toast, useAction } from "./kit";
 import { Avatar, Card, Empty, Pill } from "./ui";
 
-export type Member = { id: string; username: string; name: string; designation: string; email: string; phone: string; photo?: string; access: Section[]; active: boolean; lastLogin?: string; open: number; done: number; sample?: boolean };
+export type Member = { id: string; username: string; name: string; designation: string; email: string; phone: string; photo?: string; access: Section[]; active: boolean; lastLogin?: string; open: number; done: number; waiting: number; declined: number; sample?: boolean };
 
 const ago = (iso?: string) => (iso ? new Date(iso).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Dhaka" }) : "Never signed in");
 
 /** Team: create accounts (username + one-time password), set access, reset passwords, pause or remove, approve leave. */
 export function TeamManager({ members, leaves }: { members: Member[]; leaves: (Leave & { name: string; photo?: string })[] }) {
   const { pending, exec } = useAction();
+  const [assign, setAssign] = useState<Member | null>(null);
+  const people = members.filter((m) => m.active).map((m) => ({ id: m.id, name: m.name, photo: m.photo }));
   const [edit, setEdit] = useState<Partial<Member> | null>(null);
   const [creds, setCreds] = useState<{ username: string; password: string; title: string } | null>(null);
 
@@ -50,9 +53,12 @@ export function TeamManager({ members, leaves }: { members: Member[]; leaves: (L
             <div className="mt-4 grid grid-cols-2 gap-2 rounded-2xl bg-soft p-3 text-center">
               <p><b className="block text-[17px] text-ink tabular-nums">{m.open}</b><span className="text-[11px] font-bold text-subtle">open tasks</span></p>
               <p><b className="block text-[17px] text-ink tabular-nums">{m.done}</b><span className="text-[11px] font-bold text-subtle">done</span></p>
+              {m.waiting > 0 && <p className="col-span-2 rounded-xl bg-tile-butter/70 py-1 text-[11px] font-black text-tile-navy">{m.waiting} waiting for their answer</p>}
+              {m.declined > 0 && <p className="col-span-2 rounded-xl bg-tile-coral/12 py-1 text-[11px] font-black text-sale">{m.declined} declined — see Tasks</p>}
             </div>
             <p className="mt-3 text-[11px] font-semibold text-subtle">Last sign-in: {ago(m.lastLogin)}{m.sample && " · sample member"}</p>
             <div className="mt-4 flex flex-wrap gap-1.5 border-t border-line pt-4">
+              {m.active && <Btn size="sm" tone="primary" onClick={() => setAssign(m)}><Icon name="clipboard-check" className="size-3.5" /> Assign task</Btn>}
               <Btn size="sm" tone="soft" onClick={() => setEdit(m)}><Icon name="file-pen-line" className="size-3.5" /> Edit</Btn>
               <Btn size="sm" tone="soft" disabled={pending} onClick={() => exec(() => resetEmployeePassword({ id: m.id })).then((r) => r.ok && setCreds({ ...r.data, title: `New password for ${m.name}` }))}><Icon name="key" className="size-3.5" /> Reset password</Btn>
               <Btn size="sm" tone="soft" disabled={pending} onClick={() => exec(() => setEmployeeActive({ id: m.id, active: !m.active }), m.active ? "Account paused" : "Account active")}>{m.active ? <Icon name="lock" className="size-3.5" /> : <Icon name="user-check" className="size-3.5" />}{m.active ? "Pause" : "Activate"}</Btn>
@@ -62,7 +68,11 @@ export function TeamManager({ members, leaves }: { members: Member[]; leaves: (L
         ))}
       </div>
 
-      <Card title="Leave requests">
+      <Modal open={!!assign} onOpenChange={(o) => !o && setAssign(null)} title={assign ? `Assign a task to ${assign.name}` : ""}>
+        {assign && <TaskForm task={{ priority: "normal", assignee: assign.id }} people={people} isAdmin me="admin" onDone={() => setAssign(null)} />}
+      </Modal>
+
+      <Card icon="calendar-days" title="Leave requests">
         {leaves.length === 0 ? (
           <Empty>No leave requests.</Empty>
         ) : (

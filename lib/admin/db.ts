@@ -1,7 +1,7 @@
 import "server-only";
 import { mkdir, readFile, rename, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { seed } from "./seed";
+import { sampleContacts, seed } from "./seed";
 import type { Db } from "./types";
 
 /**
@@ -26,8 +26,16 @@ export async function readDb(): Promise<Db> {
     await persist(db);
     return db;
   }
-  const db = JSON.parse(await readFile(file, "utf8")) as Db;
+  const db = upgrade(JSON.parse(await readFile(file, "utf8")) as Db);
   store.cache = { db, mtime };
+  return db;
+}
+
+/** Fills collections added after a store was first created (older `db.json` files). */
+function upgrade(db: Db) {
+  const sample = db.orders?.some((o) => o.sample);
+  db.contacts ??= sample ? sampleContacts(Date.now()) : [];
+  db.mails ??= [];
   return db;
 }
 

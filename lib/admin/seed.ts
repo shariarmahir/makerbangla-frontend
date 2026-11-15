@@ -2,7 +2,7 @@ import { randomBytes } from "node:crypto";
 import { productVisual } from "@/lib/catalog";
 import { products } from "@/lib/data/catalog";
 import { deliveryOptions } from "@/lib/site";
-import { couriers, type CatalogItem, type DashOrder, type Db, type DayVisits, type Expense, type Lead, type Promo } from "./types";
+import { couriers, type CatalogItem, type Contact, type DashOrder, type Db, type DayVisits, type Expense, type Lead, type Promo } from "./types";
 
 /**
  * First-run data. The catalog and promo banners are real site content. Everything marked `sample` (orders, expenses,
@@ -25,6 +25,18 @@ const customers = [
 const cities = ["Dhaka", "Dhaka", "Dhaka", "Gazipur", "Chattogram", "Rajshahi", "Sylhet", "Khulna", "Narayanganj", "Cumilla"];
 const sources = ["facebook", "facebook", "website", "website", "whatsapp", "youtube", "google", "instagram"];
 const countries = ["Bangladesh", "Bangladesh", "Bangladesh", "Bangladesh", "India", "United Arab Emirates", "Saudi Arabia", "Malaysia", "United States", "United Kingdom"];
+
+/** Sample website contact messages (approval queue, a replied thread, one spam). */
+export function sampleContacts(now: number): Contact[] {
+  const at = (h: number) => new Date(now - h * 3_600_000).toISOString();
+  return [
+    { id: "c_s1", createdAt: at(2), name: "Shadman Rahim", email: "shadman@example.com", phone: "01700040001", topic: "Bulk or lab quotation", message: "We need 20 Arduino Uno boards and 20 breadboard kits for our CSE 2nd year lab at AIUB. Can you send a quotation with delivery to Kuratoli?", status: "new", replies: [], sample: true },
+    { id: "c_s2", createdAt: at(5), name: "Lamia Noor", email: "lamia@example.com", topic: "Order & delivery", message: "My order MB-261111-SB was shipped with Pathao 3 days ago. When will it reach Gazipur?", status: "new", replies: [], sample: true },
+    { id: "c_s3", createdAt: at(9), name: "Promo Bot", email: "seo-offer@example.com", topic: "Other", message: "Get 10,000 backlinks today for only $5!!! Visit our site now.", status: "new", replies: [], sample: true },
+    { id: "c_s4", createdAt: at(30), name: "Tahsin Ahmed", email: "tahsin@example.com", phone: "01700040004", topic: "Project help", message: "Which motor driver should I use with a 12 V gear motor and ESP32 for a line follower?", status: "replied", replies: [{ at: at(26), by: "Super Admin", text: "Hi Tahsin, an L298N works, but a TB6612FNG is smaller and more efficient for 12 V gear motors up to 1.2 A. Both are in stock.", sent: true }], sample: true },
+    { id: "c_s5", createdAt: at(52), name: "Nabila Karim", email: "nabila@example.com", topic: "Product question", message: "Does the DHT22 sensor come with a breakout board and pull-up resistor?", status: "approved", replies: [], sample: true },
+  ];
+}
 
 /** Deterministic PRNG so the sample set is stable between installs. */
 function rng(seed: number) {
@@ -158,6 +170,8 @@ export function seed(): Db {
       passwordHash: locked(), sessionVersion: 1, active: true, createdAt: ago(200 - i * 40).toISOString(), sample: true,
     })),
     orders,
+    contacts: sampleContacts(now),
+    mails: [],
     quotes: [
       { id: "Q-1001", createdAt: ago(3).toISOString(), customer: { name: "UAP Robotics Club", phone: "01700030001" }, lines: [{ name: "Arduino Uno R3", qty: 10, price: 850 }, { name: "HC-SR04 Ultrasonic Sensor", qty: 10, price: 120 }], status: "sent", sample: true },
       { id: "Q-1002", createdAt: ago(9).toISOString(), customer: { name: "BUET EEE Lab", phone: "01700030002" }, lines: [{ name: "Digital Multimeter", qty: 6, price: 1450 }], status: "accepted", sample: true },

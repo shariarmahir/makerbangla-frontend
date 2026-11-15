@@ -11,6 +11,7 @@ import { Icon, type IconName } from "./icon";
 import { Btn, ConfirmButton, download, Field, input, Modal, textarea, toCsv, useAction } from "./kit";
 import { LinesEditor, type Line, type PickProduct } from "./lines-editor";
 import { addressOf as addr, challanPdf, invoicePdf, paidOf as paid, receiptPdf } from "./order-docs";
+import { TaskForm } from "./tasks-board";
 import { Avatar, Card, Empty, Pill } from "./ui";
 
 /**
@@ -34,6 +35,7 @@ const nextStep = (o: DashOrder): { label: string; icon: IconName; ship?: boolean
   o.status === "confirmed" ? { label: "Pack", icon: "box" } : o.status === "packed" ? (o.delivery.id === "pickup" ? { label: "Handed over", icon: "check-check" } : { label: "Ship", icon: "truck", ship: true }) : o.status === "shipped" ? { label: "Delivered", icon: "check-check" } : null;
 
 const PER_PAGE = 20;
+const plural = (n: number, w: string) => `${n} ${w}${n === 1 ? "" : "s"}`;
 const date = (iso: string, time = false) => new Date(iso).toLocaleString("en-GB", { day: "numeric", month: "short", ...(time ? { hour: "2-digit", minute: "2-digit" } : { year: "2-digit" }), timeZone: "Asia/Dhaka" });
 
 // Client clock for "waiting 3h" labels; the server snapshot is null so hydration matches.
@@ -51,13 +53,14 @@ const age = (iso: string, now: number | null) => {
 export function OrdersManager({ orders, quotes, products, team, isAdmin, me }: { orders: DashOrder[]; quotes: Quote[]; products: PickProduct[]; team: Member[]; isAdmin: boolean; me: string }) {
   const params = useSearchParams();
   const start = params.get("tab");
-  const [tab, setTab] = useState<"board" | "list" | "history" | "quotes">(start === "history" || start === "quotes" || start === "list" ? start : params.get("status") ? "list" : "board");
+  const [tab, setTab] = useState<"board" | "list" | "history" | "quotes">(start === "history" || start === "quotes" || start === "board" ? start : "list");
   const [q, setQ] = useState("");
   const [mine, setMine] = useState(false);
   const [open, setOpen] = useState<string | null>(null);
   const [ship, setShip] = useState<string[] | null>(null);
   const [reject, setReject] = useState<DashOrder | null>(null);
   const [quoting, setQuoting] = useState(false);
+  const [task, setTask] = useState<DashOrder | null>(null);
   const { pending, exec } = useAction();
 
   const s = q.trim().toLowerCase();
@@ -78,7 +81,7 @@ export function OrdersManager({ orders, quotes, products, team, isAdmin, me }: {
   const exportCsv = () =>
     download(`orders-${new Date().toISOString().slice(0, 10)}.csv`, toCsv([["Order", "Date", "Customer", "Phone", "Delivery", "Items", "Total", "Paid", "Due", "Status", "Handled by", "Courier", "Tracking", "Source"], ...visible.map((o) => [o.id, o.createdAt.slice(0, 10), o.customer.name, o.customer.phone, o.delivery.label, o.lines.map((l) => `${l.qty}x ${l.name}`).join("; "), o.total, paid(o), o.status === "cancelled" ? 0 : o.total - paid(o), statusLabel[o.status], who(o.assignee)?.name ?? "", o.courier?.name ?? "", o.courier?.tracking ?? "", o.source])]));
 
-  const tabs = [["board", "Live board", "layout-grid"], ["list", `All orders · ${orders.length}`, "clipboard-check"], ["history", "History", "history"], ["quotes", `Quotations · ${quotes.length}`, "file-text"]] as const;
+  const tabs = [["list", `All orders · ${orders.length}`, "clipboard-check"], ["board", "Live board", "layout-grid"], ["history", "History", "history"], ["quotes", `Quotations · ${quotes.length}`, "file-text"]] as const;
 
   return (
     <div className="space-y-4">
@@ -116,13 +119,16 @@ export function OrdersManager({ orders, quotes, products, team, isAdmin, me }: {
       )}
 
       <Modal open={!!detail} onOpenChange={(o) => !o && setOpen(null)} title={detail ? `Order ${detail.id}` : ""} wide>
-        {detail && <OrderDetail o={detail} others={orders.filter((x) => x.customer.phone === detail.customer.phone && x.id !== detail.id)} act={act} exec={exec} team={team} onShip={() => setShip([detail.id])} onReject={() => setReject(detail)} onDeleted={() => setOpen(null)} />}
+        {detail && <OrderDetail o={detail} others={orders.filter((x) => x.customer.phone === detail.customer.phone && x.id !== detail.id)} act={act} exec={exec} team={team} onShip={() => setShip([detail.id])} onReject={() => setReject(detail)} onTask={() => setTask(detail)} onDeleted={() => setOpen(null)} />}
       </Modal>
       <Modal open={!!ship} onOpenChange={(o) => !o && setShip(null)} title={ship && ship.length > 1 ? `Ship ${ship.length} orders` : "Hand over to courier"}>
         {ship && <ShipForm ids={ship} exec={exec} pending={pending} onDone={() => setShip(null)} />}
       </Modal>
       <Modal open={!!reject} onOpenChange={(o) => !o && setReject(null)} title={reject ? `${reject.status === "pending" ? "Reject" : "Cancel"} ${reject.id}` : ""}>
         {reject && <RejectForm o={reject} exec={exec} pending={pending} onDone={() => setReject(null)} />}
+      </Modal>
+      <Modal open={!!task} onOpenChange={(o) => !o && setTask(null)} title={task ? `Task for ${task.id}` : ""}>
+        {task && <TaskForm task={{ title: `${task.id}: `, priority: "important", assignee: task.assignee ?? me, orderId: task.id }} people={team} isAdmin={isAdmin} me={me} onDone={() => setTask(null)} />}
       </Modal>
       <Modal open={quoting} onOpenChange={setQuoting} title="New quotation" wide>
         <NewQuote products={products} exec={exec} pending={pending} onDone={() => setQuoting(false)} />
@@ -141,36 +147,39 @@ type Actions = {
   who: (id?: string) => Member | undefined;
 };
 
-/** Kanban of live orders. Delivered shows the last 7 days. */
+/** Live board: one row per stage, cards wrap across the row (no inner scrollbars). Delivered shows the last 7 days. */
 function Board({ orders, act }: { orders: DashOrder[]; act: Actions }) {
   const now = useNow();
   const week = now === null ? 0 : now - 7 * 86_400_000;
+  const [more, setMore] = useState<string[]>([]);
+  const cap = 8;
   return (
-    <div className="-mx-3 overflow-x-auto px-3 pb-2 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-      <div className="grid min-w-[1060px] grid-cols-5 gap-2.5">
-        {flow.map((st) => {
-          const all = orders.filter((o) => o.status === st && (st !== "delivered" || Date.parse(o.history.at(-1)?.at ?? o.createdAt) > week));
-          return (
-            <section key={st} aria-label={statusLabel[st]} className={cn("flex min-w-0 flex-col rounded-[22px] p-2.5 ring-1", st === "pending" ? "bg-tile-butter/45 ring-tile-yellow/70" : "bg-white/70 ring-line")}>
-              <header className="flex items-center gap-2 px-1.5 pt-1 pb-2.5">
-                <span className={cn("grid size-7 place-items-center rounded-lg", st === "pending" ? "bg-tile-yellow text-tile-navy" : st === "delivered" ? "bg-tile-navy text-tile-yellow" : "bg-tile-sky text-tile-navy")}><Icon name={lane[st].icon} className="size-4" /></span>
-                <span className="min-w-0 flex-1">
-                  <h3 className="truncate text-[13px] leading-tight font-black text-ink">{statusLabel[st]}</h3>
-                  <span className="block truncate text-[10.5px] font-bold text-subtle tabular-nums">{bdt(all.reduce((n, o) => n + o.total, 0))}</span>
-                </span>
-                <span className="rounded-full bg-white px-2 py-0.5 text-[11px] font-black text-tile-navy tabular-nums ring-1 ring-line">{all.length}</span>
-              </header>
-              {st === "pending" && act.isAdmin && all.length > 1 && (
-                <Btn size="sm" tone="primary" className="mb-2" disabled={act.pending} onClick={() => act.approve(all.map((o) => o.id))}><Icon name="check-check" className="size-3.5" /> Approve all {all.length}</Btn>
-              )}
-              <ul className="flex max-h-[640px] flex-col gap-2 overflow-y-auto pr-0.5">
-                {all.length === 0 && <li className="rounded-2xl border border-dashed border-line px-3 py-6 text-center text-[12px] font-semibold text-subtle">Nothing here</li>}
-                {all.slice(0, 40).map((o) => <OrderCard key={o.id} o={o} act={act} now={now} />)}
+    <div className="space-y-3">
+      {flow.map((st) => {
+        const all = orders.filter((o) => o.status === st && (st !== "delivered" || Date.parse(o.history.at(-1)?.at ?? o.createdAt) > week));
+        const full = more.includes(st);
+        return (
+          <section key={st} aria-label={statusLabel[st]} className={cn("dash-rise rounded-[24px] p-3 ring-1 sm:p-4", st === "pending" ? "bg-tile-butter/45 ring-tile-yellow/70" : "bg-white/80 ring-line")}>
+            <header className="flex flex-wrap items-center gap-2.5">
+              <span className={cn("grid size-9 place-items-center rounded-xl", st === "pending" ? "bg-tile-yellow text-tile-navy" : st === "delivered" ? "bg-tile-navy text-tile-yellow" : "bg-tile-sky text-tile-navy")}><Icon name={lane[st].icon} className="size-4.5" /></span>
+              <h3 className="text-[15px] font-black text-ink">{statusLabel[st]}{st === "delivered" && <span className="ml-1.5 text-[12px] font-bold text-subtle">· last 7 days</span>}</h3>
+              <span className="rounded-full bg-white px-2.5 py-0.5 text-[12px] font-black text-tile-navy tabular-nums ring-1 ring-line">{all.length}</span>
+              <span className="text-[12px] font-bold text-subtle tabular-nums">{bdt(all.reduce((n, o) => n + o.total, 0))}</span>
+              <span className="ml-auto flex gap-2">
+                {st === "pending" && act.isAdmin && all.length > 1 && <Btn size="sm" tone="primary" disabled={act.pending} onClick={() => act.approve(all.map((o) => o.id))}><Icon name="check-check" className="size-3.5" /> Approve all {all.length}</Btn>}
+                {all.length > cap && <Btn size="sm" tone="ghost" onClick={() => setMore((m) => (full ? m.filter((x) => x !== st) : [...m, st]))}>{full ? "Show less" : `Show all ${all.length}`}</Btn>}
+              </span>
+            </header>
+            {all.length === 0 ? (
+              <p className="mt-3 text-[12.5px] font-semibold text-subtle">{st === "pending" ? "No new orders waiting." : "Nothing here right now."}</p>
+            ) : (
+              <ul className="mt-3 grid grid-cols-[repeat(auto-fill,minmax(232px,1fr))] gap-2.5">
+                {(full ? all : all.slice(0, cap)).map((o) => <OrderCard key={o.id} o={o} act={act} now={now} />)}
               </ul>
-            </section>
-          );
-        })}
-      </div>
+            )}
+          </section>
+        );
+      })}
     </div>
   );
 }
@@ -189,7 +198,7 @@ function OrderCard({ o, act, now }: { o: DashOrder; act: Actions; now: number | 
         </span>
       </div>
       <p className="mt-1.5 truncate text-[13px] font-black text-ink">{o.customer.name}</p>
-      <p className="truncate text-[11.5px] font-semibold text-subtle">{o.delivery.id === "pickup" ? "Store pickup" : o.delivery.city || o.delivery.label} · {o.lines.reduce((n, l) => n + l.qty, 0)} items</p>
+      <p className="truncate text-[11.5px] font-semibold text-subtle">{o.delivery.id === "pickup" ? "Store pickup" : o.delivery.city || o.delivery.label} · {plural(o.lines.reduce((n, l) => n + l.qty, 0), "item")}</p>
       <div className="mt-2 flex items-center gap-2">
         <b className="text-[13px] text-ink tabular-nums">{bdt(o.total)}</b>
         <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-soft"><span className={cn("block h-full rounded-full", pct >= 100 ? "bg-tile-navy" : "bg-tile-yellow")} style={{ width: `${pct}%` }} /></span>
@@ -222,8 +231,34 @@ function OrderList({ orders, act, exec, team, onShip, initial }: { orders: DashO
   const [status, setStatus] = useState<OrderStatus | "all">((orderStatuses as readonly string[]).includes(initial ?? "") ? (initial as OrderStatus) : "all");
   const [page, setPage] = useState(0);
   const [picked, setPicked] = useState<string[]>([]);
+  const [period, setPeriod] = useState("all");
+  const [pay, setPay] = useState("all");
+  const [handler, setHandler] = useState("all");
+  const [sort, setSort] = useState("new");
+  const [late, setLate] = useState(false);
+  const now = useNow();
   const counts = useMemo(() => Object.fromEntries(orderStatuses.map((s) => [s, orders.filter((o) => o.status === s).length])), [orders]);
-  const shown = orders.filter((o) => status === "all" || o.status === status);
+  // "Stuck" orders: no step taken for over a day.
+  const lateIds = new Set(now === null ? [] : orders.filter((o) => ["pending", "confirmed", "packed"].includes(o.status) && now - Date.parse(o.history.at(-1)?.at ?? o.createdAt) > 86_400_000).map((o) => o.id));
+  const shown = orders
+    .filter((o) => {
+      const p = paid(o);
+      return (
+        (status === "all" || o.status === status) &&
+        (period === "all" || now === null || now - Date.parse(o.createdAt) <= Number(period) * 86_400_000) &&
+        (pay === "all" || (pay === "paid" ? p >= o.total : pay === "partial" ? p > 0 && p < o.total : p === 0 && o.status !== "cancelled")) &&
+        (handler === "all" || (handler === "none" ? !o.assignee : o.assignee === handler)) &&
+        (!late || lateIds.has(o.id))
+      );
+    })
+    .sort((a, b) => (sort === "high" ? b.total - a.total : sort === "old" ? a.createdAt.localeCompare(b.createdAt) : b.createdAt.localeCompare(a.createdAt)));
+  const filters: [string, (v: string) => void, string, [string, string][]][] = [
+    [period, setPeriod, "Period", [["all", "Any time"], ["1", "Today"], ["7", "7 days"], ["30", "30 days"]]],
+    [pay, setPay, "Payment", [["all", "Any payment"], ["unpaid", "Unpaid"], ["partial", "Part paid"], ["paid", "Paid"]]],
+    [handler, setHandler, "Handled by", [["all", "Anyone"], ["none", "Unassigned"], ...team.map((m): [string, string] => [m.id, m.name])]],
+    [sort, setSort, "Sort", [["new", "Newest first"], ["old", "Oldest first"], ["high", "Highest total"]]],
+  ];
+
   const pages = Math.max(1, Math.ceil(shown.length / PER_PAGE));
   const pg = Math.min(page, pages - 1);
   const rows = shown.slice(pg * PER_PAGE, pg * PER_PAGE + PER_PAGE);
@@ -243,6 +278,18 @@ function OrderList({ orders, act, exec, team, onShip, initial }: { orders: DashO
         ))}
         {act.isAdmin && counts.cancelled > 0 && <ConfirmButton label={`Clear ${counts.cancelled} cancelled`} confirm="Clear cancelled" onConfirm={() => exec(() => clearCancelled(), "Cancelled orders cleared")} className="ml-auto" />}
       </div>
+      <div className="mb-4 flex flex-wrap items-center gap-2 rounded-2xl bg-soft p-2">
+        {filters.map(([v, set, label, opts]) => (
+          <select key={label} value={v} aria-label={label} onChange={(e) => (set(e.target.value), setPage(0))} className="h-9 rounded-xl bg-white px-2.5 text-[12.5px] font-bold text-ink ring-1 ring-line outline-none focus:ring-2 focus:ring-brand">
+            {opts.map(([k, l]) => <option key={k} value={k}>{l}</option>)}
+          </select>
+        ))}
+        <button onClick={() => (setLate((l) => !l), setPage(0))} aria-pressed={late} className={cn("flex h-9 items-center gap-1.5 rounded-xl px-3 text-[12.5px] font-black ring-1", late ? "bg-tile-coral text-white ring-tile-coral" : "bg-white text-sale ring-line")}>
+          <Icon name="alarm-clock" className="size-4" /> Stuck over 24 h · {lateIds.size}
+        </button>
+        <span className="ml-auto px-2 text-[12px] font-bold text-subtle tabular-nums">{shown.length} orders · {bdt(shown.reduce((n, o) => n + o.total, 0))}</span>
+      </div>
+
 
       {picked.length > 0 && (
         <div className="dash-rise mb-3 flex flex-wrap items-center gap-2 rounded-2xl bg-tile-navy px-3 py-2 text-[12.5px] font-bold text-white">
@@ -368,7 +415,7 @@ function RejectForm({ o, exec, pending, onDone }: { o: DashOrder; exec: Exec; pe
   );
 }
 
-function OrderDetail({ o, others, act, exec, team, onShip, onReject, onDeleted }: { o: DashOrder; others: DashOrder[]; act: Actions; exec: Exec; team: Member[]; onShip: () => void; onReject: () => void; onDeleted: () => void }) {
+function OrderDetail({ o, others, act, exec, team, onShip, onReject, onTask, onDeleted }: { o: DashOrder; others: DashOrder[]; act: Actions; exec: Exec; team: Member[]; onShip: () => void; onReject: () => void; onTask: () => void; onDeleted: () => void }) {
   const p = paid(o), due = o.status === "cancelled" ? 0 : o.total - p;
   const step = nextStep(o);
   const at = (s: OrderStatus) => o.history.findLast((h) => h.status === s);
@@ -485,6 +532,7 @@ function OrderDetail({ o, others, act, exec, team, onShip, onReject, onDeleted }
             <Icon name="mail-check" className="size-4 text-brand" /> Email customer
           </a>
         )}
+        <Btn onClick={onTask}><Icon name="clipboard-check" className="size-4 text-brand" /> Create task</Btn>
         {act.isAdmin && <ConfirmButton label="Delete" onConfirm={() => exec(() => deleteOrders({ ids: [o.id] }), "Order deleted").then((r) => r.ok && onDeleted())} className="ml-auto h-10" />}
       </div>
 

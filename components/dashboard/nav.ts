@@ -9,6 +9,7 @@ export const dashNav: { href: string; label: string; icon: IconName; area: Secti
   { href: "/dashboard/products", label: "Products & stock", icon: "boxes", area: "products", group: "Catalog" },
   { href: "/dashboard/promotions", label: "Promotions", icon: "sparkles", area: "promotions", group: "Catalog" },
   { href: "/dashboard/clients", label: "Clients & leads", icon: "users-round", area: "clients", group: "Customers" },
+  { href: "/dashboard/inbox", label: "Inbox & email", icon: "mail-check", area: "clients", group: "Customers" },
   { href: "/dashboard/finance", label: "Finance & reports", icon: "wallet", area: "finance", group: "Money" },
   { href: "/dashboard/calculator", label: "Calculator", icon: "badge-percent", area: "finance", group: "Money" },
   { href: "/dashboard/tasks", label: "Tasks & calendar", icon: "calendar-check-2", area: null, group: "Team" },

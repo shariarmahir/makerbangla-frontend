@@ -16,6 +16,7 @@ const taskSchema = z.object({
   priority: z.enum(priorities),
   assignee: z.string().max(40),
   due: z.union([z.literal(""), day]).optional(),
+  orderId: z.union([z.literal(""), idOf]).optional(),
 });
 
 export async function saveTask(input: unknown) {
@@ -23,13 +24,18 @@ export async function saveTask(input: unknown) {
     mutate((db) => {
       // Staff can create tasks for themselves only.
       const assignee = user.role === "admin" ? d.assignee : user.id;
-      if (assignee !== "admin" && !db.employees.some((e) => e.id === assignee)) throw new UserError("Pick who the task is for.");
+      if (assignee !== "admin" && !db.employees.some((e) => e.id === assignee && e.active)) throw new UserError("Pick who the task is for.");
+      const orderId = d.orderId && db.orders.some((o) => o.id === d.orderId) ? d.orderId : undefined;
+      // A task given to someone else waits for them to accept it.
+      const response = assignee === user.id ? undefined : ("pending" as const);
       const existing = db.tasks.find((t) => t.id === d.id);
       if (existing) {
         if (!own(existing, user)) throw new UserError("You can only edit your own tasks.");
-        Object.assign(existing, { title: d.title, detail: d.detail || undefined, priority: d.priority, assignee, due: d.due || undefined });
+        const reassigned = existing.assignee !== assignee;
+        Object.assign(existing, { title: d.title, detail: d.detail || undefined, priority: d.priority, assignee, due: d.due || undefined, orderId });
+        if (reassigned) Object.assign(existing, { response, declineReason: undefined, status: "todo" });
       } else {
-        db.tasks.unshift({ id: uid("t"), createdAt: new Date().toISOString(), createdBy: user.id, title: d.title, detail: d.detail || undefined, priority: d.priority, status: "todo", assignee, due: d.due || undefined });
+        db.tasks.unshift({ id: uid("t"), createdAt: new Date().toISOString(), createdBy: user.id, title: d.title, detail: d.detail || undefined, priority: d.priority, status: "todo", assignee, due: d.due || undefined, ...(response ? { response } : {}), ...(orderId ? { orderId } : {}) });
       }
       log(db, user.name, `${existing ? "updated" : "created"} task “${d.title}”`);
       return null;
@@ -42,6 +48,8 @@ export async function moveTask(input: { id: string; status: string; submission?:
     mutate((db) => {
       const t = db.tasks.find((x) => x.id === id);
       if (!t || !own(t, user)) throw new UserError("You can only update your own tasks.");
+      if (user.role !== "admin" && t.response === "pending") throw new UserError("Accept the task first.");
+      if (user.role !== "admin" && t.response === "declined") throw new UserError("You declined this task.");
       // Team members submit work for review; the super admin approves it as done.
       if (status === "done" && user.role !== "admin" && t.assignee !== "admin" && t.createdBy !== user.id) throw new UserError("Submit it for review — the super admin will mark it done.");
       t.status = status;
@@ -52,10 +60,28 @@ export async function moveTask(input: { id: string; status: string; submission?:
   );
 }
 
+/** The person a task was given to accepts it, or declines it with a reason the super admin sees. */
+export async function respondTask(input: { id: string; accept: boolean; reason?: string }) {
+  return run(null, z.object({ id: idOf, accept: z.boolean(), reason: str(300).optional() }), input, ({ id, accept, reason }, user) =>
+    mutate((db) => {
+      const t = db.tasks.find((x) => x.id === id);
+      if (!t || t.assignee !== user.id) throw new UserError("This task isn't assigned to you.");
+      if (t.response !== "pending") throw new UserError("You already answered this task.");
+      if (!accept && (!reason || reason.length < 3)) throw new UserError("Tell the team why you can't take it.");
+      t.response = accept ? "accepted" : "declined";
+      t.declineReason = accept ? undefined : reason;
+      if (accept && t.status === "todo") t.status = "doing";
+      log(db, user.name, `${accept ? "accepted" : "declined"} task “${t.title}”${accept ? "" : ` — ${reason}`}`);
+      return null;
+    }),
+  );
+}
+
 export async function deleteTasks(input: { ids: string[] }) {
   return run(null, z.object({ ids: z.array(idOf).min(1).max(1000) }), input, ({ ids }, user) =>
     mutate((db) => {
-      db.tasks = db.tasks.filter((t) => !(ids.includes(t.id) && own(t, user)));
+      // Staff can remove tasks they made for themselves, not work the super admin assigned.
+      db.tasks = db.tasks.filter((t) => !(ids.includes(t.id) && (user.role === "admin" || (t.assignee === user.id && t.createdBy === user.id))));
       log(db, user.name, `deleted ${ids.length} task(s)`);
       return null;
     }),

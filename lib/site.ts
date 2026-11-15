@@ -24,7 +24,7 @@ export const mainNav = [
   { label: "Lab Guides", href: "/learn#lab-guides" },
   { label: "Tech Insights", href: "/blog" },
   { label: "Info", href: "/info" },
-  { label: "Contact", href: "#contact" },
+  { label: "Contact", href: "/contact" },
   { label: "Sign in", href: "/account" },
 ] as const;
 

@@ -6,7 +6,7 @@ export const sections = {
   orders: "Orders & invoices",
   products: "Products",
   promotions: "Promotions",
-  clients: "Clients & leads",
+  clients: "Clients, leads & email",
   finance: "Finance",
 } as const;
 export type Section = keyof typeof sections;
@@ -83,6 +83,11 @@ export type Task = Sample & {
   assignee: string; // "admin" or an employee id
   due?: string; // yyyy-mm-dd
   submission?: string;
+  /** Tasks given to someone else wait for them to accept or decline (with a reason). */
+  response?: "pending" | "accepted" | "declined";
+  declineReason?: string;
+  /** Optional link to the order the task is about. */
+  orderId?: string;
 };
 
 export const noteColors = ["yellow", "blue", "navy", "coral", "sky"] as const;
@@ -141,6 +146,24 @@ export type CatalogItem = {
 /** One day of first-party, cookieless traffic counts. No IPs or identifiers are stored. */
 export type DayVisits = { views: number; visits: number; returning: number; sources: Record<string, number>; countries: Record<string, number> };
 
+/** Website contact-form messages. New ones wait for approval (spam check) before the team replies. */
+export const contactTopics = ["Order & delivery", "Product question", "Bulk or lab quotation", "Project help", "Other"] as const;
+export const contactStatuses = ["new", "approved", "replied", "spam", "archived"] as const;
+export type Contact = Sample & {
+  id: string;
+  createdAt: string;
+  name: string;
+  email: string;
+  phone?: string;
+  topic: (typeof contactTopics)[number];
+  message: string;
+  status: (typeof contactStatuses)[number];
+  replies: { at: string; by: string; text: string; sent: boolean }[];
+};
+
+/** Outgoing email log. `sent` is false when the message was handed to the user's mail app instead. */
+export type MailLog = Sample & { id: string; at: string; by: string; to: string; subject: string; text: string; sent: boolean; ref?: string };
+
 export type Activity = { id: string; at: string; who: string; text: string };
 
 /** Super admin profile. The first password comes from `admin-account.ts`; a changed one is stored (hashed) here. */
@@ -163,4 +186,6 @@ export type Db = {
   visits: Record<string, DayVisits>;
   sampleVisits: Record<string, DayVisits>;
   activity: Activity[];
+  contacts: Contact[];
+  mails: MailLog[];
 };
