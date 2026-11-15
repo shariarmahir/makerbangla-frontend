@@ -2,7 +2,7 @@ import { randomBytes } from "node:crypto";
 import { productVisual } from "@/lib/catalog";
 import { products } from "@/lib/data/catalog";
 import { deliveryOptions } from "@/lib/site";
-import { couriers, type CatalogItem, type Contact, type DashOrder, type Db, type DayVisits, type Expense, type Lead, type Promo } from "./types";
+import { couriers, type CatalogItem, type Contact, type Review, type DashOrder, type Db, type DayVisits, type Expense, type Lead, type Promo } from "./types";
 
 /**
  * First-run data. The catalog and promo banners are real site content. Everything marked `sample` (orders, expenses,
@@ -35,6 +35,16 @@ export function sampleContacts(now: number): Contact[] {
     { id: "c_s3", createdAt: at(9), name: "Promo Bot", email: "seo-offer@example.com", topic: "Other", message: "Get 10,000 backlinks today for only $5!!! Visit our site now.", status: "new", replies: [], sample: true },
     { id: "c_s4", createdAt: at(30), name: "Tahsin Ahmed", email: "tahsin@example.com", phone: "01700040004", topic: "Project help", message: "Which motor driver should I use with a 12 V gear motor and ESP32 for a line follower?", status: "replied", replies: [{ at: at(26), by: "Super Admin", text: "Hi Tahsin, an L298N works, but a TB6612FNG is smaller and more efficient for 12 V gear motors up to 1.2 A. Both are in stock.", sent: true }], sample: true },
     { id: "c_s5", createdAt: at(52), name: "Nabila Karim", email: "nabila@example.com", topic: "Product question", message: "Does the DHT22 sensor come with a breakout board and pull-up resistor?", status: "approved", replies: [], sample: true },
+  ];
+}
+
+/** Sample reviews for the moderation queue. They stay "pending" and `sample`, so the store never shows them. */
+export function sampleReviews(now: number): Review[] {
+  const at = (h: number) => new Date(now - h * 3_600_000).toISOString();
+  return [
+    { id: "r_s1", createdAt: at(3), name: "Arif Chowdhury", role: "EEE student, UAP", rating: 5, text: "Got the full line-follower kit in one order and the team helped me pick the right motor driver. Delivery to Mohammadpur was next day.", status: "pending", sample: true },
+    { id: "r_s2", createdAt: at(20), name: "Sumaiya Akter", role: "CSE, DIU", rating: 4, text: "Good quality ESP32 boards and clear product notes. Would love more stock of the USB-C versions.", status: "pending", sample: true },
+    { id: "r_s3", createdAt: at(46), name: "Lab coordinator", role: "BUET EEE Lab", rating: 5, text: "Quotation for 10 multimeters came within a day, invoice and challan were in order.", status: "pending", sample: true },
   ];
 }
 
@@ -172,6 +182,7 @@ export function seed(): Db {
     orders,
     contacts: sampleContacts(now),
     mails: [],
+    reviews: sampleReviews(now),
     quotes: [
       { id: "Q-1001", createdAt: ago(3).toISOString(), customer: { name: "UAP Robotics Club", phone: "01700030001" }, lines: [{ name: "Arduino Uno R3", qty: 10, price: 850 }, { name: "HC-SR04 Ultrasonic Sensor", qty: 10, price: 120 }], status: "sent", sample: true },
       { id: "Q-1002", createdAt: ago(9).toISOString(), customer: { name: "BUET EEE Lab", phone: "01700030002" }, lines: [{ name: "Digital Multimeter", qty: 6, price: 1450 }], status: "accepted", sample: true },

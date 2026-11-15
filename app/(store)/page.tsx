@@ -10,6 +10,7 @@ import { FeatureStrip } from "@/components/home/feature-strip";
 import { Hero } from "@/components/home/hero";
 import { PromoBanners } from "@/components/home/promo-banners";
 import { PromoRotator } from "@/components/home/promo-rotator";
+import { Reviews } from "@/components/home/reviews";
 import { TechInsights } from "@/components/home/tech-insights";
 import { JsonLd } from "@/components/json-ld";
 import { site } from "@/lib/site";
@@ -86,6 +87,7 @@ export default function HomePage() {
       />
       <TechInsights />
       <ContactCta />
+      <Reviews />
     </>
   );
 }

@@ -66,3 +66,35 @@ export async function sendContact(_: ContactState, form: FormData): Promise<Cont
   });
   return { ok: true, message: "Thanks! Your message is with our team — we usually reply within a working day." };
 }
+
+// ——— Reviews ———
+export type ReviewState = { ok: boolean; message: string; fields?: Record<string, string> } | null;
+const reviewHits = new Map<string, { n: number; until: number }>();
+
+/** Website review → dashboard (Inbox & email → Reviews). Nothing is shown publicly until the team approves it. */
+export async function submitReview(_: ReviewState, form: FormData): Promise<ReviewState> {
+  const get = (k: string, max: number) => String(form.get(k) ?? "").trim().slice(0, max);
+  const fields = { name: get("name", 60), role: get("role", 60), rating: get("rating", 1), text: get("text", 800) };
+  if (form.get("company")) return { ok: true, message: "Thank you for your review!" }; // honeypot
+
+  const ip = (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
+  const now = Date.now();
+  const h = reviewHits.get(ip);
+  if (h && h.until > now && h.n >= 3) return { ok: false, message: "Thanks — you've already sent a review recently.", fields };
+
+  const rating = Number(fields.rating);
+  if (!Number.isInteger(rating) || rating < 1 || rating > 5) return { ok: false, message: "Tap the stars to give a rating.", fields };
+  if (fields.name.length < 2) return { ok: false, message: "Please enter your name.", fields };
+  if (fields.text.length < 15) return { ok: false, message: "Please write a sentence or two about your experience.", fields };
+
+  const db = await readDb();
+  if (db.reviews.filter((r) => r.status === "pending" && now - Date.parse(r.createdAt) < 3_600_000).length >= 40) return { ok: false, message: "We're getting a lot of reviews right now. Please try again later.", fields };
+  reviewHits.set(ip, h && h.until > now ? { n: h.n + 1, until: h.until } : { n: 1, until: now + 60 * 60_000 });
+  if (reviewHits.size > 10_000) reviewHits.clear();
+
+  await mutate((d) => {
+    d.reviews.unshift({ id: uid("r"), createdAt: new Date().toISOString(), name: fields.name, ...(fields.role ? { role: fields.role } : {}), rating: rating as 1 | 2 | 3 | 4 | 5, text: fields.text, status: "pending" });
+    d.reviews.length = Math.min(d.reviews.length, 2000);
+  });
+  return { ok: true, message: "Thank you! Your review will appear once our team has checked it." };
+}

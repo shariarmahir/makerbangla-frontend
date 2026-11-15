@@ -161,6 +161,20 @@ export type Contact = Sample & {
   replies: { at: string; by: string; text: string; sent: boolean }[];
 };
 
+/** Customer reviews from the website. Only approved, non-sample reviews are ever shown on the store. */
+export type Review = Sample & {
+  id: string;
+  createdAt: string;
+  name: string;
+  /** e.g. "EEE student, UAP" */
+  role?: string;
+  rating: 1 | 2 | 3 | 4 | 5;
+  text: string;
+  status: "pending" | "approved" | "hidden";
+  /** Public reply from Makerbangla. */
+  reply?: string;
+};
+
 /** Outgoing email log. `sent` is false when the message was handed to the user's mail app instead. */
 export type MailLog = Sample & { id: string; at: string; by: string; to: string; subject: string; text: string; sent: boolean; ref?: string };
 
@@ -188,4 +202,5 @@ export type Db = {
   activity: Activity[];
   contacts: Contact[];
   mails: MailLog[];
+  reviews: Review[];
 };

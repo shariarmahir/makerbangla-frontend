@@ -29,7 +29,7 @@ export default async function InboxPage() {
         <Kpi icon="clock" label="Average first reply" value={answered.length ? `${hours < 1 ? "<1" : Math.round(hours)} h` : "—"} tone="navy" foot={`${answered.length} conversation${answered.length === 1 ? "" : "s"}`} />
         <Kpi icon="send" label="Emails · 30 days" value={String(month.length)} tone="coral" foot={`${month.filter((m) => m.sent).length} sent from here`} />
       </div>
-      <InboxManager contacts={db.contacts} mails={db.mails} recipients={recipients} mailReady={mailReady()} isAdmin={user.role === "admin"} />
+      <InboxManager contacts={db.contacts} mails={db.mails} reviews={db.reviews} recipients={recipients} mailReady={mailReady()} isAdmin={user.role === "admin"} />
     </>
   );
 }

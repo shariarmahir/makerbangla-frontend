@@ -48,11 +48,13 @@ async function Frame({ children }: { children: React.ReactNode }) {
   if (declined) alerts.push({ text: `${declined} task${declined > 1 ? "s were" : " was"} declined — reassign`, href: "/dashboard/tasks", tone: "warn" });
   const inbox = canAccess(user, "clients") ? db.contacts.filter((c) => c.status === "new").length : 0;
   if (inbox) alerts.push({ text: `${inbox} website message${inbox > 1 ? "s" : ""} to approve`, href: "/dashboard/inbox", tone: "info" });
+  const reviews = canAccess(user, "clients") ? db.reviews.filter((r) => r.status === "pending" && !r.sample).length : 0;
+  if (reviews) alerts.push({ text: `${reviews} customer review${reviews > 1 ? "s" : ""} waiting to be published`, href: "/dashboard/inbox?tab=reviews", tone: "info" });
   const badges: Record<string, number> = {
     "/dashboard/orders": canAccess(user, "orders") ? (isAdmin ? pending : db.orders.filter((o) => o.assignee === user.id && ["confirmed", "packed"].includes(o.status)).length) : 0,
     "/dashboard": assigned,
     "/dashboard/tasks": isAdmin ? declined + db.tasks.filter((t) => t.status === "review").length : db.tasks.filter((t) => t.assignee === user.id && t.status !== "done" && t.priority === "emergency").length,
-    "/dashboard/inbox": inbox,
+    "/dashboard/inbox": inbox + reviews,
     "/dashboard/team": isAdmin ? leaves : 0,
     "/dashboard/clients": canAccess(user, "clients") ? leads : 0,
   };

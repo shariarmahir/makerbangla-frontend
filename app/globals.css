@@ -255,3 +255,29 @@
   .dash-rise { animation: rise 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
 }
 @keyframes chart-grow-x { from { transform: scaleX(0); } }
+
+/* Footer credit: "Kandari Lab" in a flowing brand-colour gradient with a soft glow (static for reduced motion). */
+.kandari {
+  background: linear-gradient(90deg, var(--color-tile-yellow), var(--color-tile-white), var(--color-tile-sky), color-mix(in srgb, var(--color-brand) 70%, white), var(--color-tile-butter), var(--color-tile-yellow));
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  filter: drop-shadow(0 0 12px color-mix(in srgb, var(--color-tile-yellow) 40%, transparent));
+}
+@media (prefers-reduced-motion: no-preference) {
+  .kandari {
+    animation: kandari-flow 6s linear infinite;
+  }
+  .kandari-dot {
+    animation: kandari-pulse 1.8s ease-in-out infinite;
+  }
+}
+@keyframes kandari-flow {
+  to { background-position: 300% 0; }
+}
+@keyframes kandari-pulse {
+  50% { transform: scale(1.5); opacity: 0.55; }
+}

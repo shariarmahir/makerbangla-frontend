@@ -1,12 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { contactToLead, clearMailLog, deleteContacts, replyContact, sendEmail, setContactStatus } from "@/lib/admin/actions/mail";
 import { mailto } from "@/lib/admin/pdf";
-import { leadSources, type Contact, type MailLog } from "@/lib/admin/types";
+import { leadSources, type Contact, type MailLog, type Review } from "@/lib/admin/types";
 import { cn } from "@/lib/utils";
 import { Icon, type IconName } from "./icon";
 import { Btn, ConfirmButton, Field, input, textarea, toast, useAction } from "./kit";
+import { ReviewsAdmin } from "./reviews-admin";
 import { Avatar, Card, Empty, Pill, type PillTone } from "./ui";
 
 /**
@@ -39,15 +41,17 @@ const when = (iso: string) => new Date(iso).toLocaleString("en-GB", { day: "nume
 /** Hands an unsent message to the user's mail app. */
 const openMailApp = (to: string, subject: string, text: string) => window.open(mailto(to, subject, text), "_self");
 
-export function InboxManager({ contacts, mails, recipients, mailReady, isAdmin }: { contacts: Contact[]; mails: MailLog[]; recipients: Recipient[]; mailReady: boolean; isAdmin: boolean }) {
-  const [tab, setTab] = useState<"inbox" | "compose" | "sent">("inbox");
+export function InboxManager({ contacts, mails, reviews, recipients, mailReady, isAdmin }: { contacts: Contact[]; mails: MailLog[]; reviews: Review[]; recipients: Recipient[]; mailReady: boolean; isAdmin: boolean }) {
+  const params = useSearchParams();
+  const [tab, setTab] = useState<"inbox" | "compose" | "sent" | "reviews">(params.get("tab") === "reviews" ? "reviews" : "inbox");
   const { pending, exec } = useAction();
   const fresh = contacts.filter((c) => c.status === "new").length;
-  const tabs = [["inbox", `Inbox${fresh ? ` · ${fresh}` : ""}`, "mail-check"], ["compose", "Compose", "file-pen-line"], ["sent", `Sent · ${mails.length}`, "send"]] as const;
+  const waiting = reviews.filter((r) => r.status === "pending").length;
+  const tabs = [["inbox", `Inbox${fresh ? ` · ${fresh}` : ""}`, "mail-check"], ["reviews", `Reviews${waiting ? ` · ${waiting}` : ""}`, "sparkles"], ["compose", "Compose", "file-pen-line"], ["sent", `Sent · ${mails.length}`, "send"]] as const;
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-2">
-        <div role="tablist" className="flex rounded-2xl bg-white p-1 ring-1 ring-line">
+        <div role="tablist" className="flex flex-wrap rounded-2xl bg-white p-1 ring-1 ring-line">
           {tabs.map(([t, label, icon]) => (
             <button key={t} role="tab" aria-selected={tab === t} onClick={() => setTab(t)} className={cn("flex h-9 items-center gap-1.5 rounded-xl px-3.5 text-[13px] font-black transition-colors", tab === t ? "bg-tile-navy text-tile-yellow" : "text-subtle hover:text-ink")}>
               <Icon name={icon} className="size-4" /> {label}
@@ -59,7 +63,7 @@ export function InboxManager({ contacts, mails, recipients, mailReady, isAdmin }
           {mailReady ? "Sending from the dashboard" : "Emails open in your mail app — add RESEND_API_KEY and MAIL_FROM to send from here"}
         </p>
       </div>
-      {tab === "inbox" ? <Inbox contacts={contacts} exec={exec} pending={pending} /> : tab === "compose" ? <Compose recipients={recipients} exec={exec} pending={pending} onSent={() => setTab("sent")} /> : <Sent mails={mails} exec={exec} isAdmin={isAdmin} />}
+      {tab === "inbox" ? <Inbox contacts={contacts} exec={exec} pending={pending} /> : tab === "reviews" ? <ReviewsAdmin reviews={reviews} /> : tab === "compose" ? <Compose recipients={recipients} exec={exec} pending={pending} onSent={() => setTab("sent")} /> : <Sent mails={mails} exec={exec} isAdmin={isAdmin} />}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import "server-only";
 import { mkdir, readFile, rename, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { sampleContacts, seed } from "./seed";
+import { sampleContacts, sampleReviews, seed } from "./seed";
 import type { Db } from "./types";
 
 /**
@@ -36,6 +36,7 @@ function upgrade(db: Db) {
   const sample = db.orders?.some((o) => o.sample);
   db.contacts ??= sample ? sampleContacts(Date.now()) : [];
   db.mails ??= [];
+  db.reviews ??= sample ? sampleReviews(Date.now()) : [];
   return db;
 }
 
