@@ -18,14 +18,25 @@ export type Sample = { sample?: true };
 
 export const orderStatuses = ["pending", "confirmed", "packed", "shipped", "delivered", "cancelled"] as const;
 export type OrderStatus = (typeof orderStatuses)[number];
+/** How each status reads on screen: website orders arrive as "New" and wait for the owner's approval. */
+export const statusLabel: Record<OrderStatus, string> = { pending: "New", confirmed: "Approved", packed: "Packed", shipped: "On the way", delivered: "Delivered", cancelled: "Cancelled" };
+export const couriers = ["Pathao", "Steadfast", "RedX", "Sundarban", "SA Paribahan", "eCourier", "Own rider"] as const;
 export type Payment = { amount: number; method: string; at: string };
 
 export type DashOrder = Order &
   Sample & {
     status: OrderStatus;
+    /** Money off the items subtotal (manual orders and invoices). `total` already has it taken off. */
+    discount?: number;
     payments: Payment[];
-    history: { status: OrderStatus; at: string; by: string }[];
+    history: { status: OrderStatus; at: string; by: string; note?: string }[];
     source: string;
+    /** Who handles packing and dispatch: "admin" or an employee id. Set automatically on approval. */
+    assignee?: string;
+    courier?: { name: string; tracking?: string };
+    cancelReason?: string;
+    /** Internal notes, never shown to the customer. */
+    notes?: { at: string; by: string; text: string }[];
   };
 
 export type Quote = Sample & {

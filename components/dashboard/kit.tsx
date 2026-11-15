@@ -2,7 +2,8 @@
 
 import { useEffect, useState, useTransition } from "react";
 import { Dialog } from "@base-ui/react/dialog";
-import { CheckCircle2, LoaderCircle, Trash2, TriangleAlert, X } from "lucide-react";
+import { LoaderCircle, X } from "lucide-react";
+import { Icon } from "./icon";
 import type { Result } from "@/lib/admin/action";
 import { cn } from "@/lib/utils";
 
@@ -67,7 +68,7 @@ export function Toaster() {
     <div aria-live="polite" className="pointer-events-none fixed bottom-24 left-1/2 z-[70] flex w-[min(92vw,380px)] -translate-x-1/2 flex-col gap-2">
       {items.map((t) => (
         <p key={t.id} className={cn("dash-rise pointer-events-auto flex items-center gap-2.5 rounded-2xl px-4 py-3 text-[13px] font-bold shadow-2xl", t.ok ? "bg-tile-midnight text-white" : "bg-tile-coral text-white")}>
-          {t.ok ? <CheckCircle2 className="size-4.5 shrink-0 text-tile-yellow" /> : <TriangleAlert className="size-4.5 shrink-0" />}
+          {t.ok ? <Icon name="circle-check" className="size-4.5 shrink-0 text-tile-yellow" /> : <Icon name="badge-alert" className="size-4.5 shrink-0" />}
           {t.text}
         </p>
       ))}
@@ -106,7 +107,7 @@ export function ConfirmButton({ onConfirm, label = "Delete", confirm = "Confirm"
       className={cn(armed && "bg-tile-coral text-white", className)}
       onClick={() => (armed ? (setArmed(false), onConfirm()) : setArmed(true))}
     >
-      {icon && <Trash2 className="size-3.5" />}
+      {icon && <Icon name="delete" className="size-3.5" />}
       {armed ? confirm : size === "icon" ? null : label}
     </Btn>
   );

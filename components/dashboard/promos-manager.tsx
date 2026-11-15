@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowDown, ArrowUp, Eye, EyeOff, Pencil, Plus } from "lucide-react";
+import { Icon } from "./icon";
 import { PromoSlides } from "@/components/home/promo-slides";
 import { deletePromo, movePromo, savePromo, togglePromo } from "@/lib/admin/actions/catalog";
 import type { CatalogItem, Promo } from "@/lib/admin/types";
@@ -23,7 +23,7 @@ export function PromosManager({ promos, products }: { promos: Promo[]; products:
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-center gap-2">
-        <Btn tone="primary" onClick={() => setEdit(blank)}><Plus className="size-4" /> New banner</Btn>
+        <Btn tone="primary" onClick={() => setEdit(blank)}><Icon name="plus" className="size-4" /> New banner</Btn>
         <p className="text-[12.5px] font-semibold text-subtle">{promos.filter((p) => p.active).length} of {promos.length} banners are live on the home page. Changes publish instantly.</p>
       </div>
       {promos.length === 0 && <Empty>No banners yet. The home page hides the section until one is live.</Empty>}
@@ -33,10 +33,10 @@ export function PromosManager({ promos, products }: { promos: Promo[]; products:
             <span className="text-[13px] font-black text-ink">{i + 1}. {p.title}</span>
             <Pill tone={p.active ? "delivered" : "neutral"}>{p.active ? "Live" : "Hidden"}</Pill>
             <span className="ml-auto flex gap-1">
-              <Btn size="icon" tone="soft" aria-label="Move up" disabled={pending || i === 0} onClick={() => exec(() => movePromo({ id: p.id, dir: -1 }))}><ArrowUp className="size-4" /></Btn>
-              <Btn size="icon" tone="soft" aria-label="Move down" disabled={pending || i === promos.length - 1} onClick={() => exec(() => movePromo({ id: p.id, dir: 1 }))}><ArrowDown className="size-4" /></Btn>
-              <Btn size="sm" tone="soft" onClick={() => exec(() => togglePromo({ id: p.id }), p.active ? "Banner hidden" : "Banner is live")}>{p.active ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}{p.active ? "Hide" : "Show"}</Btn>
-              <Btn size="sm" tone="accent" onClick={() => setEdit(p)}><Pencil className="size-3.5" /> Edit</Btn>
+              <Btn size="icon" tone="soft" aria-label="Move up" disabled={pending || i === 0} onClick={() => exec(() => movePromo({ id: p.id, dir: -1 }))}><Icon name="chevron-up" className="size-4" /></Btn>
+              <Btn size="icon" tone="soft" aria-label="Move down" disabled={pending || i === promos.length - 1} onClick={() => exec(() => movePromo({ id: p.id, dir: 1 }))}><Icon name="chevron-down" className="size-4" /></Btn>
+              <Btn size="sm" tone="soft" onClick={() => exec(() => togglePromo({ id: p.id }), p.active ? "Banner hidden" : "Banner is live")}>{p.active ? <Icon name="eye-off" className="size-3.5" /> : <Icon name="eye" className="size-3.5" />}{p.active ? "Hide" : "Show"}</Btn>
+              <Btn size="sm" tone="accent" onClick={() => setEdit(p)}><Icon name="file-pen-line" className="size-3.5" /> Edit</Btn>
               <ConfirmButton size="icon" label="Delete banner" onConfirm={() => exec(() => deletePromo({ id: p.id }), "Banner deleted")} />
             </span>
           </div>

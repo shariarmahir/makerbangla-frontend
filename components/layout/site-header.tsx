@@ -153,7 +153,7 @@ function SearchBar({ className }: { className?: string }) {
         aria-label="Search"
         className="grid w-11 shrink-0 place-items-center rounded-xl bg-tile-navy text-tile-yellow shadow-[0_6px_14px_-6px_rgb(26_73_175/0.7)] transition-[background-color,scale] hover:bg-tile-blue hover:text-white active:scale-95 sm:w-12"
       >
-        <Search className="size-[18px]" strokeWidth={2.4} />
+        <Search className="size-4.5" strokeWidth={2.4} />
       </button>
     </Form>
   );

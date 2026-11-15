@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
-import { ArrowRight, LayoutDashboard, ShieldCheck, ShoppingBag } from "lucide-react";
+import { ArrowRight, LayoutDashboard, ShieldCheck, ShoppingBag, UserRoundCheck } from "lucide-react";
 import { SignInForm } from "@/components/account/sign-in-form";
-import { MagicLink } from "@/components/ui/magic-button";
+import { MagicButton, MagicLink } from "@/components/ui/magic-button";
+import { DEMO_EMPLOYEE } from "@/lib/admin/admin-account";
 import { getUser } from "@/lib/admin/auth";
+import { demoSignIn } from "@/lib/admin/auth-actions";
+import { readDb } from "@/lib/admin/db";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -24,6 +27,26 @@ async function SessionHint() {
       <span className="flex-1">Signed in as {user.name} — open your dashboard</span>
       <ArrowRight className="size-4" />
     </Link>
+  );
+}
+
+/** One-click employee demo, offered only while the sample team exists (Settings → Clear sample data removes it). */
+async function DemoAccess() {
+  const db = await readDb();
+  const e = db.employees.find((x) => x.id === DEMO_EMPLOYEE && x.sample && x.active);
+  if (!e) return null;
+  return (
+    <form action={demoSignIn} className="mt-6 rounded-2xl bg-tile-butter/60 p-4 ring-1 ring-tile-yellow">
+      <p className="text-[12px] font-black tracking-wide text-tile-navy uppercase">Demo employee</p>
+      <div className="mt-2.5 flex flex-wrap items-center gap-3">
+        <span aria-hidden className="grid size-11 shrink-0 place-items-center rounded-full bg-tile-navy text-[15px] font-black text-tile-yellow">{e.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}</span>
+        <span className="min-w-0 flex-1">
+          <b className="block text-[14px] text-ink">{e.name}</b>
+          <span className="text-[12px] font-semibold text-subtle">{e.designation} · sample profile</span>
+        </span>
+        <MagicButton type="submit" variant="brand" size="sm" rainbow={false}><UserRoundCheck className="size-4" /> Enter employee dashboard</MagicButton>
+      </div>
+    </form>
   );
 }
 
@@ -49,6 +72,9 @@ export default function AccountPage() {
             <SessionHint />
           </Suspense>
           <SignInForm />
+          <Suspense>
+            <DemoAccess />
+          </Suspense>
           <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-5 text-[12px] text-subtle">
             <span>Forgot your password? Ask the super admin to reset it.</span>
             <MagicLink href="/shop" variant="light" size="sm">Continue shopping</MagicLink>

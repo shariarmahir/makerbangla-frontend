@@ -53,6 +53,7 @@ export async function SiteFooter() {
             <li><Link href="/learn#lab-guides" className={link}>Lab Guides</Link></li>
             <li><Link href="/blog" className={link}>Tech Insights</Link></li>
             <li><Link href="/brands" className={link}>Brands</Link></li>
+            <li><Link href="/track" className={link}>Track Order</Link></li>
             <li><Link href="/wishlist" className={link}>Wishlist</Link></li>
             <li><Link href="/privacy" className={link}>Privacy Policy</Link></li>
             <li><Link href="/terms" className={link}>Terms of Service</Link></li>

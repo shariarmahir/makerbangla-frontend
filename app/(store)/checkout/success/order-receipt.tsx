@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useState, useSyncExternalStore } from "react";
 import { motion } from "motion/react";
-import { Check, Download, Loader2, Printer, ShoppingBag } from "lucide-react";
+import { Check, Download, Loader2, MapPin, Printer, ShoppingBag } from "lucide-react";
 import { MagicButton, MagicLink } from "@/components/ui/magic-button";
 import { getOrder } from "@/lib/orders-store";
 import { site } from "@/lib/site";
@@ -74,6 +74,9 @@ export function OrderReceipt() {
           <MagicButton type="button" variant="default" rainbow={false} onClick={() => window.print()}>
             <Printer className="size-4" /> Print
           </MagicButton>
+          <MagicLink href={`/track?id=${order.id}`} variant="light">
+            <MapPin className="size-4" /> Track order
+          </MagicLink>
           <MagicLink href="/shop" variant="secondary">
             <ShoppingBag className="size-4" /> Continue shopping
           </MagicLink>

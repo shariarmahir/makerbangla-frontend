@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { endSession, startSession } from "./auth";
 import { log, mutate, readDb } from "./db";
-import { adminEmail, adminPasswordHash } from "./admin-account";
+import { adminEmail, adminPasswordHash, DEMO_EMPLOYEE } from "./admin-account";
 import { sessionReady, verifyPassword } from "./session";
 
 /** `id` is echoed back so the form keeps what was typed (React resets forms after an action). */
@@ -69,4 +69,14 @@ export async function signIn(_: SignInState, form: FormData): Promise<SignInStat
 export async function signOut() {
   await endSession();
   redirect("/account");
+}
+
+/** One click into the employee dashboard as the sample dispatch employee (only while sample data exists). */
+export async function demoSignIn() {
+  const db = await readDb();
+  const e = db.employees.find((x) => x.id === DEMO_EMPLOYEE && x.sample && x.active);
+  if (!e || !sessionReady()) redirect("/account");
+  await startSession({ sub: e.id, role: "staff", v: e.sessionVersion });
+  await mutate((d) => log(d, e.name, "opened the employee demo"));
+  redirect("/dashboard");
 }

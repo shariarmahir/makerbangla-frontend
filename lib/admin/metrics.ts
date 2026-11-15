@@ -154,5 +154,14 @@ export function customers(db: Db) {
   return [...m.values()].sort((a, b) => b.spend - a.spend);
 }
 
+/** Latest contact details per phone number, for autofilling order and invoice forms. */
+export function knownCustomers(db: Db) {
+  const m = new Map<string, { name: string; phone: string; email?: string; city?: string; address?: string }>();
+  for (const o of [...db.orders].sort((a, b) => a.createdAt.localeCompare(b.createdAt))) {
+    m.set(o.customer.phone, { name: o.customer.name, phone: o.customer.phone, email: o.customer.email, city: o.delivery.city, address: o.delivery.address });
+  }
+  return [...m.values()];
+}
+
 export const sourceLabel = (s: string) =>
   ({ facebook: "Facebook", youtube: "YouTube", google: "Google", instagram: "Instagram", whatsapp: "WhatsApp", website: "Website", direct: "Direct", referral: "Referral", phone: "Phone", "walk-in": "Walk-in", other: "Other" })[s] ?? s;

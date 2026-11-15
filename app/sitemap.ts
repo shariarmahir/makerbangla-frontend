@@ -13,6 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: url("/brands"), changeFrequency: "weekly", priority: 0.7 },
     { url: url("/learn"), changeFrequency: "weekly", priority: 0.8 },
     { url: url("/blog"), changeFrequency: "weekly", priority: 0.7 },
+    { url: url("/track"), changeFrequency: "yearly", priority: 0.4 },
     ...categories.map((c) => ({ url: url(`/shop?category=${c.slug}`), changeFrequency: "weekly" as const, priority: 0.7 })),
     ...brands.map((b) => ({ url: url(`/shop?brand=${b.slug}`), changeFrequency: "weekly" as const, priority: 0.6 })),
     ...products.map((p) => ({ url: url(`/products/${p.slug}`), changeFrequency: "weekly" as const, priority: 0.8, images: [url(`/images/products/${p.slug}.webp`)] })),

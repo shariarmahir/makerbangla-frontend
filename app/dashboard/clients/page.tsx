@@ -1,4 +1,3 @@
-import { Contact, Globe2, Target, Trophy } from "lucide-react";
 import { BarChart, Bars } from "@/components/dashboard/charts";
 import { palette, seriesColors } from "@/components/dashboard/palette";
 import { LeadsManager, TrafficPanel } from "@/components/dashboard/clients-tools";
@@ -29,10 +28,10 @@ export default async function ClientsPage() {
       <PageHeader title="Clients & leads" />
       <div className="space-y-5">
         <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
-          <Kpi icon={Contact} label="Customers" value={String(people.length)} tone="blue" foot={`${people.filter((p) => p.orders > 1).length} ordered more than once`} />
-          <Kpi icon={Target} label="Open leads" value={String(leads.filter((l) => !["won", "lost"].includes(l.status)).length)} tone="yellow" foot={`${leads.filter((l) => !l.approved).length} waiting for approval`} />
-          <Kpi icon={Trophy} label="Lead win rate" value={`${leads.length ? Math.round((won.length / leads.length) * 100) : 0}%`} tone="navy" foot={`${bdt(won.reduce((n, l) => n + (l.value ?? 0), 0))} won`} />
-          <Kpi icon={Globe2} label="Visit → order" value={`${t30.totalVisits ? ((db.orders.filter((o) => Date.parse(o.createdAt) > now - 30 * DAY).length / t30.totalVisits) * 100).toFixed(1) : "0"}%`} tone="coral" foot="last 30 days" />
+          <Kpi icon="user-round-check" label="Customers" value={String(people.length)} tone="blue" foot={`${people.filter((p) => p.orders > 1).length} ordered more than once`} />
+          <Kpi icon="circle-gauge" label="Open leads" value={String(leads.filter((l) => !["won", "lost"].includes(l.status)).length)} tone="yellow" foot={`${leads.filter((l) => !l.approved).length} waiting for approval`} />
+          <Kpi icon="sparkles" label="Lead win rate" value={`${leads.length ? Math.round((won.length / leads.length) * 100) : 0}%`} tone="navy" foot={`${bdt(won.reduce((n, l) => n + (l.value ?? 0), 0))} won`} />
+          <Kpi icon="map-pin" label="Visit → order" value={`${t30.totalVisits ? ((db.orders.filter((o) => Date.parse(o.createdAt) > now - 30 * DAY).length / t30.totalVisits) * 100).toFixed(1) : "0"}%`} tone="coral" foot="last 30 days" />
         </div>
 
         <TrafficPanel ranges={ranges} />

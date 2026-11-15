@@ -2,7 +2,7 @@ import { randomBytes } from "node:crypto";
 import { productVisual } from "@/lib/catalog";
 import { products } from "@/lib/data/catalog";
 import { deliveryOptions } from "@/lib/site";
-import type { CatalogItem, DashOrder, Db, DayVisits, Expense, Lead, Promo } from "./types";
+import { couriers, type CatalogItem, type DashOrder, type Db, type DayVisits, type Expense, type Lead, type Promo } from "./types";
 
 /**
  * First-run data. The catalog and promo banners are real site content. Everything marked `sample` (orders, expenses,
@@ -57,6 +57,22 @@ export function seed(): Db {
     return [{ id: `promo_${i + 1}`, ...rest, text: p.summary, price: p.price, oldPrice: p.oldPrice, href: `/products/${p.slug}`, image: productVisual(p.slug).src, active: true }];
   });
 
+  // Order journey: website → owner approval → packed and shipped by the assigned team member → delivered.
+  const handlers = [["emp_nusrat", "Nusrat Jahan"], ["emp_tanvir", "Tanvir Hasan"]] as const;
+  const flow = ["pending", "confirmed", "packed", "shipped", "delivered"] as const;
+  const trail = (status: DashOrder["status"], at: Date, pickup: boolean): Pick<DashOrder, "history" | "assignee" | "courier" | "cancelReason"> => {
+    if (status === "cancelled") return { history: [{ status: "pending", at: at.toISOString(), by: "Website" }, { status, at: new Date(at.getTime() + DAY / 3).toISOString(), by: "Super Admin", note: "Customer unreachable" }], cancelReason: "Customer unreachable" };
+    const steps = flow.slice(0, flow.indexOf(status) + 1).filter((s) => !(pickup && s === "shipped"));
+    const gap = Math.min(DAY * 0.45, (now - at.getTime()) / (steps.length + 1));
+    const [id, name] = pick(handlers);
+    const courier = !pickup && steps.includes("shipped") ? { name: pick(couriers), tracking: `${pick(["PTH", "SFC", "RDX"])}-${4800000 + Math.floor(r() * 99999)}` } : undefined;
+    return {
+      history: steps.map((s, k) => ({ status: s, at: new Date(at.getTime() + k * gap).toISOString(), by: k === 0 ? "Website" : k === 1 ? "Super Admin" : name, ...(s === "shipped" && courier ? { note: `${courier.name} · ${courier.tracking}` } : {}) })),
+      ...(steps.length > 1 ? { assignee: id } : {}),
+      ...(courier ? { courier } : {}),
+    };
+  };
+
   // Orders: more recent months are busier, so the trend charts have a shape.
   const orders: DashOrder[] = [];
   for (let i = 0; i < 170; i++) {
@@ -69,8 +85,9 @@ export function seed(): Db {
     const delivery = pick(deliveryOptions);
     const subtotal = lines.reduce((n, l) => n + l.price * l.qty, 0);
     const total = subtotal + delivery.fee;
-    const status: DashOrder["status"] =
+    let status: DashOrder["status"] =
       age > 9 ? (r() < 0.06 ? "cancelled" : "delivered") : age > 5 ? pick(["shipped", "delivered", "delivered"] as const) : age > 2 ? pick(["confirmed", "packed", "shipped"] as const) : pick(["pending", "pending", "confirmed"] as const);
+    if (delivery.id === "pickup" && status === "shipped") status = "packed";
     const paid = status === "delivered" ? total : status === "shipped" && r() < 0.4 ? Math.round(total * 0.3) : 0;
     const name = pick(customers);
     orders.push({
@@ -82,7 +99,7 @@ export function seed(): Db {
       lines, subtotal, total, demo: false, sample: true,
       status,
       payments: paid ? [{ amount: paid, method: paid === total ? "Cash" : "bKash", at: new Date(at.getTime() + 2 * DAY).toISOString() }] : [],
-      history: [{ status: "pending", at: at.toISOString(), by: "Website" }, ...(status !== "pending" ? [{ status, at: new Date(at.getTime() + DAY).toISOString(), by: "Super Admin" }] : [])],
+      ...trail(status, at, delivery.id === "pickup"),
       source: pick(sources),
     });
   }

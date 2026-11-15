@@ -13,13 +13,15 @@ async function start(title: string, ref: string, date: string) {
   const { jsPDF } = await import("jspdf");
   const doc = new jsPDF({ unit: "mm", format: "a4" });
   const W = 210, M = 16;
-  doc.setFillColor(...NAVY).rect(0, 0, W, 30, "F");
-  doc.setFillColor(...YELLOW).rect(0, 30, W, 1.6, "F");
+  doc.setFillColor(...NAVY).rect(0, 0, W, 32, "F");
+  doc.setFillColor(...YELLOW).rect(0, 32, W, 1.6, "F");
   doc.setFont("helvetica", "bold").setFontSize(19).setTextColor(...YELLOW).text(site.name, M, 15);
   doc.setFont("helvetica", "normal").setFontSize(8.5).setTextColor(255, 255, 255);
   doc.text(latin1(`${site.address.street}, ${site.address.city}  |  ${site.phone}  |  ${site.email}`), M, 22);
   doc.setFont("helvetica", "bold").setFontSize(15).setTextColor(255, 255, 255).text(title.toUpperCase(), W - M, 14, { align: "right" });
-  doc.setFont("helvetica", "normal").setFontSize(9).text(latin1(`${ref}  |  ${date}`), W - M, 21, { align: "right" });
+  // Number and date on their own lines so they never run into the address on the left.
+  doc.setFont("helvetica", "bold").setFontSize(9.5).text(latin1(ref), W - M, 21, { align: "right" });
+  doc.setFont("helvetica", "normal").setFontSize(8.5).text(latin1(date), W - M, 27, { align: "right" });
   return { doc, W, M };
 }
 
@@ -29,76 +31,105 @@ function footer(doc: import("jspdf").jsPDF, W: number) {
 }
 
 export type DocInput = {
-  kind: "Invoice" | "Receipt" | "Quotation";
+  kind: "Invoice" | "Receipt" | "Quotation" | "Delivery Challan";
+  /** Document number, e.g. INV-261115-AB12 */
   ref: string;
+  /** Order the document belongs to (shown under the number). */
+  orderRef?: string;
   date: string; // ISO
   customer: { name: string; phone: string; email?: string };
   address?: string;
   lines: { name: string; qty: number; price: number; sku?: string }[];
   delivery?: { label: string; fee: number };
+  discount?: number;
+  /** Total paid so far (invoice / full receipt). */
   paid?: number;
+  /** A single payment receipt: shows this payment and the balance after it. */
+  payment?: { amount: number; method: string; at: string; paidBefore: number };
   note?: string;
 };
 
 export async function documentPdf(d: DocInput) {
   const date = new Date(d.date).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Dhaka" });
-  const { doc, W, M } = await start(d.kind, d.ref, date);
+  const { doc, W, M } = await start(d.kind, d.ref, d.orderRef ? `Order ${d.orderRef}  |  ${date}` : date);
+  const challan = d.kind === "Delivery Challan";
   let y = 44;
-  doc.setFont("helvetica", "bold").setFontSize(8.5).setTextColor(...SUBTLE).text(d.kind === "Quotation" ? "PREPARED FOR" : "BILL TO", M, y);
+  doc.setFont("helvetica", "bold").setFontSize(8.5).setTextColor(...SUBTLE).text(d.kind === "Quotation" ? "PREPARED FOR" : challan ? "DELIVER TO" : d.kind === "Receipt" ? "RECEIVED FROM" : "BILL TO", M, y);
   doc.setFont("helvetica", "bold").setFontSize(11.5).setTextColor(...INK).text(latin1(d.customer.name), M, y + 6);
   doc.setFont("helvetica", "normal").setFontSize(9.5).setTextColor(...SUBTLE);
   [d.customer.phone, d.customer.email, d.address].filter(Boolean).forEach((r, i) => doc.text(latin1(String(r)), M, y + 11.5 + i * 5, { maxWidth: 100 }));
   if (d.delivery) {
-    doc.setFont("helvetica", "bold").setFontSize(8.5).text("DELIVERY", W - M, y, { align: "right" });
+    doc.setFont("helvetica", "bold").setFontSize(8.5).setTextColor(...SUBTLE).text("DELIVERY", W - M, y, { align: "right" });
     doc.setFont("helvetica", "normal").setFontSize(9.5).setTextColor(...INK).text(latin1(d.delivery.label), W - M, y + 6, { align: "right" });
   }
 
   y += 32;
   doc.setFillColor(242, 246, 252).roundedRect(M, y - 5.5, W - 2 * M, 9, 2, 2, "F");
   doc.setFont("helvetica", "bold").setFontSize(8.5).setTextColor(...SUBTLE);
-  doc.text("ITEM", M + 3, y).text("QTY", 132, y, { align: "right" }).text("PRICE", 160, y, { align: "right" }).text("AMOUNT", W - M - 3, y, { align: "right" });
+  doc.text("#", M + 3, y).text("ITEM", M + 11, y);
+  if (challan) doc.text("QTY", W - M - 3, y, { align: "right" });
+  else doc.text("QTY", 132, y, { align: "right" }).text("PRICE", 160, y, { align: "right" }).text("AMOUNT", W - M - 3, y, { align: "right" });
   y += 9;
   doc.setFont("helvetica", "normal").setFontSize(9.5).setTextColor(...INK);
-  for (const l of d.lines) {
-    const rows = doc.splitTextToSize(latin1(l.name + (l.sku ? `  (${l.sku})` : "")), 100) as string[];
-    doc.text(rows, M + 3, y);
-    doc.text(String(l.qty), 132, y, { align: "right" }).text(money(l.price), 160, y, { align: "right" }).text(money(l.qty * l.price), W - M - 3, y, { align: "right" });
+  d.lines.forEach((l, i) => {
+    const rows = doc.splitTextToSize(latin1(l.name + (l.sku ? `  (${l.sku})` : "")), challan ? 150 : 100) as string[];
+    doc.text(String(i + 1), M + 3, y).text(rows, M + 11, y);
+    if (challan) doc.text(String(l.qty), W - M - 3, y, { align: "right" });
+    else doc.text(String(l.qty), 132, y, { align: "right" }).text(money(l.price), 160, y, { align: "right" }).text(money(l.qty * l.price), W - M - 3, y, { align: "right" });
     y += rows.length * 5 + 3;
     doc.setDrawColor(223, 231, 242).line(M, y - 3, W - M, y - 3);
     if (y > 250) {
       doc.addPage();
       y = 24;
     }
-  }
+  });
 
-  const subtotal = d.lines.reduce((n, l) => n + l.qty * l.price, 0);
-  const total = subtotal + (d.delivery?.fee ?? 0);
-  const rows: [string, string, boolean?][] = [["Subtotal", money(subtotal)]];
-  if (d.delivery) rows.push([`Delivery (${d.delivery.label})`, d.delivery.fee ? money(d.delivery.fee) : "Free"]);
-  rows.push(["Total", money(total), true]);
-  if (d.paid !== undefined) rows.push(["Paid", money(d.paid)], ["Balance due", money(Math.max(0, total - d.paid)), true]);
-  y += 3;
-  for (const [k, v, bold] of rows) {
-    doc.setFont("helvetica", bold ? "bold" : "normal").setFontSize(bold ? 11 : 9.5).setTextColor(...INK);
-    doc.text(latin1(k), 150, y, { align: "right" }).text(v, W - M - 3, y, { align: "right" });
-    y += bold ? 7 : 5.5;
-  }
-  if (d.kind === "Receipt" && d.paid !== undefined && d.paid >= total) {
-    doc.setDrawColor(...NAVY).setLineWidth(0.8).roundedRect(M, y - 14, 34, 11, 2, 2, "S");
-    doc.setFont("helvetica", "bold").setFontSize(12).setTextColor(...NAVY).text("PAID", M + 17, y - 6.5, { align: "center" });
+  if (challan) {
+    y += 4;
+    doc.setFont("helvetica", "bold").setFontSize(10).text(`Total items: ${d.lines.reduce((n, l) => n + l.qty, 0)}`, W - M - 3, y, { align: "right" });
+    y = Math.max(y + 34, 236);
+    doc.setDrawColor(...SUBTLE).setLineWidth(0.3);
+    [["Prepared by", M], ["Delivered by", M + 62], ["Received by (sign & date)", M + 124]].forEach(([t, x]) => {
+      doc.line(x as number, y, (x as number) + 54, y);
+      doc.setFont("helvetica", "normal").setFontSize(8.5).setTextColor(...SUBTLE).text(String(t), x as number, y + 5);
+    });
+  } else {
+    const subtotal = d.lines.reduce((n, l) => n + l.qty * l.price, 0);
+    const discount = Math.min(subtotal, d.discount ?? 0);
+    const total = subtotal - discount + (d.delivery?.fee ?? 0);
+    const rows: [string, string, boolean?][] = [["Subtotal", money(subtotal)]];
+    if (discount) rows.push(["Discount", `- ${money(discount)}`]);
+    if (d.delivery) rows.push([`Delivery (${d.delivery.label})`, d.delivery.fee ? money(d.delivery.fee) : "Free"]);
+    rows.push(["Total", money(total), true]);
+    if (d.payment) {
+      rows.push(["Paid before", money(d.payment.paidBefore)], [`This payment (${d.payment.method})`, money(d.payment.amount), true], ["Balance due", money(Math.max(0, total - d.payment.paidBefore - d.payment.amount)), true]);
+    } else if (d.paid !== undefined) rows.push(["Paid", money(d.paid)], ["Balance due", money(Math.max(0, total - d.paid)), true]);
+    y += 3;
+    for (const [k, v, bold] of rows) {
+      doc.setFont("helvetica", bold ? "bold" : "normal").setFontSize(bold ? 11 : 9.5).setTextColor(...INK);
+      doc.text(latin1(k), 150, y, { align: "right" }).text(v, W - M - 3, y, { align: "right" });
+      y += bold ? 7 : 5.5;
+    }
+    const settled = d.payment ? d.payment.paidBefore + d.payment.amount >= total : d.paid !== undefined && d.paid >= total;
+    if ((d.kind === "Receipt" || d.kind === "Invoice") && settled) {
+      doc.setDrawColor(...NAVY).setLineWidth(0.8).roundedRect(M, y - 14, 34, 11, 2, 2, "S");
+      doc.setFont("helvetica", "bold").setFontSize(12).setTextColor(...NAVY).text("PAID", M + 17, y - 6.5, { align: "center" });
+    }
   }
   if (d.note) {
     y += 6;
     doc.setFont("helvetica", "bold").setFontSize(8.5).setTextColor(...SUBTLE).text("NOTE", M, y);
     doc.setFont("helvetica", "normal").setFontSize(9.5).setTextColor(...INK).text(doc.splitTextToSize(latin1(d.note), W - 2 * M) as string[], M, y + 5.5);
   }
-  if (d.kind === "Quotation") {
-    doc.setFont("helvetica", "italic").setFontSize(9).setTextColor(...SUBTLE).text("Prices valid for 15 days from the date above. Delivery and taxes as stated.", M, 276);
-  } else {
-    doc.setFont("helvetica", "italic").setFontSize(9).setTextColor(...SUBTLE).text("Thank you for building with Makerbangla.", M, 276);
-  }
+  const closing = {
+    Quotation: "Prices valid for 15 days from the date above. Delivery and taxes as stated.",
+    "Delivery Challan": "Please check the items on delivery. This challan is not a bill.",
+    Invoice: "Payment: cash on delivery, bKash, Nagad or bank transfer. Thank you for building with Makerbangla.",
+    Receipt: "Thank you for your payment.",
+  }[d.kind];
+  doc.setFont("helvetica", "italic").setFontSize(9).setTextColor(...SUBTLE).text(closing, M, 276);
   footer(doc, W);
-  doc.save(`${d.kind.toLowerCase()}-${d.ref}.pdf`);
+  doc.save(`${d.kind.toLowerCase().replace(/\s+/g, "-")}-${d.ref}.pdf`);
 }
 
 export type ReportInput = {

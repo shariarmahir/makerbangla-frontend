@@ -1,6 +1,6 @@
-import type { LucideIcon } from "lucide-react";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Icon, type IconName } from "./icon";
 
 /** Presentational building blocks for dashboard pages (server-safe). */
 
@@ -13,12 +13,17 @@ export function PageHeader({ title, children }: { title: string; children?: Reac
   );
 }
 
-export function Card({ title, action, children, className, bodyClassName }: { title?: React.ReactNode; action?: React.ReactNode; children: React.ReactNode; className?: string; bodyClassName?: string }) {
+export function Card({ title, icon, action, children, className, bodyClassName }: { title?: React.ReactNode; icon?: IconName; action?: React.ReactNode; children: React.ReactNode; className?: string; bodyClassName?: string }) {
   return (
-    <section className={cn("dash-rise flex min-w-0 flex-col rounded-[20px] bg-white p-5 shadow-[0_18px_40px_-34px_rgb(14_31_77/0.6)] ring-1 ring-line", className)}>
+    <section data-anim className={cn("dash-rise flex min-w-0 flex-col rounded-[22px] bg-white p-5 shadow-[0_1px_0_rgb(255_255_255)_inset,0_20px_44px_-36px_rgb(14_31_77/0.55)] ring-1 ring-line", className)}>
       {(title || action) && (
         <header className="mb-4 flex items-center justify-between gap-3">
-          {title && <h2 className="text-[15px] font-black tracking-tight text-ink">{title}</h2>}
+          {title && (
+            <h2 className="flex min-w-0 items-center gap-2.5 text-[15px] font-black tracking-tight text-ink">
+              {icon && <span className="grid size-8 shrink-0 place-items-center rounded-xl bg-tile-sky/70 text-tile-navy"><Icon name={icon} className="size-4" /></span>}
+              {title}
+            </h2>
+          )}
           {action}
         </header>
       )}
@@ -28,30 +33,40 @@ export function Card({ title, action, children, className, bodyClassName }: { ti
 }
 
 const kpiTones = {
-  blue: "bg-brand text-white",
-  yellow: "bg-tile-yellow text-tile-navy",
-  navy: "bg-tile-navy text-tile-yellow",
-  coral: "bg-tile-coral text-white",
-  sky: "bg-tile-sky text-tile-navy",
+  blue: ["bg-brand text-white", "bg-brand/25"],
+  yellow: ["bg-tile-yellow text-tile-navy", "bg-tile-yellow/45"],
+  navy: ["bg-tile-navy text-tile-yellow", "bg-tile-navy/20"],
+  coral: ["bg-tile-coral text-white", "bg-tile-coral/20"],
+  sky: ["bg-tile-sky text-tile-navy", "bg-tile-sky"],
 } as const;
 export type KpiTone = keyof typeof kpiTones;
 
-export function Kpi({ icon: Icon, label, value, delta, tone = "blue", foot, children }: { icon: LucideIcon; label: string; value: string; delta?: number; tone?: KpiTone; foot?: string; children?: React.ReactNode }) {
+/** KPI tile: icon and label on one line, the figure and change below, then an optional trend strip (`spark`) or a small visual on the right (`children`). */
+export function Kpi({ icon, label, value, delta, tone = "blue", foot, spark, children }: { icon: IconName; label: string; value: string; delta?: number; tone?: KpiTone; foot?: string; spark?: React.ReactNode; children?: React.ReactNode }) {
+  const [chip, glow] = kpiTones[tone];
   return (
-    <div className="dash-rise flex min-w-0 flex-col rounded-[20px] bg-white p-4 shadow-[0_18px_40px_-34px_rgb(14_31_77/0.6)] ring-1 ring-line sm:p-5">
-      <div className="flex items-start justify-between gap-3">
-        <span className={cn("grid size-10 shrink-0 place-items-center rounded-xl", kpiTones[tone])}><Icon className="size-5" /></span>
-        {delta !== undefined && Number.isFinite(delta) && (
-          <span className={cn("flex items-center gap-0.5 rounded-full px-2 py-0.5 text-[11px] font-black tabular-nums", delta >= 0 ? "bg-tile-sky/60 text-tile-navy" : "bg-tile-coral/12 text-sale")}>
-            {delta >= 0 ? <ArrowUpRight className="size-3.5" /> : <ArrowDownRight className="size-3.5" />}
-            {Math.abs(delta).toFixed(1)}%
-          </span>
-        )}
+    <div data-anim className="dash-rise group relative isolate flex min-w-0 flex-col overflow-hidden rounded-[22px] bg-white p-4 shadow-[0_20px_44px_-36px_rgb(14_31_77/0.55)] ring-1 ring-line transition-[box-shadow,translate] hover:-translate-y-0.5 hover:shadow-[0_26px_50px_-30px_rgb(14_31_77/0.6)] sm:p-5">
+      <span aria-hidden className={cn("absolute -top-12 -right-12 -z-10 size-32 rounded-full opacity-60 blur-2xl transition-opacity group-hover:opacity-100", glow)} />
+      <div className="flex items-center gap-2.5">
+        <span className={cn("grid size-9 shrink-0 place-items-center rounded-xl shadow-[0_8px_16px_-10px_rgb(14_31_77/0.7)]", chip)}><Icon name={icon} className="size-4.5" /></span>
+        <p className="min-w-0 flex-1 truncate text-[12.5px] font-bold text-subtle">{label}</p>
       </div>
-      <p className="mt-3 text-[12px] font-bold text-subtle">{label}</p>
-      <p className="mt-0.5 truncate text-[clamp(1.25rem,2vw,1.6rem)] leading-tight font-black tracking-tight text-ink tabular-nums">{value}</p>
-      {foot && <p className="mt-1 text-[11.5px] font-semibold text-subtle">{foot}</p>}
-      {children}
+      <div className="mt-3 flex min-w-0 items-center gap-3">
+        <div className="min-w-0 flex-1">
+          <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span className="truncate text-[clamp(1.25rem,1.9vw,1.6rem)] leading-tight font-black tracking-tight text-ink tabular-nums">{value}</span>
+            {delta !== undefined && Number.isFinite(delta) && (
+              <span className={cn("flex shrink-0 items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[10.5px] font-black tabular-nums", delta >= 0 ? "bg-tile-sky/70 text-tile-navy" : "bg-tile-coral/12 text-sale")}>
+                {delta >= 0 ? <ArrowUpRight className="size-3" /> : <ArrowDownRight className="size-3" />}
+                {Math.abs(delta).toFixed(1)}%
+              </span>
+            )}
+          </p>
+          {foot && <p className="mt-0.5 truncate text-[11.5px] font-semibold text-subtle">{foot}</p>}
+        </div>
+        {children && <div className="shrink-0">{children}</div>}
+      </div>
+      {spark && <div className="-mx-1 mt-2 -mb-1">{spark}</div>}
     </div>
   );
 }

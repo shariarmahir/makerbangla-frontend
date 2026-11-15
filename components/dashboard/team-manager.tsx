@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Copy, KeyRound, Mail, Pause, Pencil, Phone, Play, UserPlus, X } from "lucide-react";
+import { X } from "lucide-react";
+import { Icon } from "./icon";
 import { decideLeave, deleteEmployee, resetEmployeePassword, saveEmployee, setEmployeeActive } from "@/lib/admin/actions/people";
 import { sections, type Leave, type Section } from "@/lib/admin/types";
 import { cn } from "@/lib/utils";
@@ -22,7 +23,7 @@ export function TeamManager({ members, leaves }: { members: Member[]; leaves: (L
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-center gap-2">
-        <Btn tone="primary" onClick={() => setEdit({ access: [] })}><UserPlus className="size-4" /> Add team member</Btn>
+        <Btn tone="primary" onClick={() => setEdit({ access: [] })}><Icon name="user-plus" className="size-4" /> Add team member</Btn>
         <p className="text-[12.5px] font-semibold text-subtle">Each member signs in at /account with their username (or email) and password.</p>
       </div>
 
@@ -40,8 +41,8 @@ export function TeamManager({ members, leaves }: { members: Member[]; leaves: (L
               <Pill tone={m.active ? "delivered" : "neutral"}>{m.active ? "Active" : "Paused"}</Pill>
             </div>
             <ul className="mt-4 space-y-1 text-[12px] text-subtle">
-              <li className="flex items-center gap-2"><Mail className="size-3.5 text-brand" /><span className="truncate">{m.email}</span></li>
-              <li className="flex items-center gap-2"><Phone className="size-3.5 text-brand" />{m.phone}</li>
+              <li className="flex items-center gap-2"><Icon name="mail-check" className="size-3.5 text-brand" /><span className="truncate">{m.email}</span></li>
+              <li className="flex items-center gap-2"><Icon name="phone" className="size-3.5 text-brand" />{m.phone}</li>
             </ul>
             <div className="mt-3 flex flex-wrap gap-1">
               {m.access.map((a) => <span key={a} className="rounded-full bg-tile-sky/60 px-2 py-0.5 text-[10.5px] font-black text-tile-navy">{sections[a]}</span>)}
@@ -52,9 +53,9 @@ export function TeamManager({ members, leaves }: { members: Member[]; leaves: (L
             </div>
             <p className="mt-3 text-[11px] font-semibold text-subtle">Last sign-in: {ago(m.lastLogin)}{m.sample && " · sample member"}</p>
             <div className="mt-4 flex flex-wrap gap-1.5 border-t border-line pt-4">
-              <Btn size="sm" tone="soft" onClick={() => setEdit(m)}><Pencil className="size-3.5" /> Edit</Btn>
-              <Btn size="sm" tone="soft" disabled={pending} onClick={() => exec(() => resetEmployeePassword({ id: m.id })).then((r) => r.ok && setCreds({ ...r.data, title: `New password for ${m.name}` }))}><KeyRound className="size-3.5" /> Reset password</Btn>
-              <Btn size="sm" tone="soft" disabled={pending} onClick={() => exec(() => setEmployeeActive({ id: m.id, active: !m.active }), m.active ? "Account paused" : "Account active")}>{m.active ? <Pause className="size-3.5" /> : <Play className="size-3.5" />}{m.active ? "Pause" : "Activate"}</Btn>
+              <Btn size="sm" tone="soft" onClick={() => setEdit(m)}><Icon name="file-pen-line" className="size-3.5" /> Edit</Btn>
+              <Btn size="sm" tone="soft" disabled={pending} onClick={() => exec(() => resetEmployeePassword({ id: m.id })).then((r) => r.ok && setCreds({ ...r.data, title: `New password for ${m.name}` }))}><Icon name="key" className="size-3.5" /> Reset password</Btn>
+              <Btn size="sm" tone="soft" disabled={pending} onClick={() => exec(() => setEmployeeActive({ id: m.id, active: !m.active }), m.active ? "Account paused" : "Account active")}>{m.active ? <Icon name="lock" className="size-3.5" /> : <Icon name="user-check" className="size-3.5" />}{m.active ? "Pause" : "Activate"}</Btn>
               <ConfirmButton size="icon" label={`Remove ${m.name}`} confirm="Remove" onConfirm={() => exec(() => deleteEmployee({ id: m.id }), "Account removed")} className="ml-auto" />
             </div>
           </article>
@@ -75,7 +76,7 @@ export function TeamManager({ members, leaves }: { members: Member[]; leaves: (L
                 </span>
                 {l.status === "pending" ? (
                   <span className="flex gap-1.5">
-                    <Btn size="sm" tone="primary" disabled={pending} onClick={() => exec(() => decideLeave({ id: l.id, status: "approved" }), "Leave approved")}><Check className="size-3.5" /> Approve</Btn>
+                    <Btn size="sm" tone="primary" disabled={pending} onClick={() => exec(() => decideLeave({ id: l.id, status: "approved" }), "Leave approved")}><Icon name="check" className="size-3.5" /> Approve</Btn>
                     <Btn size="sm" tone="danger" disabled={pending} onClick={() => exec(() => decideLeave({ id: l.id, status: "rejected" }), "Leave declined")}><X className="size-3.5" /> Decline</Btn>
                   </span>
                 ) : (
@@ -101,7 +102,7 @@ export function TeamManager({ members, leaves }: { members: Member[]; leaves: (L
             {[["Username", creds.username], ["Password", creds.password]].map(([k, v]) => (
               <div key={k} className="flex items-center gap-3 rounded-2xl bg-soft p-3.5">
                 <span className="min-w-0 flex-1"><span className="block text-[11px] font-black tracking-wide text-subtle uppercase">{k}</span><code className="text-[15px] font-black text-ink">{v}</code></span>
-                <Btn size="sm" tone="ghost" onClick={() => navigator.clipboard.writeText(v).then(() => toast(`${k} copied`))}><Copy className="size-3.5" /> Copy</Btn>
+                <Btn size="sm" tone="ghost" onClick={() => navigator.clipboard.writeText(v).then(() => toast(`${k} copied`))}><Icon name="copy" className="size-3.5" /> Copy</Btn>
               </div>
             ))}
             <p className="rounded-xl bg-tile-butter/70 px-3 py-2 text-[12px] font-semibold text-tile-navy">This password is shown once. They can change it in Settings after signing in.</p>
@@ -135,7 +136,7 @@ function MemberForm({ m, pending, onSave, onCancel }: { m: Partial<Member>; pend
           {(Object.keys(sections) as Section[]).map((s) => (
             <label key={s} className={cn("flex cursor-pointer items-center gap-2 rounded-xl px-3 py-2.5 text-[12.5px] font-bold ring-1 transition-colors", access.includes(s) ? "bg-tile-navy text-tile-yellow ring-tile-navy" : "bg-white text-ink ring-line hover:bg-soft")}>
               <input type="checkbox" checked={access.includes(s)} onChange={() => setAccess((a) => (a.includes(s) ? a.filter((x) => x !== s) : [...a, s]))} className="sr-only" />
-              <Check className={cn("size-3.5", !access.includes(s) && "opacity-0")} />
+              <Icon name="check" className={cn("size-3.5", !access.includes(s) && "opacity-0")} />
               {sections[s]}
             </label>
           ))}

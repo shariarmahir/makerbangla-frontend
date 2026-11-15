@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { BellRing, ChevronLeft, ChevronRight, Pin, PinOff, Plus } from "lucide-react";
+import { Icon } from "./icon";
 import { deleteNote, saveNote, toggleNotePin } from "@/lib/admin/actions/work";
 import { noteColors, type Note } from "@/lib/admin/types";
 import { cn } from "@/lib/utils";
@@ -55,8 +55,8 @@ export function Calendar({ notes, today, compact }: { notes: Note[]; today: stri
       <div className="mb-3 flex items-center justify-between">
         <p className="text-[14px] font-black text-ink">{new Date(Date.UTC(view.y, view.m, 1)).toLocaleString("en-GB", { month: "long", year: "numeric", timeZone: "UTC" })}</p>
         <div className="flex gap-1">
-          <Btn size="icon" tone="soft" aria-label="Previous month" onClick={() => step(-1)}><ChevronLeft className="size-4" /></Btn>
-          <Btn size="icon" tone="soft" aria-label="Next month" onClick={() => step(1)}><ChevronRight className="size-4" /></Btn>
+          <Btn size="icon" tone="soft" aria-label="Previous month" onClick={() => step(-1)}><Icon name="chevron-left" className="size-4" /></Btn>
+          <Btn size="icon" tone="soft" aria-label="Next month" onClick={() => step(1)}><Icon name="chevron-right" className="size-4" /></Btn>
         </div>
       </div>
       <div className="grid grid-cols-7 gap-1 text-center text-[10.5px] font-black text-subtle uppercase">
@@ -89,7 +89,7 @@ export function Calendar({ notes, today, compact }: { notes: Note[]; today: stri
       <div className="mt-4 border-t border-line pt-4">
         <div className="mb-2.5 flex items-center justify-between">
           <p className="text-[12.5px] font-black text-ink">{new Date(`${selected}T00:00:00Z`).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" })}</p>
-          <Btn size="sm" tone="accent" onClick={() => setAdding((a) => !a)}><Plus className="size-3.5" /> Note</Btn>
+          <Btn size="sm" tone="accent" onClick={() => setAdding((a) => !a)}><Icon name="plus" className="size-3.5" /> Note</Btn>
         </div>
         {adding && (
           <form
@@ -124,8 +124,8 @@ export function Calendar({ notes, today, compact }: { notes: Note[]; today: stri
                 <span className="block truncate text-[12.5px] font-black">{n.title}</span>
                 {n.time && <span className="text-[11px] font-bold opacity-80">{n.time}</span>}
               </span>
-              <a href={googleLink(n)} target="_blank" rel="noopener noreferrer" title="Add to Google Calendar with a reminder" aria-label="Add to Google Calendar" className="grid size-7 place-items-center rounded-lg hover:bg-black/10"><BellRing className="size-3.5" /></a>
-              <button onClick={() => exec(() => toggleNotePin({ id: n.id }))} aria-label={n.pinned ? "Unpin" : "Pin"} className="grid size-7 place-items-center rounded-lg hover:bg-black/10">{n.pinned ? <PinOff className="size-3.5" /> : <Pin className="size-3.5" />}</button>
+              <a href={googleLink(n)} target="_blank" rel="noopener noreferrer" title="Add to Google Calendar with a reminder" aria-label="Add to Google Calendar" className="grid size-7 place-items-center rounded-lg hover:bg-black/10"><Icon name="bell" className="size-3.5" /></a>
+              <button onClick={() => exec(() => toggleNotePin({ id: n.id }))} aria-label={n.pinned ? "Unpin" : "Pin"} className="grid size-7 place-items-center rounded-lg hover:bg-black/10">{n.pinned ? <Icon name="bookmark-minus" className="size-3.5" /> : <Icon name="bookmark" className="size-3.5" />}</button>
               <ConfirmButton size="icon" label="Delete note" confirm="Delete" onConfirm={() => exec(() => deleteNote({ id: n.id }), "Note deleted")} />
             </li>
           ))}
@@ -142,14 +142,14 @@ export function PinnedNotes({ notes }: { notes: Note[] }) {
     <ul className="grid gap-2 sm:grid-cols-2">
       {pinned.map((n) => (
         <li key={n.id} className={cn("relative rounded-2xl p-3.5 pr-9 shadow-[0_12px_24px_-18px_rgb(14_31_77/0.7)]", noteTone[n.color])}>
-          <Pin className="absolute top-3 right-3 size-3.5 rotate-45" />
+          <Icon name="bookmark" className="absolute top-3 right-3 size-3.5 rotate-45" />
           <p className="text-[13px] leading-snug font-black">{n.title}</p>
           <p className="mt-1 text-[11px] font-bold opacity-80">
             {new Date(`${n.date}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" })}
             {n.time && ` · ${n.time}`}
           </p>
           <a href={googleLink(n)} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex items-center gap-1 text-[11px] font-black underline underline-offset-2">
-            <BellRing className="size-3" /> Google reminder
+            <Icon name="bell" className="size-3" /> Google reminder
           </a>
         </li>
       ))}

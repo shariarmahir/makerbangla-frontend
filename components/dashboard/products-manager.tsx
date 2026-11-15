@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Download, FileUp, ImageOff, Pencil, Plus, Search, Upload } from "lucide-react";
+import { Icon } from "./icon";
 import { deleteProducts, importProducts, resetProducts, saveProduct, setStock } from "@/lib/admin/actions/catalog";
 import type { CatalogItem } from "@/lib/admin/types";
 import { bdt, cn, discount } from "@/lib/utils";
@@ -72,9 +72,9 @@ export function ProductsManager({ products, categories, isAdmin }: { products: C
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-2">
-        <Btn tone="primary" onClick={() => setEdit({ active: true, isNew: true, stock: 10 })}><Plus className="size-4" /> Add product</Btn>
-        <Btn onClick={() => setImporting(true)}><FileUp className="size-4 text-brand" /> Bulk import</Btn>
-        <Btn onClick={() => download("products.csv", toCsv([["Name", "SKU", "Category", "Price", "Regular price", "Stock", "Active", "Summary"], ...shown.map((p) => [p.name, p.sku, p.category, p.price, p.oldPrice ?? "", p.stock, p.active ? "yes" : "no", p.summary])]))}><Download className="size-4 text-brand" /> Export CSV</Btn>
+        <Btn tone="primary" onClick={() => setEdit({ active: true, isNew: true, stock: 10 })}><Icon name="plus" className="size-4" /> Add product</Btn>
+        <Btn onClick={() => setImporting(true)}><Icon name="upload" className="size-4 text-brand" /> Bulk import</Btn>
+        <Btn onClick={() => download("products.csv", toCsv([["Name", "SKU", "Category", "Price", "Regular price", "Stock", "Active", "Summary"], ...shown.map((p) => [p.name, p.sku, p.category, p.price, p.oldPrice ?? "", p.stock, p.active ? "yes" : "no", p.summary])]))}><Icon name="download" className="size-4 text-brand" /> Export CSV</Btn>
         {isAdmin && <ConfirmButton icon={false} label="Reset to site catalog" confirm="Reset all products" onConfirm={() => exec(() => resetProducts(), "Products reset to the site catalog")} className="ml-auto h-10 px-4" />}
       </div>
 
@@ -88,7 +88,7 @@ export function ProductsManager({ products, categories, isAdmin }: { products: C
             {categories.map((c) => <option key={c.slug} value={c.slug}>{c.name}</option>)}
           </select>
           <label className="relative w-full sm:w-60">
-            <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-brand" />
+            <Icon name="search" className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-brand" />
             <input value={q} onChange={(e) => (setQ(e.target.value), setPage(0))} placeholder="Search name or SKU" aria-label="Search products" className={cn(input, "pl-9")} />
           </label>
         </div>
@@ -120,7 +120,7 @@ export function ProductsManager({ products, categories, isAdmin }: { products: C
                       <span className="flex items-center gap-3">
                         <span className="grid size-12 shrink-0 place-items-center overflow-hidden rounded-xl bg-stage">
                           {/* eslint-disable-next-line @next/next/no-img-element -- small local thumbnails */}
-                          {p.image ? <img src={p.image} alt="" loading="lazy" className="size-full object-contain p-1" /> : <ImageOff className="size-4 text-subtle" />}
+                          {p.image ? <img src={p.image} alt="" loading="lazy" className="size-full object-contain p-1" /> : <Icon name="eye-off" className="size-4 text-subtle" />}
                         </span>
                         <span className="min-w-0">
                           <b className="line-clamp-1 text-ink">{p.name}</b>
@@ -155,7 +155,7 @@ export function ProductsManager({ products, categories, isAdmin }: { products: C
                     </td>
                     <td className="text-right">
                       <span className="inline-flex gap-1">
-                        <Btn size="icon" tone="soft" aria-label={`Edit ${p.name}`} onClick={() => setEdit(p)}><Pencil className="size-3.5" /></Btn>
+                        <Btn size="icon" tone="soft" aria-label={`Edit ${p.name}`} onClick={() => setEdit(p)}><Icon name="file-pen-line" className="size-3.5" /></Btn>
                         <ConfirmButton size="icon" label={`Delete ${p.name}`} onConfirm={() => exec(() => deleteProducts({ slugs: [p.slug] }), "Product deleted")} />
                       </span>
                     </td>
@@ -224,7 +224,7 @@ function ProductForm({ item, categories, pending, onSave, onCancel }: { item: Pa
           {off > 0 && <span className="absolute -top-3 -left-2 grid size-14 -rotate-12 place-content-center rounded-full bg-tile-coral text-center leading-none text-white shadow-lg"><b className="text-[15px]">{off}%</b><span className="text-[8px] font-black tracking-widest">OFF</span></span>}
           <div className="grid aspect-[1/0.84] place-items-center">
             {/* eslint-disable-next-line @next/next/no-img-element -- preview */}
-            {image ? <img src={image} alt="" className="max-h-full object-contain drop-shadow-xl" /> : <ImageOff className="size-8 opacity-40" />}
+            {image ? <img src={image} alt="" className="max-h-full object-contain drop-shadow-xl" /> : <Icon name="eye-off" className="size-8 opacity-40" />}
           </div>
           <p className="mt-2 line-clamp-2 text-[14px] leading-tight font-black">{item.name || "Product name"}</p>
           <p className="mt-2 text-[17px] font-black tabular-nums">{bdt(Number(offer) || Number(regular) || 0)}</p>
@@ -249,16 +249,16 @@ function ImportForm({ categories, pending, onImport }: { categories: Cat[]; pend
         Columns: <b className="text-ink">name, sku, category, regular price, offer price, stock, summary</b>. Category is one of: {categories.map((c) => c.slug).join(", ")}. Add photos afterwards from each product&apos;s edit form.
       </p>
       <div className="flex flex-wrap gap-2">
-        <Btn onClick={() => download("product-import-template.csv", toCsv([["name", "sku", "category", "regular price", "offer price", "stock", "summary"], ["Arduino Nano V3", "MB-MCU-099", "microcontrollers", "650", "590", "25", "Compact ATmega328P board for breadboards."]]))}><Download className="size-4 text-brand" /> Template</Btn>
+        <Btn onClick={() => download("product-import-template.csv", toCsv([["name", "sku", "category", "regular price", "offer price", "stock", "summary"], ["Arduino Nano V3", "MB-MCU-099", "microcontrollers", "650", "590", "25", "Compact ATmega328P board for breadboards."]]))}><Icon name="download" className="size-4 text-brand" /> Template</Btn>
         <label className="inline-flex h-10 cursor-pointer items-center gap-1.5 rounded-xl bg-white px-4 text-[13px] font-bold text-tile-navy ring-1 ring-line hover:bg-soft">
-          <Upload className="size-4 text-brand" /> Choose CSV
+          <Icon name="upload" className="size-4 text-brand" /> Choose CSV
           <input type="file" accept=".csv,text/csv" hidden onChange={async (e) => { const f = e.target.files?.[0]; if (f && f.size < 1_000_000) setText(await f.text()); }} />
         </label>
       </div>
       <textarea value={text} onChange={(e) => setText(e.target.value)} placeholder="…or paste CSV rows here" className={cn(textarea, "min-h-40 font-mono text-[12px]")} />
       <div className="flex items-center justify-between gap-2">
         <span className="text-[12.5px] font-bold text-subtle">{data.length} row{data.length === 1 ? "" : "s"} ready</span>
-        <Btn tone="primary" disabled={pending || !data.length || data.length > 1000} onClick={() => onImport(data.map((r) => r.slice(0, 7)))}><Upload className="size-4" /> Import</Btn>
+        <Btn tone="primary" disabled={pending || !data.length || data.length > 1000} onClick={() => onImport(data.map((r) => r.slice(0, 7)))}><Icon name="upload" className="size-4" /> Import</Btn>
       </div>
     </div>
   );

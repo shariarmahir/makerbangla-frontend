@@ -1,4 +1,3 @@
-import { AlarmClock, ListTodo, Siren, SquareCheckBig } from "lucide-react";
 import { Calendar, PinnedNotes } from "@/components/dashboard/calendar";
 import { TasksBoard } from "@/components/dashboard/tasks-board";
 import { Card, Kpi, PageHeader } from "@/components/dashboard/ui";
@@ -23,10 +22,10 @@ export default async function TasksPage() {
       <PageHeader title="Tasks & calendar" />
       <div className="space-y-5">
         <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
-          <Kpi icon={ListTodo} label="Open tasks" value={String(open.length)} tone="blue" />
-          <Kpi icon={AlarmClock} label="Due today" value={String(open.filter((t) => t.due === today).length)} tone="yellow" foot={`${open.filter((t) => t.due && t.due < today).length} overdue`} />
-          <Kpi icon={Siren} label="Emergency" value={String(open.filter((t) => t.priority === "emergency").length)} tone="coral" foot={`${open.filter((t) => t.priority === "important").length} important`} />
-          <Kpi icon={SquareCheckBig} label="Waiting for review" value={String(tasks.filter((t) => t.status === "review").length)} tone="navy" />
+          <Kpi icon="clipboard-check" label="Open tasks" value={String(open.length)} tone="blue" />
+          <Kpi icon="alarm-clock" label="Due today" value={String(open.filter((t) => t.due === today).length)} tone="yellow" foot={`${open.filter((t) => t.due && t.due < today).length} overdue`} />
+          <Kpi icon="flame" label="Emergency" value={String(open.filter((t) => t.priority === "emergency").length)} tone="coral" foot={`${open.filter((t) => t.priority === "important").length} important`} />
+          <Kpi icon="circle-check" label="Waiting for review" value={String(tasks.filter((t) => t.status === "review").length)} tone="navy" />
         </div>
         <TasksBoard tasks={tasks} people={people} me={user.id} isAdmin={isAdmin} today={today} />
         <div className="grid gap-4 xl:grid-cols-[1fr_1.4fr]">

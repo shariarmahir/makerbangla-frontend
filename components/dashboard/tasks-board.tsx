@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CalendarDays, ChevronLeft, ChevronRight, Pencil, Plus, Send, Siren } from "lucide-react";
+import { Icon } from "./icon";
 import { deleteTasks, moveTask, saveTask } from "@/lib/admin/actions/work";
 import { priorities, taskStatuses, type Task, type TaskStatus } from "@/lib/admin/types";
 import { cn } from "@/lib/utils";
@@ -37,7 +37,7 @@ export function TasksBoard({ tasks, people, me, isAdmin, today }: { tasks: Task[
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center gap-2">
-        <Btn tone="primary" onClick={() => setEdit({ priority: "normal", assignee: isAdmin ? "admin" : me })}><Plus className="size-4" /> New task</Btn>
+        <Btn tone="primary" onClick={() => setEdit({ priority: "normal", assignee: isAdmin ? "admin" : me })}><Icon name="plus" className="size-4" /> New task</Btn>
         {isAdmin && (
           <select value={who} onChange={(e) => setWho(e.target.value)} aria-label="Filter by person" className={cn(input, "w-auto min-w-44 bg-white")}>
             <option value="all">Everyone</option>
@@ -68,8 +68,8 @@ export function TasksBoard({ tasks, people, me, isAdmin, today }: { tasks: Task[
                   return (
                     <li key={t.id} className={cn("dash-rise rounded-2xl bg-white p-3 ring-1 ring-line transition-shadow hover:shadow-[0_14px_28px_-20px_rgb(14_31_77/0.6)]", t.priority === "emergency" && "ring-2 ring-tile-coral/60")}>
                       <div className="flex items-center gap-1.5">
-                        <Pill tone={priorityTone[t.priority]}>{t.priority === "emergency" && <Siren className="size-3" />}{t.priority}</Pill>
-                        {mine && <button onClick={() => setEdit(t)} aria-label="Edit task" className="ml-auto grid size-7 place-items-center rounded-lg text-subtle hover:bg-soft hover:text-ink"><Pencil className="size-3.5" /></button>}
+                        <Pill tone={priorityTone[t.priority]}>{t.priority === "emergency" && <Icon name="flame" className="size-3" />}{t.priority}</Pill>
+                        {mine && <button onClick={() => setEdit(t)} aria-label="Edit task" className="ml-auto grid size-7 place-items-center rounded-lg text-subtle hover:bg-soft hover:text-ink"><Icon name="file-pen-line" className="size-3.5" /></button>}
                       </div>
                       <p className="mt-2 text-[13px] leading-snug font-black text-ink">{t.title}</p>
                       {t.detail && <p className="mt-1 line-clamp-3 text-[12px] leading-snug text-subtle">{t.detail}</p>}
@@ -77,15 +77,15 @@ export function TasksBoard({ tasks, people, me, isAdmin, today }: { tasks: Task[
                       <div className="mt-3 flex items-center gap-2">
                         <Avatar name={p.name} photo={"photo" in p ? p.photo : undefined} size={24} />
                         <span className="min-w-0 flex-1 truncate text-[11.5px] font-bold text-subtle">{p.name}</span>
-                        {t.due && <span className={cn("flex items-center gap-1 text-[11px] font-bold", late ? "text-sale" : "text-subtle")}><CalendarDays className="size-3" />{t.due.slice(5).replace("-", "/")}</span>}
+                        {t.due && <span className={cn("flex items-center gap-1 text-[11px] font-bold", late ? "text-sale" : "text-subtle")}><Icon name="calendar-days" className="size-3" />{t.due.slice(5).replace("-", "/")}</span>}
                       </div>
                       {mine && (
                         <div className="mt-2.5 flex items-center gap-1 border-t border-line pt-2.5">
-                          <Btn size="icon" tone="soft" aria-label="Move back" disabled={pending || s === "todo"} onClick={() => move(t, -1)}><ChevronLeft className="size-4" /></Btn>
+                          <Btn size="icon" tone="soft" aria-label="Move back" disabled={pending || s === "todo"} onClick={() => move(t, -1)}><Icon name="chevron-left" className="size-4" /></Btn>
                           {s === "doing" && !isAdmin ? (
-                            <Btn size="sm" tone="accent" onClick={() => setSubmit(t)} className="flex-1"><Send className="size-3.5" /> Submit</Btn>
+                            <Btn size="sm" tone="accent" onClick={() => setSubmit(t)} className="flex-1"><Icon name="send" className="size-3.5" /> Submit</Btn>
                           ) : (
-                            <Btn size="icon" tone="soft" aria-label="Move forward" disabled={pending || s === "done" || (s === "review" && !isAdmin && t.createdBy !== me)} onClick={() => move(t, 1)}><ChevronRight className="size-4" /></Btn>
+                            <Btn size="icon" tone="soft" aria-label="Move forward" disabled={pending || s === "done" || (s === "review" && !isAdmin && t.createdBy !== me)} onClick={() => move(t, 1)}><Icon name="chevron-right" className="size-4" /></Btn>
                           )}
                           <ConfirmButton size="icon" label="Delete task" onConfirm={() => exec(() => deleteTasks({ ids: [t.id] }), "Task deleted")} className="ml-auto" />
                         </div>
@@ -150,7 +150,7 @@ export function TasksBoard({ tasks, people, me, isAdmin, today }: { tasks: Task[
             <Field label="What did you do?"><textarea name="submission" required maxLength={600} className={textarea} placeholder="e.g. Packed 12 orders, handed to Pathao at 4 pm." /></Field>
             <div className="flex justify-end gap-2">
               <Btn onClick={() => setSubmit(null)}>Cancel</Btn>
-              <Btn type="submit" tone="accent" disabled={pending}><Send className="size-4" /> Submit</Btn>
+              <Btn type="submit" tone="accent" disabled={pending}><Icon name="send" className="size-4" /> Submit</Btn>
             </div>
           </form>
         )}

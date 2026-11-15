@@ -9,3 +9,6 @@ export const adminEmail = (process.env.ADMIN_EMAIL || "kandari.super@gmail.com")
 
 export const adminPasswordHash =
   process.env.ADMIN_PASSWORD_HASH || "scrypt:d6a9a397d1acaea60692b974d8da926d:a18b552ae0d311d8a5e9a3e9b4f3160f011ba2a504d8b702244bb99c17d97e14";
+
+/** The sample employee behind the sign-in page's one-click demo. It disappears with Settings → "Clear sample data". */
+export const DEMO_EMPLOYEE = "emp_tanvir";

@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { MessagesSquare, SendHorizontal, X } from "lucide-react";
+import { X } from "lucide-react";
+import { Icon } from "./icon";
 import { getMessages, sendMessage } from "@/lib/admin/actions/work";
 import type { Message } from "@/lib/admin/types";
 import { cn } from "@/lib/utils";
@@ -59,7 +60,7 @@ export function Chat({ me }: { me: string }) {
       {open && (
         <section aria-label="Team chat" className="dash-rise fixed right-3 bottom-24 z-50 flex h-[min(520px,70dvh)] w-[min(92vw,370px)] flex-col overflow-hidden rounded-[22px] bg-white shadow-[0_30px_70px_-20px_rgb(14_31_77/0.5)] ring-1 ring-line sm:right-6">
           <header className="flex items-center justify-between bg-tile-navy px-4 py-3.5 text-tile-yellow">
-            <p className="flex items-center gap-2 text-[14px] font-black"><MessagesSquare className="size-4.5" /> Team chat</p>
+            <p className="flex items-center gap-2 text-[14px] font-black"><Icon name="message-square-more" className="size-4.5" /> Team chat</p>
             <button onClick={() => setOpen(false)} aria-label="Close chat" className="grid size-8 place-items-center rounded-full hover:bg-white/10"><X className="size-4.5" /></button>
           </header>
           <div ref={list} className="flex-1 space-y-3 overflow-y-auto bg-soft/60 px-3 py-4">
@@ -80,7 +81,7 @@ export function Chat({ me }: { me: string }) {
           </div>
           <form onSubmit={send} className="flex items-center gap-2 border-t border-line p-2.5">
             <input value={text} onChange={(e) => setText(e.target.value)} maxLength={600} placeholder="Write a message…" aria-label="Message" className="h-10 min-w-0 flex-1 rounded-xl bg-soft px-3 text-[13px] font-semibold outline-none focus:ring-2 focus:ring-brand" />
-            <button aria-label="Send" className="grid size-10 shrink-0 place-items-center rounded-xl bg-tile-yellow text-tile-navy hover:brightness-105"><SendHorizontal className="size-4.5" /></button>
+            <button aria-label="Send" className="grid size-10 shrink-0 place-items-center rounded-xl bg-tile-yellow text-tile-navy hover:brightness-105"><Icon name="send" className="size-4.5" /></button>
           </form>
         </section>
       )}
@@ -92,7 +93,7 @@ export function Chat({ me }: { me: string }) {
         aria-label={open ? "Close team chat" : `Open team chat${unread ? ` (${unread} new)` : ""}`}
         className="fixed right-3 bottom-5 z-50 grid size-14 place-items-center rounded-full bg-tile-navy text-tile-yellow shadow-[0_18px_30px_-12px_rgb(26_73_175/0.8)] transition-transform hover:scale-105 sm:right-6"
       >
-        {open ? <X className="size-6" /> : <MessagesSquare className="size-6" />}
+        {open ? <X className="size-6" /> : <Icon name="message-square-more" className="size-6" />}
         {unread > 0 && <span className="absolute -top-0.5 -right-0.5 grid min-w-5 place-items-center rounded-full bg-sale px-1 text-[11px] leading-5 font-black text-white ring-2 ring-white">{unread}</span>}
       </button>
     </>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { BadgeCheck, Download, Mail, MessageCircle, Pencil, Plus, Search } from "lucide-react";
+import { Icon } from "./icon";
 import { deleteLeads, saveLead, updateLead } from "@/lib/admin/actions/people";
 import { mailto } from "@/lib/admin/pdf";
 import { leadSources, leadStatuses, type Lead } from "@/lib/admin/types";
@@ -36,11 +36,11 @@ export function TrafficPanel({ ranges }: { ranges: Record<"7" | "30" | "90", Tra
       </div>
       <div className="grid gap-4 xl:grid-cols-[2fr_1fr]">
         <Card key={`l${r}`} title="Daily visits" action={<Legend items={[{ name: "Visits", color: palette.blue }, { name: "Page views", color: palette.yellow }]} />}>
-          <LineChart labels={t.labels} series={[{ name: "Visits", color: palette.blue, values: t.visits }, { name: "Page views", color: palette.yellow, values: t.views }]} format="compact" height={260} />
+          <LineChart labels={t.labels} series={[{ name: "Visits", color: palette.blue, values: t.visits }, { name: "Page views", color: palette.yellow, values: t.views }]} format="compact" height={372} />
         </Card>
         <Card key={`s${r}`} title="Where visitors come from">
           <div className="flex flex-col items-center gap-4">
-            <Donut data={t.sources.map(([s, v], i) => ({ label: label(s), value: v, color: seriesColors[i % seriesColors.length] }))} center={compact(t.totalVisits)} sub="visits" size={170} />
+            <Donut data={t.sources.map(([s, v], i) => ({ label: label(s), value: v, color: seriesColors[i % seriesColors.length] }))} center={compact(t.totalVisits)} sub="visits" size={196} />
             <Bars items={t.sources.slice(0, 6).map(([s, v], i) => ({ label: label(s), value: v, note: `${Math.round((v / (t.totalVisits || 1)) * 100)}%`, color: seriesColors[i % seriesColors.length] }))} />
           </div>
         </Card>
@@ -73,14 +73,14 @@ export function LeadsManager({ leads }: { leads: Lead[] }) {
       title="Leads"
       action={
         <span className="flex gap-1.5">
-          <Btn size="sm" onClick={() => download("leads.csv", toCsv([["Name", "Email", "Phone", "Organisation", "Source", "Country", "Status", "Approved", "Value", "Note", "Created"], ...shown.map((l) => [l.name, l.email, l.phone, l.org, l.source, l.country, l.status, l.approved ? "yes" : "no", l.value, l.note, l.createdAt.slice(0, 10)])]))}><Download className="size-3.5 text-brand" /> CSV</Btn>
-          <Btn size="sm" tone="primary" onClick={() => setEdit({ source: "facebook", status: "new", country: "Bangladesh" })}><Plus className="size-3.5" /> Add lead</Btn>
+          <Btn size="sm" onClick={() => download("leads.csv", toCsv([["Name", "Email", "Phone", "Organisation", "Source", "Country", "Status", "Approved", "Value", "Note", "Created"], ...shown.map((l) => [l.name, l.email, l.phone, l.org, l.source, l.country, l.status, l.approved ? "yes" : "no", l.value, l.note, l.createdAt.slice(0, 10)])]))}><Icon name="download" className="size-3.5 text-brand" /> CSV</Btn>
+          <Btn size="sm" tone="primary" onClick={() => setEdit({ source: "facebook", status: "new", country: "Bangladesh" })}><Icon name="plus" className="size-3.5" /> Add lead</Btn>
         </span>
       }
     >
       <div className="mb-3 flex flex-wrap gap-2">
         <label className="relative min-w-48 flex-1">
-          <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-brand" />
+          <Icon name="search" className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-brand" />
           <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search leads" aria-label="Search leads" className={cn(input, "pl-9")} />
         </label>
         <select value={src} onChange={(e) => setSrc(e.target.value)} aria-label="Source" className={cn(input, "w-auto")}><option value="all">All platforms</option>{leadSources.map((s) => <option key={s} value={s}>{label(s)}</option>)}</select>
@@ -117,16 +117,16 @@ export function LeadsManager({ leads }: { leads: Lead[] }) {
                   </td>
                   <td>
                     {l.approved ? (
-                      <button onClick={() => exec(() => updateLead({ id: l.id, approved: false }))} className="inline-flex items-center gap-1 text-[11.5px] font-black text-tile-navy"><BadgeCheck className="size-4 text-brand" /> Approved</button>
+                      <button onClick={() => exec(() => updateLead({ id: l.id, approved: false }))} className="inline-flex items-center gap-1 text-[11.5px] font-black text-tile-navy"><Icon name="circle-check" className="size-4 text-brand" /> Approved</button>
                     ) : (
                       <Btn size="sm" tone="accent" disabled={pending} onClick={() => exec(() => updateLead({ id: l.id, approved: true }), "Lead approved")}>Approve</Btn>
                     )}
                   </td>
                   <td className="text-right">
                     <span className="inline-flex gap-1">
-                      {l.email && <a href={mailto(l.email, "Makerbangla — following up", `Hi ${l.name},\n\nThanks for your interest in Makerbangla. `)} aria-label={`Email ${l.name}`} className="grid size-8 place-items-center rounded-xl bg-soft text-tile-navy hover:bg-tile-sky/60"><Mail className="size-3.5" /></a>}
-                      {l.phone && <a href={`https://wa.me/88${l.phone.replace(/\D/g, "").replace(/^88/, "")}`} target="_blank" rel="noopener noreferrer" aria-label={`WhatsApp ${l.name}`} className="grid size-8 place-items-center rounded-xl bg-soft text-tile-navy hover:bg-tile-sky/60"><MessageCircle className="size-3.5" /></a>}
-                      <Btn size="icon" tone="soft" aria-label={`Edit ${l.name}`} onClick={() => setEdit(l)}><Pencil className="size-3.5" /></Btn>
+                      {l.email && <a href={mailto(l.email, "Makerbangla — following up", `Hi ${l.name},\n\nThanks for your interest in Makerbangla. `)} aria-label={`Email ${l.name}`} className="grid size-8 place-items-center rounded-xl bg-soft text-tile-navy hover:bg-tile-sky/60"><Icon name="mail-check" className="size-3.5" /></a>}
+                      {l.phone && <a href={`https://wa.me/88${l.phone.replace(/\D/g, "").replace(/^88/, "")}`} target="_blank" rel="noopener noreferrer" aria-label={`WhatsApp ${l.name}`} className="grid size-8 place-items-center rounded-xl bg-soft text-tile-navy hover:bg-tile-sky/60"><Icon name="message-circle" className="size-3.5" /></a>}
+                      <Btn size="icon" tone="soft" aria-label={`Edit ${l.name}`} onClick={() => setEdit(l)}><Icon name="file-pen-line" className="size-3.5" /></Btn>
                     </span>
                   </td>
                 </tr>

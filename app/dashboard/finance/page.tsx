@@ -1,7 +1,8 @@
-import { Banknote, HandCoins, Landmark, PiggyBank } from "lucide-react";
 import { Bars, BarChart, Donut, Legend, LineChart } from "@/components/dashboard/charts";
 import { palette, seriesColors } from "@/components/dashboard/palette";
-import { BusinessCalculator, ExpenseBook, Reports } from "@/components/dashboard/finance-tools";
+import { ExpenseBook, Reports } from "@/components/dashboard/finance-tools";
+import Link from "next/link";
+import { ArrowRight, Calculator } from "lucide-react";
 import { Card, Kpi, PageHeader, Table } from "@/components/dashboard/ui";
 import { requireUser } from "@/lib/admin/auth";
 import { readDb } from "@/lib/admin/db";
@@ -59,19 +60,19 @@ export default async function FinancePage() {
       <PageHeader title="Finance" />
       <div className="space-y-5">
         <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
-          <Kpi icon={Banknote} label="Collected this month" value={bdt(cur.collected)} delta={delta(cur.collected, prev.collected)} tone="blue" />
-          <Kpi icon={Landmark} label="Expenses this month" value={bdt(cur.expenses)} delta={delta(cur.expenses, prev.expenses)} tone="yellow" />
-          <Kpi icon={PiggyBank} label="Profit this month" value={bdt(cur.profit)} delta={prev.profit > 0 ? delta(cur.profit, prev.profit) : undefined} tone="navy" foot={cur.collected ? `${Math.round((cur.profit / cur.collected) * 100)}% margin` : undefined} />
-          <Kpi icon={HandCoins} label="Receivable (due)" value={bdt(db.orders.reduce((n, o) => n + dueOf(o), 0))} tone="coral" foot={`${db.orders.filter((o) => dueOf(o) > 0).length} orders with balance`} />
+          <Kpi icon="circle-dollar-sign" label="Collected this month" value={bdt(cur.collected)} delta={delta(cur.collected, prev.collected)} tone="blue" />
+          <Kpi icon="wallet" label="Expenses this month" value={bdt(cur.expenses)} delta={delta(cur.expenses, prev.expenses)} tone="yellow" />
+          <Kpi icon="hand-coins" label="Profit this month" value={bdt(cur.profit)} delta={prev.profit > 0 ? delta(cur.profit, prev.profit) : undefined} tone="navy" foot={cur.collected ? `${Math.round((cur.profit / cur.collected) * 100)}% margin` : undefined} />
+          <Kpi icon="hand-coins" label="Receivable (due)" value={bdt(db.orders.reduce((n, o) => n + dueOf(o), 0))} tone="coral" foot={`${db.orders.filter((o) => dueOf(o) > 0).length} orders with balance`} />
         </div>
 
         <div className="grid gap-4 xl:grid-cols-[2fr_1fr]">
           <Card title="Profit trend · 12 months" action={<Legend items={[{ name: "Collected", color: palette.blue }, { name: "Expenses", color: palette.coral }, { name: "Profit", color: palette.yellow }]} />}>
-            <LineChart labels={m.labels} series={[{ name: "Collected", color: palette.blue, values: m.collected }, { name: "Expenses", color: palette.coral, values: m.expenses }, { name: "Profit", color: palette.yellow, values: m.profit.map((p) => Math.max(0, p)) }]} format="compact" height={270} />
+            <LineChart labels={m.labels} series={[{ name: "Collected", color: palette.blue, values: m.collected }, { name: "Expenses", color: palette.coral, values: m.expenses }, { name: "Profit", color: palette.yellow, values: m.profit.map((p) => Math.max(0, p)) }]} format="compact" height={390} />
           </Card>
           <Card title="Where the money goes">
             <div className="flex flex-col items-center gap-4">
-              <Donut data={expList.map(([c, v], i) => ({ label: c, value: v, color: seriesColors[i % seriesColors.length] }))} center={short(year.expenses)} sub="12-month expenses" size={176} />
+              <Donut data={expList.map(([c, v], i) => ({ label: c, value: v, color: seriesColors[i % seriesColors.length] }))} center={short(year.expenses)} sub="spent in 12 months" size={200} />
               <Bars items={expList.slice(0, 5).map(([c, v], i) => ({ label: c, value: v, note: bdt(v), color: seriesColors[i % seriesColors.length] }))} />
             </div>
           </Card>
@@ -96,7 +97,14 @@ export default async function FinancePage() {
                 report(db, "Yearly report", end - 365 * DAY, end),
               ]}
             />
-            <BusinessCalculator />
+            <Link href="/dashboard/calculator" className="dash-rise group flex items-center gap-4 rounded-[20px] bg-tile-navy p-5 text-white shadow-[0_18px_40px_-28px_rgb(14_31_77/0.9)]">
+              <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-tile-yellow text-tile-navy"><Calculator className="size-6" /></span>
+              <span className="min-w-0 flex-1">
+                <b className="block text-[15px] text-tile-yellow">Business calculator</b>
+                <span className="text-[12.5px] text-white/75">Pricing & profit, import landed cost, break-even targets, margin ↔ markup</span>
+              </span>
+              <ArrowRight className="size-5 text-tile-yellow transition-transform group-hover:translate-x-1" />
+            </Link>
           </div>
         </div>
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plane } from "lucide-react";
+import { Icon } from "./icon";
 import { requestLeave } from "@/lib/admin/actions/people";
 import type { Leave } from "@/lib/admin/types";
 import { Btn, Field, input, textarea, useAction } from "./kit";
@@ -34,7 +34,7 @@ export function LeaveCard({ leaves }: { leaves: Leave[] }) {
           </div>
         </form>
       ) : (
-        <Btn tone="accent" className="mb-4 w-full" onClick={() => setOpen(true)}><Plane className="size-4" /> Request leave</Btn>
+        <Btn tone="accent" className="mb-4 w-full" onClick={() => setOpen(true)}><Icon name="send" className="size-4" /> Request leave</Btn>
       )}
       <ul className="space-y-2">
         {leaves.length === 0 && <li className="text-[12.5px] font-semibold text-subtle">No leave requests yet.</li>}

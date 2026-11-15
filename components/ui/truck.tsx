@@ -10,7 +10,7 @@ export interface TruckIconHandle {
   stopAnimation: () => void;
 }
 
-interface TruckIconProps extends HTMLAttributes<HTMLDivElement> {
+interface TruckIconProps extends HTMLAttributes<HTMLSpanElement> {
   size?: number;
 }
 
@@ -74,7 +74,7 @@ const TruckIcon = forwardRef<TruckIconHandle, TruckIconProps>(
     });
 
     const handleMouseEnter = useCallback(
-      (e: React.MouseEvent<HTMLDivElement>) => {
+      (e: React.MouseEvent<HTMLSpanElement>) => {
         if (!isControlledRef.current) {
           controls.start("animate");
         }
@@ -84,7 +84,7 @@ const TruckIcon = forwardRef<TruckIconHandle, TruckIconProps>(
     );
 
     const handleMouseLeave = useCallback(
-      (e: React.MouseEvent<HTMLDivElement>) => {
+      (e: React.MouseEvent<HTMLSpanElement>) => {
         if (!isControlledRef.current) {
           controls.start("normal");
         }
@@ -94,7 +94,7 @@ const TruckIcon = forwardRef<TruckIconHandle, TruckIconProps>(
     );
 
     return (
-      <div
+      <span
         className={className}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -176,7 +176,7 @@ const TruckIcon = forwardRef<TruckIconHandle, TruckIconProps>(
             </motion.g>
           </motion.g>
         </svg>
-      </div>
+      </span>
     );
   }
 );
