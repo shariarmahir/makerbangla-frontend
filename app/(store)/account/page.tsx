@@ -4,9 +4,9 @@ import { Suspense } from "react";
 import { ArrowRight, LayoutDashboard, ShieldCheck, ShoppingBag, UserRoundCheck } from "lucide-react";
 import { SignInForm } from "@/components/account/sign-in-form";
 import { MagicButton, MagicLink } from "@/components/ui/magic-button";
-import { DEMO_EMPLOYEE } from "@/lib/admin/admin-account";
 import { getUser } from "@/lib/admin/auth";
 import { demoSignIn } from "@/lib/admin/auth-actions";
+import { demoEmployee } from "@/lib/admin/demo";
 import { readDb } from "@/lib/admin/db";
 import { site } from "@/lib/site";
 
@@ -30,10 +30,10 @@ async function SessionHint() {
   );
 }
 
-/** One-click employee demo, offered only while the sample team exists (Settings → Clear sample data removes it). */
+/** One-click employee demo, offered only while the store is pure sample data (see `lib/admin/demo.ts`). */
 async function DemoAccess() {
   const db = await readDb();
-  const e = db.employees.find((x) => x.id === DEMO_EMPLOYEE && x.sample && x.active);
+  const e = demoEmployee(db);
   if (!e) return null;
   return (
     <form action={demoSignIn} className="mt-6 rounded-2xl bg-tile-butter/60 p-4 ring-1 ring-tile-yellow">

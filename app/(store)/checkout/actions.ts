@@ -1,9 +1,15 @@
 "use server";
 
+import { headers } from "next/headers";
 import { log, mutate } from "@/lib/admin/db";
 import { products } from "@/lib/data/catalog";
 import { normalizeBdPhone, type Order, type OrderLine, type PlaceOrderState } from "@/lib/order";
+import { clientIp, limiter } from "@/lib/rate-limit";
 import { deliveryOptions, site } from "@/lib/site";
+
+// Order spam brake: 5 orders per IP per 10 minutes, 120 per hour site-wide.
+const perIp = limiter("order", 5, 10 * 60_000);
+const siteWide = limiter("order-all", 120, 60 * 60_000);
 
 const EMAIL = /^[^\s@]{1,64}@[^\s@]{1,190}\.[a-z]{2,24}$/i;
 const SLUG = /^[a-z0-9-]{1,80}$/;
@@ -61,12 +67,13 @@ export async function placeOrder(_: PlaceOrderState, form: FormData): Promise<Pl
     const p = products.find((x) => x.slug === item.slug);
     if (!p || p.stock <= 0) continue;
     const existing = lines.find((l) => l.slug === p.slug);
-    if (existing) existing.qty = Math.min(99, existing.qty + item.qty);
+    if (existing) existing.qty = Math.min(99, p.stock, existing.qty + item.qty);
     else lines.push({ slug: p.slug, name: p.name, sku: p.sku, qty: Math.min(item.qty, p.stock), price: p.price });
   }
   if (lines.length === 0) errors.items = "Your cart is empty or the items are no longer available.";
 
   if (Object.keys(errors).length) return { ok: false, message: "Please check the highlighted fields.", errors };
+  if (!perIp.take(clientIp(await headers())) || !siteWide.take("all")) return { ok: false, message: `We're receiving a lot of orders right now. Please call ${site.phone} and we'll take it by phone.` };
 
   const subtotal = lines.reduce((n, l) => n + l.price * l.qty, 0);
   const now = new Date();

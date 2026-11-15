@@ -1,10 +1,13 @@
 import { mutate } from "@/lib/admin/db";
 import { dayKey } from "@/lib/admin/metrics";
 import type { DayVisits } from "@/lib/admin/types";
+import { clientIp, limiter } from "@/lib/rate-limit";
 
 /** Country names for the ISO codes hosting platforms put in request headers. */
 const names = new Intl.DisplayNames(["en"], { type: "region" });
-const hits = new Map<string, { n: number; until: number }>();
+// 60 views/min per client, 3,000/min site-wide: keeps scripted floods from inflating the traffic report.
+const hits = limiter("visit", 60, 60_000);
+const siteWide = limiter("visit-all", 3000, 60_000);
 
 // Views are counted in memory and written in one go every few seconds, so a busy page never rewrites the store per hit.
 let pending: Record<string, DayVisits> = {};
@@ -37,12 +40,8 @@ function source(ref: string, utm: string) {
 
 /** Receives the storefront's page-view beacon and adds it to today's counters. Stores no IP or identifier. */
 export async function POST(req: Request) {
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
   const now = Date.now();
-  const h = hits.get(ip);
-  if (h && h.until > now && h.n > 60) return new Response(null, { status: 204 }); // 60 views/min per client is plenty
-  hits.set(ip, h && h.until > now ? { n: h.n + 1, until: h.until } : { n: 1, until: now + 60_000 });
-  if (hits.size > 5000) hits.clear();
+  if (!hits.take(clientIp(req.headers), now) || !siteWide.take("all", now)) return new Response(null, { status: 204 });
 
   const text = await req.text().catch(() => "");
   if (text.length > 600) return new Response(null, { status: 204 });

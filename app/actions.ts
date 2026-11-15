@@ -3,6 +3,11 @@
 import { headers } from "next/headers";
 import { mutate, readDb, uid } from "@/lib/admin/db";
 import { contactTopics } from "@/lib/admin/types";
+import { clientIp, limiter } from "@/lib/rate-limit";
+
+const newsletterHits = limiter("newsletter", 5, 10 * 60_000);
+const contactHits = limiter("contact", 5, 10 * 60_000);
+const reviewHits = limiter("review", 3, 60 * 60_000);
 
 export type SubscribeState = { ok: boolean; message: string } | null;
 
@@ -13,6 +18,7 @@ export async function subscribe(_: SubscribeState, form: FormData): Promise<Subs
   if (form.get("company")) return { ok: true, message: "Thanks for subscribing!" };
 
   const email = String(form.get("email") ?? "").trim().toLowerCase();
+  if (!newsletterHits.take(clientIp(await headers()))) return { ok: false, message: "Please try again in a few minutes." };
   if (email.length > 254 || !EMAIL.test(email)) return { ok: false, message: "Please enter a valid email address." };
 
   const api = process.env.API_URL;
@@ -35,7 +41,6 @@ export async function subscribe(_: SubscribeState, form: FormData): Promise<Subs
 
 // ——— Contact form ———
 export type ContactState = { ok: boolean; message: string; fields?: Record<string, string> } | null;
-const contactHits = new Map<string, { n: number; until: number }>();
 
 /** Website contact form → dashboard Inbox (waits for approval). 5 messages per IP per 10 minutes. */
 export async function sendContact(_: ContactState, form: FormData): Promise<ContactState> {
@@ -43,10 +48,9 @@ export async function sendContact(_: ContactState, form: FormData): Promise<Cont
   const fields = { name: get("name", 80), email: get("email", 254).toLowerCase(), phone: get("phone", 20), topic: get("topic", 40), message: get("message", 2000) };
   if (form.get("company")) return { ok: true, message: "Thanks! We'll get back to you soon." }; // honeypot
 
-  const ip = (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
+  const ip = clientIp(await headers());
   const now = Date.now();
-  const h = contactHits.get(ip);
-  if (h && h.until > now && h.n >= 5) return { ok: false, message: "You've sent a few messages already. Please call or WhatsApp us instead.", fields };
+  if (contactHits.blocked(ip, now)) return { ok: false, message: "You've sent a few messages already. Please call or WhatsApp us instead.", fields };
 
   if (fields.name.length < 2) return { ok: false, message: "Please enter your name.", fields };
   if (!EMAIL.test(fields.email)) return { ok: false, message: "Please enter a valid email address.", fields };
@@ -57,8 +61,7 @@ export async function sendContact(_: ContactState, form: FormData): Promise<Cont
   // Site-wide brake: forwarded IPs can be forged, so cap unapproved messages per hour too.
   const db = await readDb();
   if (db.contacts.filter((c) => c.status === "new" && now - Date.parse(c.createdAt) < 3_600_000).length >= 60) return { ok: false, message: "We're getting a lot of messages right now. Please call or WhatsApp us instead.", fields };
-  contactHits.set(ip, h && h.until > now ? { n: h.n + 1, until: h.until } : { n: 1, until: now + 10 * 60_000 });
-  if (contactHits.size > 10_000) contactHits.clear();
+  contactHits.take(ip, now);
 
   await mutate((db) => {
     db.contacts.unshift({ id: uid("c"), createdAt: new Date().toISOString(), name: fields.name, email: fields.email, ...(fields.phone ? { phone: fields.phone } : {}), topic, message: fields.message, status: "new", replies: [] });
@@ -69,7 +72,6 @@ export async function sendContact(_: ContactState, form: FormData): Promise<Cont
 
 // ——— Reviews ———
 export type ReviewState = { ok: boolean; message: string; fields?: Record<string, string> } | null;
-const reviewHits = new Map<string, { n: number; until: number }>();
 
 /** Website review → dashboard (Inbox & email → Reviews). Nothing is shown publicly until the team approves it. */
 export async function submitReview(_: ReviewState, form: FormData): Promise<ReviewState> {
@@ -77,10 +79,9 @@ export async function submitReview(_: ReviewState, form: FormData): Promise<Revi
   const fields = { name: get("name", 60), role: get("role", 60), rating: get("rating", 1), text: get("text", 800) };
   if (form.get("company")) return { ok: true, message: "Thank you for your review!" }; // honeypot
 
-  const ip = (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
+  const ip = clientIp(await headers());
   const now = Date.now();
-  const h = reviewHits.get(ip);
-  if (h && h.until > now && h.n >= 3) return { ok: false, message: "Thanks — you've already sent a review recently.", fields };
+  if (reviewHits.blocked(ip, now)) return { ok: false, message: "Thanks — you've already sent a review recently.", fields };
 
   const rating = Number(fields.rating);
   if (!Number.isInteger(rating) || rating < 1 || rating > 5) return { ok: false, message: "Tap the stars to give a rating.", fields };
@@ -89,8 +90,7 @@ export async function submitReview(_: ReviewState, form: FormData): Promise<Revi
 
   const db = await readDb();
   if (db.reviews.filter((r) => r.status === "pending" && now - Date.parse(r.createdAt) < 3_600_000).length >= 40) return { ok: false, message: "We're getting a lot of reviews right now. Please try again later.", fields };
-  reviewHits.set(ip, h && h.until > now ? { n: h.n + 1, until: h.until } : { n: 1, until: now + 60 * 60_000 });
-  if (reviewHits.size > 10_000) reviewHits.clear();
+  reviewHits.take(ip, now);
 
   await mutate((d) => {
     d.reviews.unshift({ id: uid("r"), createdAt: new Date().toISOString(), name: fields.name, ...(fields.role ? { role: fields.role } : {}), rating: rating as 1 | 2 | 3 | 4 | 5, text: fields.text, status: "pending" });

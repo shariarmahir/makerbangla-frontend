@@ -2,7 +2,8 @@ import "server-only";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { connection } from "next/server";
-import { adminEmail } from "./admin-account";
+import { adminEmail, DEMO_EMPLOYEE } from "./admin-account";
+import { demoOpen } from "./demo";
 import { readDb } from "./db";
 import { SESSION_COOKIE, SESSION_TTL, signSession, verifySession, type SessionPayload } from "./session";
 import { sections, type Section, type User } from "./types";
@@ -21,6 +22,7 @@ export async function getUser(): Promise<User | null> {
   }
   const e = db.employees.find((x) => x.id === session.sub);
   if (!e || !e.active || e.sessionVersion !== session.v) return null;
+  if (e.id === DEMO_EMPLOYEE && e.sample && !demoOpen(db)) return null; // demo closes once real customer data exists
   return { id: e.id, role: "staff", name: e.name, title: e.designation, email: e.email, photo: e.photo, access: e.access.filter((a) => a in sections) };
 }
 

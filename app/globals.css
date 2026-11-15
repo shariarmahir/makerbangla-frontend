@@ -281,3 +281,14 @@
 @keyframes kandari-pulse {
   50% { transform: scale(1.5); opacity: 0.55; }
 }
+
+/* Footer CTA card: a 1px edge in the brand colours that drifts slowly around (static for reduced motion). */
+.footer-edge {
+  background: linear-gradient(110deg, var(--color-tile-yellow), var(--color-brand), color-mix(in srgb, var(--color-tile-navy) 60%, transparent), var(--color-tile-sky), var(--color-tile-yellow));
+  background-size: 300% 100%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .footer-edge {
+    animation: kandari-flow 10s linear infinite;
+  }
+}

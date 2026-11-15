@@ -47,8 +47,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className="flex min-h-dvh flex-col overflow-x-clip">
+    // suppressHydrationWarning only covers these two elements' own attributes (one level deep):
+    // browser extensions (QuillBot, Grammarly, dark-mode tools…) stamp attributes on <html>/<body>
+    // before React hydrates. Content mismatches inside are still reported.
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
+      <body className="flex min-h-dvh flex-col overflow-x-clip" suppressHydrationWarning>
         {children}
       </body>
     </html>

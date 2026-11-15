@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { readDb } from "@/lib/admin/db";
 import { statusLabel, type OrderStatus } from "@/lib/admin/types";
 import { normalizeBdPhone } from "@/lib/order";
+import { clientIp, limiter } from "@/lib/rate-limit";
 
 export type Tracked = {
   id: string;
@@ -19,19 +20,15 @@ export type Tracked = {
 };
 export type TrackState = { order?: Tracked; error?: string; id?: string; phone?: string } | null;
 
-// 20 lookups per IP per 10 minutes: order ids + phone numbers can't be guessed in bulk.
-const hits = new Map<string, { n: number; until: number }>();
+// 20 lookups per IP per 10 minutes, 600 site-wide: order ids + phone numbers can't be guessed in bulk.
+const hits = limiter("track", 20, 10 * 60_000);
+const siteWide = limiter("track-all", 600, 10 * 60_000);
 
 /** Public order tracking: needs the order number and the phone it was placed with. Shows status only — no address or staff names. */
 export async function trackOrder(_: TrackState, form: FormData): Promise<TrackState> {
   const id = String(form.get("id") ?? "").trim().toUpperCase().slice(0, 24);
   const phoneRaw = String(form.get("phone") ?? "").slice(0, 20);
-  const ip = (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
-  const now = Date.now();
-  const h = hits.get(ip);
-  if (h && h.until > now && h.n >= 20) return { id, phone: phoneRaw, error: "Too many lookups. Please try again in a few minutes." };
-  hits.set(ip, h && h.until > now ? { n: h.n + 1, until: h.until } : { n: 1, until: now + 10 * 60_000 });
-  if (hits.size > 10_000) hits.clear();
+  if (!hits.take(clientIp(await headers())) || !siteWide.take("all")) return { id, phone: phoneRaw, error: "Too many lookups. Please try again in a few minutes." };
 
   const phone = normalizeBdPhone(phoneRaw);
   if (!/^MB-[A-Z0-9-]{4,20}$/.test(id) || !phone) return { id, phone: phoneRaw, error: "Enter your order number (MB-…) and the mobile number you ordered with." };
