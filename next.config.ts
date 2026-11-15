@@ -31,6 +31,8 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   poweredByHeader: false,
+  // Dashboard image uploads (max 4 MB) go through a server action.
+  experimental: { serverActions: { bodySizeLimit: "5mb" } },
   reactStrictMode: true,
   images: {
     formats: ["image/avif", "image/webp"],

@@ -248,3 +248,18 @@
   0%, 100% { translate: 0 0; }
   50% { translate: 0 -5px; }
 }
+
+/* Dashboard charts: draw/grow in once on mount */
+@media (prefers-reduced-motion: no-preference) {
+  .chart-draw { stroke-dasharray: 1; animation: chart-draw 1.4s cubic-bezier(0.65, 0, 0.35, 1) both; }
+  .chart-fade { animation: chart-fade 1s ease-out 0.5s both; }
+  .chart-grow-y { transform-origin: bottom; animation: chart-grow-y 0.9s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .chart-grow-x { transform-origin: left; animation: chart-grow-x 1s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .chart-arc { animation: chart-arc 1.3s cubic-bezier(0.65, 0, 0.35, 1) both; }
+  .dash-rise { animation: rise 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+}
+@keyframes chart-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes chart-fade { from { opacity: 0; } }
+@keyframes chart-grow-y { from { transform: scaleY(0); } }
+@keyframes chart-grow-x { from { transform: scaleX(0); } }
+@keyframes chart-arc { from { stroke-dasharray: 0 100; } }

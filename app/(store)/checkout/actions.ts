@@ -1,5 +1,6 @@
 "use server";
 
+import { log, mutate } from "@/lib/admin/db";
 import { products } from "@/lib/data/catalog";
 import { normalizeBdPhone, type Order, type OrderLine, type PlaceOrderState } from "@/lib/order";
 import { deliveryOptions, site } from "@/lib/site";
@@ -93,6 +94,11 @@ export async function placeOrder(_: PlaceOrderState, form: FormData): Promise<Pl
     if (process.env.NODE_ENV === "production") {
       return { ok: false, message: `Online checkout is opening soon. Please call ${site.phone} to place this order.` };
     }
+    // Preview orders also land in the dashboard's local store, so the order flow can be tried end to end.
+    await mutate((db) => {
+      db.orders.unshift({ ...order, demo: true, status: "pending", payments: [], source: "website", history: [{ status: "pending", at: order.createdAt, by: "Website" }] });
+      log(db, "Website", `received order ${order.id}`);
+    }).catch(() => {});
     return { ok: true, order: { ...order, demo: true } };
   }
 

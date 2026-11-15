@@ -16,10 +16,12 @@ Makerbangla.com — "Let's Make a Better World". An education-first e-commerce s
 
 ## Structure (no `src/`)
 
-- `app/` — routes only: `/`, `/shop`, `/products/[slug]`, `/brands`, `/learn`, `/learn/[slug]` (recipes), `/blog`, `/blog/[slug]`, `/checkout`, `/checkout/success`, `/wishlist`, `/info` (ordering, delivery, payment, quotes), `/account` (sign-in placeholder until the backend has accounts — no fake login form), `/privacy`, `/terms`, plus `sitemap.ts`, `robots.ts`, `manifest.ts`, `actions.ts` (newsletter) and `checkout/actions.ts` (place order)
-- `proxy.ts` — returns a real 404 for unknown `/products/*`, `/learn/*` and `/blog/*` slugs (detail pages stream inside Suspense, so status can't change later)
+- `app/(store)/` — storefront routes (own layout with header/footer): `/`, `/shop`, `/products/[slug]`, `/brands`, `/learn`, `/learn/[slug]` (recipes), `/blog`, `/blog/[slug]`, `/checkout`, `/checkout/success`, `/wishlist`, `/info` (ordering, delivery, payment, quotes), `/account` (team/admin sign-in; customer accounts come with the backend), `/privacy`, `/terms`, `checkout/actions.ts` (place order). `app/` root keeps `layout.tsx` (html/body only), `not-found.tsx` (brings the store frame), `sitemap.ts`, `robots.ts`, `manifest.ts`, `actions.ts` (newsletter), `api/visit` (traffic beacon) and `media/[file]` (serves dashboard uploads)
+- `app/dashboard/` — super admin + employee dashboard (see below)
+- `proxy.ts` — redirects signed-out `/dashboard/*` requests to `/account` (signature check only), and returns a real 404 for unknown `/products/*`, `/learn/*` and `/blog/*` slugs (detail pages stream inside Suspense, so status can't change later)
 - `components/layout` — utility strip (scrolls away), sticky header (logo, search, help/wishlist/cart) + primary nav with the categories mega menu, footer, cart sheet. Collections `/shop?collection=new` (isNew) and `/shop?collection=deals` (has oldPrice) are filters in `lib/catalog.ts`
 - `components/home` — landing page sections, one file per section, in page order
+- `components/dashboard` — dashboard shell (collapsible sidebar, topbar, alerts, team chat), `charts.tsx` (hand-built animated SVG/CSS charts), `palette.ts` (chart colours — keep out of client modules), `ui.tsx` (server-safe cards/KPIs/pills/tables), `kit.tsx` (client form kit, modal, toasts, `useAction`), and one manager per page
 - `components/product` — product card, `ProductVisual` (cut-out or framed photo on a colourful stage), product actions (Buy Now, Add all to cart)
 - `components/brand` — `BrandLogo` (Simple Icons glyph or typeset wordmark)
 - `components/ui` — shadcn primitives and lucide-animated icons (added via the shadcn CLI from lucide-animated.com; do not hand-edit beyond theming)
@@ -29,6 +31,7 @@ Makerbangla.com — "Let's Make a Better World". An education-first e-commerce s
 - `lib/catalog.ts` — query/filter/search helpers (server side)
 - `lib/store.ts` — client cart/wishlist/recently-viewed store (`useSyncExternalStore` + localStorage)
 - `lib/site.ts` — brand, contact and navigation config
+- `lib/admin/` — dashboard back end: `types.ts`, `db.ts` (JSON file store `.data/db.json`, git-ignored; swap for API calls when the backend exists), `seed.ts` (catalog + banners + clearly-marked sample data), `session.ts` (HMAC session cookie + scrypt hashes), `auth.ts` (`getUser`/`requireUser`/`assertUser`), `action.ts` (`run()` wrapper: re-check session + access, zod-validate, refresh), `actions/*` (server actions per area), `metrics.ts` (aggregations), `pdf.ts` (invoice/receipt/quotation/report PDFs)
 - `public/brand` — logo assets; `public/images` — optimized WebP product and banner images
 
 ## Next.js 16 notes
@@ -72,3 +75,14 @@ Makerbangla.com — "Let's Make a Better World". An education-first e-commerce s
 - Root metadata in `app/layout.tsx` (title template, OG, Twitter, canonical via `metadataBase`).
 - JSON-LD: Organization + WebSite SearchAction on `/`, Product on product pages.
 - `sitemap.ts` lists every product; `public/llms.txt` summarizes the site for LLM crawlers.
+
+## Dashboard
+
+- Sign in at `/account` (navbar "Sign in"). Super admin = `ADMIN_EMAIL` + password checked against `ADMIN_PASSWORD_HASH` (format `scrypt:<salt>:<hash>`, no `$` — .env expands it); a password changed in Settings is stored hashed in the store and wins. `SESSION_SECRET` (≥32 chars) signs the session cookie (`__Host-mb_session` in production, `mb_session` in dev; httpOnly, Secure, sameSite lax, 12 h). Sign-in is rate-limited per IP and per account. All three live in `.env.local` — never commit them or hard-code credentials.
+- Employees are created in Team: username is generated, a one-time password is shown once; reset/pause/delete bump `sessionVersion` so old sessions die. Access is per area (`sections` in `lib/admin/types.ts`); everyone has their own tasks, calendar notes, leave and chat. Team, Data tools, deleting orders and resetting products are super-admin only. Every page calls `requireUser(area)` and every action goes through `run(area, schema, …)` — never trust the proxy or the client alone.
+- Routes: `/dashboard` (admin overview or employee home), `/orders` (one-click status flow, payments, invoice/receipt/quotation PDFs, mailto), `/products` (CRUD, offer price, image upload, CSV bulk import/export, stock), `/promotions` (home-page banners — saving calls `updateTag("promos")`, `PromoRotator` reads the store under `"use cache"`), `/clients` (traffic by platform/country, leads, top customers), `/finance` (expenses, calculator, weekly/monthly/yearly PDF reports), `/tasks` (kanban, calendar notes with Google Calendar links), `/team`, `/settings`.
+- Uploads: `uploadImage` re-encodes to WebP with sharp (max 4 MB in, 1600 px out) into `.data/media`, served by `app/media/[file]`. Server action body limit is 5 MB (`next.config.ts`).
+- Sample data: every seeded order/expense/lead/team member/task/traffic day is flagged `sample`; Settings → Clear sample data removes them. Preview checkout orders (no `API_URL`, dev) are written to the store too. Traffic comes from `VisitBeacon` → `/api/visit` (cookieless counts, no IPs, honours Do Not Track; country only when the host sends a country header).
+- `app/dashboard/loading.tsx` is the Suspense boundary that keeps page-to-page navigation instant (pages check the session per request). Keep it.
+- The store's cache and write queue live on `globalThis` so every module copy in one server shares them. Promo links must be on-site (`/…`, never `//host`).
+- Dashboard pages render per request: use `requestNow()` from `metrics.ts` instead of `Date.now()` in server components, and never import values (only types/components) from `"use client"` modules into server code.

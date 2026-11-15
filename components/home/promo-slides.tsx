@@ -75,7 +75,8 @@ function Slide({ o }: { o: Offer }) {
           transition={{ duration: 1, ease, delay: 0.1 }}
           className="absolute inset-x-0 -top-12 bottom-0 sm:-top-16 md:-top-20"
         >
-          <Image src={o.image} alt={o.name} fill sizes="(min-width:768px) 340px, 44vw" quality={85} className="cutout-shadow object-contain object-bottom" />
+          {/* Dashboard uploads (/media) are already resized WebP, so they skip the optimizer. */}
+          <Image src={o.image} alt={o.name} fill sizes="(min-width:768px) 340px, 44vw" quality={85} unoptimized={o.image.startsWith("/media/")} className="cutout-shadow object-contain object-bottom" />
         </motion.div>
       </div>
 

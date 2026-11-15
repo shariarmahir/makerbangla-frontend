@@ -26,6 +26,7 @@ export default function PrivacyPage() {
               <li>Your email address, only if you subscribe to our newsletter.</li>
               <li>Cart, wishlist and recently viewed items, stored in your own browser (local storage). This data stays on your device and is not sent to us.</li>
               <li>Basic server logs (such as IP address and browser type) kept by our hosting provider for security and reliability.</li>
+              <li>Anonymous visit counts: the page visited, the referring website, a country-level location and whether you visited before. We use no cookies or identifiers for this, store no IP address, and skip it entirely if your browser sends Do Not Track.</li>
             </ul>
           ),
         },
