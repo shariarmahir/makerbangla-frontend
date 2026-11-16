@@ -16,6 +16,7 @@ const mark = <span aria-hidden className="h-px w-0 bg-tile-yellow transition-[wi
 
 const company = [
   { href: "/learn", label: "Learning Hub" },
+  { href: "/learn/lab-kitchen", label: "Lab Kitchen" },
   { href: "/learn#lab-guides", label: "Lab Guides" },
   { href: "/blog", label: "Tech Insights" },
   { href: "/brands", label: "Brands" },

@@ -21,6 +21,7 @@ export const mainNav = [
   { label: "Discount", href: "/shop?collection=deals" },
   { label: "Brands", href: "/brands" },
   { label: "Learning Hub", href: "/learn" },
+  { label: "Lab Kitchen", href: "/learn/lab-kitchen" },
   { label: "Lab Guides", href: "/learn#lab-guides" },
   { label: "Tech Insights", href: "/blog" },
   { label: "Info", href: "/info" },

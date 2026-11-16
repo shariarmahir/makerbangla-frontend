@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { articles } from "@/lib/data/articles";
 import { categories, products } from "@/lib/data/catalog";
 import { recipes } from "@/lib/data/learning";
+import { experiments } from "@/lib/lab/experiments";
 import { brands } from "@/lib/catalog";
 import { site } from "@/lib/site";
 
@@ -12,6 +13,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: url("/shop"), changeFrequency: "daily", priority: 0.9 },
     { url: url("/brands"), changeFrequency: "weekly", priority: 0.7 },
     { url: url("/learn"), changeFrequency: "weekly", priority: 0.8 },
+    { url: url("/learn/lab-kitchen"), changeFrequency: "weekly", priority: 0.8 },
+    { url: url("/learn/lab-kitchen/components"), changeFrequency: "monthly", priority: 0.5 },
+    ...experiments.map((e) => ({ url: url(`/learn/lab-kitchen/experiments/${e.slug}`), changeFrequency: "monthly" as const, priority: 0.6 })),
     { url: url("/blog"), changeFrequency: "weekly", priority: 0.7 },
     { url: url("/contact"), changeFrequency: "yearly", priority: 0.5 },
     { url: url("/track"), changeFrequency: "yearly", priority: 0.4 },

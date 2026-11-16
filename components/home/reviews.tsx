@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { ReviewComposer } from "./review-composer";
 
 /** Approved customer reviews only (moderated in Dashboard → Inbox & email → Reviews; approving expires "reviews"). */
-async function publishedReviews() {
+export async function publishedReviews() {
   "use cache";
   cacheTag("reviews");
   const db = await readDb();

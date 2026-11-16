@@ -3,6 +3,9 @@ import { SESSION_COOKIE, verifySession } from "@/lib/admin/session";
 import { articles } from "@/lib/data/articles";
 import { products } from "@/lib/data/catalog";
 import { recipes } from "@/lib/data/learning";
+import { experiments } from "@/lib/lab/experiments";
+
+const labExperiments = new Set(experiments.map((e) => e.slug));
 
 const known: Record<string, Set<string>> = {
   products: new Set(products.map((p) => p.slug)),
@@ -17,6 +20,14 @@ export function proxy(request: NextRequest) {
   if (section === "dashboard") {
     if (verifySession(request.cookies.get(SESSION_COOKIE)?.value)) return;
     return NextResponse.redirect(new URL("/account", request.url));
+  }
+
+  // Lab Kitchen lives under the Learning Hub: its home, the bench, the component library and each experiment.
+  if (section === "learn" && slug === "lab-kitchen") {
+    const [sub = "", item = "", ...more] = rest;
+    const ok = !more.length && ((!sub) || ((sub === "workspace" || sub === "components") && !item) || (sub === "experiments" && labExperiments.has(item)));
+    if (ok) return;
+    return NextResponse.rewrite(new URL("/_not-found", request.url), { status: 404 });
   }
 
   // Unknown detail URLs get a real 404 status (the pages stream under Suspense, so status can't change later).

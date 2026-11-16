@@ -254,6 +254,7 @@ export function SiteHeader() {
               <Dropdown className="h-full" panel="w-56" label="Learning Hub">
                 <ul className="p-2">
                   <li><Link href="/learn" className={menuLink}>Learning Hub</Link></li>
+                  <li><Link href="/learn/lab-kitchen" className={menuLink}>Lab Kitchen</Link></li>
                   <li><Link href="/learn#lab-guides" className={menuLink}>Lab Guides</Link></li>
                   <li><Link href="/blog" className={menuLink}>Tech Insights</Link></li>
                 </ul>

@@ -26,6 +26,7 @@
 ## Learn
 
 - [Learning Hub](https://makerbangla.com/learn): circuit recipes with parts lists, build steps and safety notes
+- [Lab Kitchen](https://makerbangla.com/learn/lab-kitchen): browser-based virtual electronics bench — assemble circuits on a breadboard, wire them, run a DC or RC transient simulation, follow guided EEE experiments (Ohm's law, series/parallel, voltage divider, KCL, LED resistor, RC charging) with lab reports, and turn the parts list into a cart. Microcontroller code execution is not available.
 - [Lab Guides](https://makerbangla.com/learn#lab-guides): equipment needed for each university sessional lab, by department
 - Recipe pages, e.g. [CNC Pen Plotter](https://makerbangla.com/learn/cnc-plotter): parts list with prices, numbered steps, safety notes
 - [Tech Insights](https://makerbangla.com/blog): explainers on edge AI, RISC-V, datasheets, oscilloscope measurements, IoT research and GaN/SiC power electronics
